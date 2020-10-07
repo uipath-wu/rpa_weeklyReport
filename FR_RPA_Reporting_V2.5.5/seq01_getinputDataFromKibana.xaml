@@ -1,0 +1,251 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="seq01_getinputDataFromKibana"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:sd="clr-namespace:System.Data;assembly=System.Data"
+ xmlns:ui="http://schemas.uipath.com/workflow/activities"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="dicInSetting" Type="InArgument(scg:Dictionary(x:String, x:String))" />
+    <x:Property Name="dtOutTypeA_7d" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="dtOutTypeA_30d" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="dtOutTypeA_90d" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="dtOutTypeB_7d" Type="OutArgument(sd:DataTable)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap2010:WorkflowViewState.IdRef>seq01_getinputDataFromKibana_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualStudio.Services.Common</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="seq01_getinputDataFromKibana" sap2010:WorkflowViewState.IdRef="Sequence_5">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="sd:DataTable" Name="dtKibanaQueryConfig" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtKibanaQueryConfigToRun" />
+      <Variable x:TypeArguments="s:DateTime" Name="dtendDate" />
+      <Variable x:TypeArguments="s:DateTime" Name="dtStartDate_7d" />
+      <Variable x:TypeArguments="s:DateTime" Name="dtStartDate_30d" />
+      <Variable x:TypeArguments="s:DateTime" Name="dtStartDate_90d" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtTypeA_7d" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtTypeA_30d" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtTypeA_90d" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtTypeB_7d" />
+    </Sequence.Variables>
+    <ui:RetryScope DisplayName="Retry Scope" sap2010:WorkflowViewState.IdRef="RetryScope_1" NumberOfRetries="3" RetryInterval="00:00:05">
+      <ui:RetryScope.ActivityBody>
+        <ActivityAction>
+          <Sequence DisplayName="Action" sap2010:WorkflowViewState.IdRef="Sequence_1">
+            <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke Kibana_OpenDist_Login.OC workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="Kibana_OpenDist_Login.OC.xaml">
+              <ui:InvokeWorkflowFile.Arguments>
+                <InArgument x:TypeArguments="x:String" x:Key="in_KibanaURL">https://rpa-dashboard.fastretailing.com/_plugin/kibana/login</InArgument>
+                <InArgument x:TypeArguments="x:String" x:Key="in_AssetKibanaCredential">[dicInSetting("OCKibanaCredentialAsset").ToString]</InArgument>
+              </ui:InvokeWorkflowFile.Arguments>
+            </ui:InvokeWorkflowFile>
+          </Sequence>
+        </ActivityAction>
+      </ui:RetryScope.ActivityBody>
+      <ui:RetryScope.Condition>
+        <ActivityFunc x:TypeArguments="x:Boolean" />
+      </ui:RetryScope.Condition>
+    </ui:RetryScope>
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_3">
+      <Assign.To>
+        <OutArgument x:TypeArguments="s:DateTime">[dtendDate]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="s:DateTime">[datetime.Now.AddDays(0 - datetime.Now.DayOfWeek)]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_4">
+      <Assign.To>
+        <OutArgument x:TypeArguments="s:DateTime">[dtStartDate_7d]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="s:DateTime">[dtendDate.AddDays(-6)]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_5">
+      <Assign.To>
+        <OutArgument x:TypeArguments="s:DateTime">[dtStartDate_30d]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="s:DateTime">[dtendDate.AddDays(-30)]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_6">
+      <Assign.To>
+        <OutArgument x:TypeArguments="s:DateTime">[dtStartDate_90d]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="s:DateTime">[dtendDate.AddDays(-90)]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke KibanaVisualize-ChromeManualSettingExport workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_8" UnSafe="False" WorkflowFileName="KibanaVisualize-ChromeManualSettingExport.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strEndDate" />
+        <InArgument x:TypeArguments="x:String" x:Key="in_strStartDate">[dtendDate.ToString("yyyy/MM/dd")]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strKibanaBaseURL">https://rpa-dashboard.fastretailing.com/_plugin/kibana/app/kibana#/visualize/edit/f5560680-bf86-11ea-af3e-fb03f75ac9e6?_g=(refreshInterval:(pause:!t,value:0),time:(from:'{0}T{1}Z',mode:absolute,to:'{2}T{3}Z'))</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_int32QueryPeriodInDays">-6</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strEndTime">14:59:59.999</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strStartTime">15:00:00.000</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strKibanaExportedCSVName">[IO.Directory.GetCurrentDirectory + ".\InputFile\ProdKibana1WkReport.csv"]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <Delay DisplayName="5sec Delay for good measure?" Duration="00:00:05" sap2010:WorkflowViewState.IdRef="Delay_2" />
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke funcConvertCSVtoDt_typeA workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="funcConvertCSVtoDt_typeA.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="strInfilePath">[IO.Directory.GetCurrentDirectory + ".\InputFile\ProdKibana1WkReport.csv"]</InArgument>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="dtOutResultTable">[dtOutTypeA_7d]</OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke KibanaVisualize-ChromeManualSettingExport workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_9" UnSafe="False" WorkflowFileName="KibanaVisualize-ChromeManualSettingExport.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strEndDate" />
+        <InArgument x:TypeArguments="x:String" x:Key="in_strStartDate">[dtendDate.ToString("yyyy/MM/dd")]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strKibanaBaseURL">https://rpa-dashboard.fastretailing.com/_plugin/kibana/app/kibana#/visualize/edit/f5560680-bf86-11ea-af3e-fb03f75ac9e6?_g=(refreshInterval:(pause:!t,value:0),time:(from:'{0}T{1}Z',mode:absolute,to:'{2}T{3}Z'))</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_int32QueryPeriodInDays">-30</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strEndTime">14:59:59.999</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strStartTime">15:00:00.000</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strKibanaExportedCSVName">[IO.Directory.GetCurrentDirectory + ".\InputFile\ProdKibana1MhReport.csv"]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <Delay DisplayName="5sec Delay for good measure?" Duration="00:00:05" sap2010:WorkflowViewState.IdRef="Delay_3" />
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke funcConvertCSVtoDt_typeA workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="funcConvertCSVtoDt_typeA.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="strInfilePath">[IO.Directory.GetCurrentDirectory + ".\InputFile\ProdKibana1MhReport.csv"]</InArgument>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="dtOutResultTable">[dtOutTypeA_30d]</OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke KibanaVisualize-ChromeManualSettingExport workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_10" UnSafe="False" WorkflowFileName="KibanaVisualize-ChromeManualSettingExport.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strEndDate" />
+        <InArgument x:TypeArguments="x:String" x:Key="in_strStartDate">[dtendDate.ToString("yyyy/MM/dd")]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strKibanaBaseURL">https://rpa-dashboard.fastretailing.com/_plugin/kibana/app/kibana#/visualize/edit/f5560680-bf86-11ea-af3e-fb03f75ac9e6?_g=(refreshInterval:(pause:!t,value:0),time:(from:'{0}T{1}Z',mode:absolute,to:'{2}T{3}Z'))</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_int32QueryPeriodInDays">-90</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strEndTime">14:59:59.999</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strStartTime">15:00:00.000</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strKibanaExportedCSVName">[IO.Directory.GetCurrentDirectory + ".\InputFile\ProdKibana3MhReport.csv"]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <Delay DisplayName="5sec Delay for good measure?" Duration="00:00:05" sap2010:WorkflowViewState.IdRef="Delay_4" />
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke funcConvertCSVtoDt_typeA workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_4" UnSafe="False" WorkflowFileName="funcConvertCSVtoDt_typeA.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="strInfilePath">[IO.Directory.GetCurrentDirectory + ".\InputFile\ProdKibana3MhReport.csv"]</InArgument>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="dtOutResultTable">[dtOutTypeA_90d]</OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke KibanaVisualize-ChromeManualSettingExport workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_7" UnSafe="False" WorkflowFileName="KibanaVisualize-ChromeManualSettingExport.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strEndDate" />
+        <InArgument x:TypeArguments="x:String" x:Key="in_strStartDate">[dtendDate.ToString("yyyy/MM/dd")]</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strKibanaBaseURL">https://rpa-dashboard.fastretailing.com/_plugin/kibana/app/kibana#/visualize/edit/25dba950-912d-11ea-b27e-a53d919190b3?_g=(refreshInterval:(pause:!t,value:0),time:(from:'{0}T{1}Z',mode:absolute,to:'{2}T{3}Z'))</InArgument>
+        <InArgument x:TypeArguments="x:Int32" x:Key="in_int32QueryPeriodInDays">-6</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strEndTime">14:59:59.999</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strStartTime">15:00:00.000</InArgument>
+        <InArgument x:TypeArguments="x:String" x:Key="in_strKibanaExportedCSVName">[IO.Directory.GetCurrentDirectory + ".\InputFile\ProdKibana1wReport_typeb.csv"]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <Delay DisplayName="5sec Delay for good measure?" Duration="00:00:05" sap2010:WorkflowViewState.IdRef="Delay_5" />
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke funcConvertCSVtoDt_typeB workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="funcConvertCSVtoDt_typeB.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="x:String" x:Key="strInfilePath">[IO.Directory.GetCurrentDirectory + ".\InputFile\ProdKibana1wReport_typeb.csv"]</InArgument>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="dtOutResultTable">[dtOutTypeB_7d]</OutArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <sads:DebugSymbol.Symbol>d1NDOlxVc2Vyc1wwOTAxMjczNVxEZXNrdG9wXEZSX1JQQV9SZXBvcnRpbmdfVjIuNS41XHNlcTAxX2dldGlucHV0RGF0YUZyb21LaWJhbmEueGFtbE1OA9UBDgIBAVsFaxUCAVVsBXMOAgFRdAV7DgIBTHwFgwEOAgFHhAEFiwEOAgFCjAEFlgEdAgE5lwEFlwF3AgE3mAEFnQEdAgEyngEFqAEdAgEpqQEFqQF3AgEnqgEFrwEdAgEisAEFugEdAgEZuwEFuwF3AgEXvAEFwQEdAgESwgEFzAEdAgEJzQEFzQF3AgEHzgEF0wEdAgECW39biQECAV1bbVtwAgFcXgtlFgIBVnEycWQCAVRuM24+AgFSeTJ5SQIBT3YzdkMCAU2BATKBAUoCAUp+M35EAgFIiQEyiQFKAgFFhgEzhgFEAgFDkQFRkQFTAgFBkAFMkAGdAgIBQI8BSI8BagIBPpMBSJMBVAIBPZQBVJQBngECATySAUaSAVICATuMAdYBjAGGAgIBOpcBQJcBSgIBOJsBTpsBXQIBNZgBxQGYAeQBAgE0mgFGmgGQAQIBM6MBUaMBVAIBMaIBTKIBnQICATChAUihAWoCAS6lAUilAVQCAS2mAVSmAZ4BAgEspAFGpAFSAgErngHWAZ4BhgICASqpAUCpAUoCASitAU6tAV4CASWqAcUBqgHkAQIBJKwBRqwBkAECASO1AVG1AVQCASG0AUy0AZ0CAgEgswFIswFqAgEetwFItwFUAgEduAFUuAGeAQIBHLYBRrYBUgIBG7AB1wGwAYcCAgEauwFAuwFKAgEYvwFOvwFeAgEVvAHFAbwB5AECARS+AUa+AZABAgETxwFRxwFTAgERxgFMxgGdAgIBEMUBSMUBagIBDskBSMkBVAIBDcoBVMoBowECAQzIAUbIAVICAQvCAdYBwgGGAgIBCs0BQM0BSgIBCNEBTtEBXQIBBc4BxQHOAeQBAgEE0AFG0AGVAQIBA18NZCUCAVdhTWGJAQIBW2JZYosBAgFZX80BX+wBAgFY</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_1" sap:VirtualizedContainerService.HintSize="314.4,88" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="336.8,212.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="RetryScope_1" sap:VirtualizedContainerService.HintSize="359.2,388.8" />
+      <sap2010:ViewStateData Id="Assign_3" sap:VirtualizedContainerService.HintSize="359.2,60" />
+      <sap2010:ViewStateData Id="Assign_4" sap:VirtualizedContainerService.HintSize="359.2,60" />
+      <sap2010:ViewStateData Id="Assign_5" sap:VirtualizedContainerService.HintSize="359.2,60" />
+      <sap2010:ViewStateData Id="Assign_6" sap:VirtualizedContainerService.HintSize="359.2,60" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_8" sap:VirtualizedContainerService.HintSize="359.2,88" />
+      <sap2010:ViewStateData Id="Delay_2" sap:VirtualizedContainerService.HintSize="359.2,22.4" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_2" sap:VirtualizedContainerService.HintSize="359.2,88" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_9" sap:VirtualizedContainerService.HintSize="359.2,88" />
+      <sap2010:ViewStateData Id="Delay_3" sap:VirtualizedContainerService.HintSize="359.2,22.4" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_3" sap:VirtualizedContainerService.HintSize="359.2,88" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_10" sap:VirtualizedContainerService.HintSize="359.2,88" />
+      <sap2010:ViewStateData Id="Delay_4" sap:VirtualizedContainerService.HintSize="359.2,22.4" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_4" sap:VirtualizedContainerService.HintSize="359.2,88" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_7" sap:VirtualizedContainerService.HintSize="359.2,88" />
+      <sap2010:ViewStateData Id="Delay_5" sap:VirtualizedContainerService.HintSize="359.2,22.4" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_5" sap:VirtualizedContainerService.HintSize="359.2,88" />
+      <sap2010:ViewStateData Id="Sequence_5" sap:VirtualizedContainerService.HintSize="381.6,2187.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="seq01_getinputDataFromKibana_1" sap:VirtualizedContainerService.HintSize="421.6,2267.2" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

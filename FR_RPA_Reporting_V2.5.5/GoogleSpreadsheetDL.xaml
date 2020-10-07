@@ -1,0 +1,1034 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="Main"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:p="http://schemas.microsoft.com/workflow/2012/07/xaml/activities"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:sd="clr-namespace:System.Data;assembly=System.Data"
+ xmlns:ui="http://schemas.uipath.com/workflow/activities"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="in_InputFileFolder" Type="InArgument(x:String)" />
+    <x:Property Name="in_OutputFolder" Type="InArgument(x:String)" />
+    <x:Property Name="in_CleanUpFolder" Type="InArgument(x:String)" />
+    <x:Property Name="out_InputFileConfig" Type="OutArgument(scg:Dictionary(x:String, x:Object))" />
+    <x:Property Name="out_dtInputFileToDL" Type="OutArgument(sd:DataTable)" />
+    <x:Property Name="in_ManualInputFileFlag" Type="InArgument(x:String)" />
+    <x:Property Name="in_ManualInputFilePath" Type="InArgument(x:String)" />
+    <x:Property Name="in_CloseChromeFlag" Type="InArgument(x:String)" />
+    <x:Property Name="in_ChromeDLSetting" Type="InArgument(x:String)" />
+    <x:Property Name="out_CleanUpTodayFolder" Type="OutArgument(x:String)" />
+    <x:Property Name="in_dtInputFileToDL" Type="InArgument(sd:DataTable)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap2010:WorkflowViewState.IdRef>Main_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+      <x:String>Microsoft.VisualBasic.CompilerServices</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualStudio.Services.Common</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Plugin.Workflow</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Download GoogleSpreadsheet" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="stUserProfilePath" />
+      <Variable x:TypeArguments="x:String" Name="stDownloadFileName" />
+      <Variable x:TypeArguments="x:Boolean" Name="boDLFileCleanNeeded" />
+      <Variable x:TypeArguments="x:String" Name="stDownloadFilePath" />
+      <Variable x:TypeArguments="x:String" Name="stInputFileFolder" />
+      <Variable x:TypeArguments="x:String" Name="stOutputFolder" />
+      <Variable x:TypeArguments="x:String" Default=".\InputFile\RPA Service Management Sheet.xlsx" Name="stInputFilePath" />
+      <Variable x:TypeArguments="x:Boolean" Name="boInputFileFolderExists" />
+      <Variable x:TypeArguments="x:Boolean" Name="boOutputFolderExists" />
+      <Variable x:TypeArguments="x:String" Name="stCleanUpFolder" />
+      <Variable x:TypeArguments="x:Boolean" Name="boCleanUpFolderExists" />
+      <Variable x:TypeArguments="x:String" Name="stCleanUpTodayFolder" />
+      <Variable x:TypeArguments="sd:DataTable" Name="out_dtConfigSetting" />
+    </Sequence.Variables>
+    <Sequence DisplayName="Init_ initiate args and vars" sap2010:WorkflowViewState.IdRef="Sequence_61">
+      <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_5" Text="// import Config.xlsx/setting from Main, assign to these variables" />
+      <Assign DisplayName="Assign_ InputFile folder" sap2010:WorkflowViewState.IdRef="Assign_7">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:String">[stInputFileFolder]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:String">[in_InputFileFolder]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <Assign DisplayName="Assign_ Output folder" sap2010:WorkflowViewState.IdRef="Assign_8">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:String">[stOutputFolder]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:String">[in_OutputFolder]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <Assign DisplayName="Assign_ CleanUp folder" sap2010:WorkflowViewState.IdRef="Assign_9">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:String">[stCleanUpFolder]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:String">[in_CleanUpFolder]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <Assign DisplayName="Assign_ CleanUpToday folder" sap2010:WorkflowViewState.IdRef="Assign_20">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:String">[stCleanUpTodayFolder]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:String">[stCleanUpFolder+"\"+now.ToString("yyyy-MM-dd_HHmmss")]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <Assign DisplayName="Assign_out_CleanUpTodayFolder" sap2010:WorkflowViewState.IdRef="Assign_29">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:String">[out_CleanUpTodayFolder]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:String">[stCleanUpTodayFolder]</InArgument>
+        </Assign.Value>
+      </Assign>
+      <Assign DisplayName="New dictionary" sap2010:WorkflowViewState.IdRef="Assign_27">
+        <Assign.To>
+          <OutArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">[out_InputFileConfig]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)">[new Dictionary(of String, object)]</InArgument>
+        </Assign.Value>
+      </Assign>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="If&#xA;&quot;.\CleanUp&quot;&#xA;folder exists,&#xA;&#xA;then, make :&#xA;yyyy-MM-dd format today's folder &#xA;&#xA;else, make :&#xA;&quot;.\CleanUp&quot;&#xA;AND&#xA;CleanUpToday [yyyy-MM-dd format today's] folder " DisplayName="Check if CleanUp folder and CleanUpToday folder exists" sap2010:WorkflowViewState.IdRef="Sequence_27">
+      <Sequence.Variables>
+        <Variable x:TypeArguments="x:Boolean" Name="boCleanUpTodayFolderExists" />
+      </Sequence.Variables>
+      <ui:PathExists DisplayName="Path Exists" Exists="[boCleanUpFolderExists]" sap2010:WorkflowViewState.IdRef="PathExists_6" Path="[stCleanUpFolder]" PathType="Folder" />
+      <If Condition="[not boCleanUpFolderExists]" sap2010:WorkflowViewState.IdRef="If_1">
+        <If.Then>
+          <Sequence DisplayName="Init_ Make CleanUp and CleanUp Date() Folder" sap2010:WorkflowViewState.IdRef="Sequence_24">
+            <Sequence.Variables>
+              <Variable x:TypeArguments="s:String[]" Name="stInputFileFolderCleanUp" />
+            </Sequence.Variables>
+            <ui:RetryScope DisplayName="Retry Scope_ Make CleanUp folder" sap2010:WorkflowViewState.IdRef="RetryScope_4" NumberOfRetries="3" RetryInterval="00:00:05">
+              <ui:RetryScope.ActivityBody>
+                <ActivityAction>
+                  <Sequence DisplayName="Action" sap2010:WorkflowViewState.IdRef="Sequence_22">
+                    <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Directory" sap2010:WorkflowViewState.IdRef="CreateDirectory_4" Path="[stCleanUpFolder]" />
+                    <ui:PathExists DisplayName="Path Exists" Exists="[boCleanUpFolderExists]" sap2010:WorkflowViewState.IdRef="PathExists_7" Path="[stCleanUpFolder]" PathType="Folder" />
+                  </Sequence>
+                </ActivityAction>
+              </ui:RetryScope.ActivityBody>
+              <ui:RetryScope.Condition>
+                <ActivityFunc x:TypeArguments="x:Boolean">
+                  <p:IsTrue DisplayName="Is true" sap2010:WorkflowViewState.IdRef="IsTrue_4" Input="[boCleanUpFolderExists]" />
+                </ActivityFunc>
+              </ui:RetryScope.Condition>
+            </ui:RetryScope>
+            <ui:RetryScope DisplayName="Retry Scope_ Make CleanUpToday folder" sap2010:WorkflowViewState.IdRef="RetryScope_5" NumberOfRetries="3" RetryInterval="00:00:05">
+              <ui:RetryScope.ActivityBody>
+                <ActivityAction>
+                  <Sequence DisplayName="Action" sap2010:WorkflowViewState.IdRef="Sequence_23">
+                    <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Directory" sap2010:WorkflowViewState.IdRef="CreateDirectory_5" Path="[stCleanUpTodayFolder]" />
+                    <ui:PathExists DisplayName="Path Exists" Exists="[boCleanUpTodayFolderExists]" sap2010:WorkflowViewState.IdRef="PathExists_8" Path="[stCleanUpTodayFolder]" PathType="Folder" />
+                  </Sequence>
+                </ActivityAction>
+              </ui:RetryScope.ActivityBody>
+              <ui:RetryScope.Condition>
+                <ActivityFunc x:TypeArguments="x:Boolean">
+                  <p:IsTrue DisplayName="Is true" sap2010:WorkflowViewState.IdRef="IsTrue_5" Input="[boCleanUpTodayFolderExists]" />
+                </ActivityFunc>
+              </ui:RetryScope.Condition>
+            </ui:RetryScope>
+          </Sequence>
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="Init_ Make CleanUp Date() Folder" sap2010:WorkflowViewState.IdRef="Sequence_26">
+            <Sequence.Variables>
+              <Variable x:TypeArguments="s:String[]" Name="stInputFileFolderCleanUp" />
+            </Sequence.Variables>
+            <ui:RetryScope DisplayName="Retry Scope_ Make CleanUpToday folder" sap2010:WorkflowViewState.IdRef="RetryScope_12" NumberOfRetries="3" RetryInterval="00:00:05">
+              <ui:RetryScope.ActivityBody>
+                <ActivityAction>
+                  <Sequence DisplayName="Action" sap2010:WorkflowViewState.IdRef="Sequence_58">
+                    <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Directory" sap2010:WorkflowViewState.IdRef="CreateDirectory_9" Path="[stCleanUpTodayFolder]" />
+                    <ui:PathExists DisplayName="Path Exists" Exists="[boCleanUpTodayFolderExists]" sap2010:WorkflowViewState.IdRef="PathExists_16" Path="[stCleanUpTodayFolder]" PathType="Folder" />
+                  </Sequence>
+                </ActivityAction>
+              </ui:RetryScope.ActivityBody>
+              <ui:RetryScope.Condition>
+                <ActivityFunc x:TypeArguments="x:Boolean">
+                  <p:IsTrue DisplayName="Is true" sap2010:WorkflowViewState.IdRef="IsTrue_12" Input="[boCleanUpTodayFolderExists]" />
+                </ActivityFunc>
+              </ui:RetryScope.Condition>
+            </ui:RetryScope>
+          </Sequence>
+        </If.Else>
+      </If>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="If&#xA;&quot;.\Output&quot;&#xA;folder exists,&#xA;&#xA;then, move all and any files inside to :&#xA;.\CleanUp\Datetime.Today folder &#xA;&#xA;else, make :&#xA;&quot;.\Output&quot; folder&#xA;" DisplayName="Check if Output folder exists" sap2010:WorkflowViewState.IdRef="Sequence_38">
+      <Sequence.Variables>
+        <Variable x:TypeArguments="x:Boolean" Name="boCleanUpTodayFolderExists" />
+      </Sequence.Variables>
+      <ui:PathExists DisplayName="Path Exists" Exists="[boOutputFolderExists]" sap2010:WorkflowViewState.IdRef="PathExists_12" Path="[stOutputFolder]" PathType="Folder" />
+      <If Condition="[boOutputFolderExists]" sap2010:WorkflowViewState.IdRef="If_3">
+        <If.Then>
+          <Sequence DisplayName="Init_ Move any files to CleanUpToday Folder" sap2010:WorkflowViewState.IdRef="Sequence_35">
+            <Sequence.Variables>
+              <Variable x:TypeArguments="s:String[]" Name="stInputFileFolderCleanUp" />
+              <Variable x:TypeArguments="s:String[]" Name="stOutputFolderCleanUp" />
+            </Sequence.Variables>
+            <Assign sap2010:WorkflowViewState.IdRef="Assign_13">
+              <Assign.To>
+                <OutArgument x:TypeArguments="s:String[]">[stOutputFolderCleanUp]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="s:String[]">[Directory.GetFiles(stOutputFolder)]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <ui:ForEach x:TypeArguments="x:Object" CurrentIndex="{x:Null}" DisplayName="For Each" sap2010:WorkflowViewState.IdRef="ForEach`1_3" Values="[stOutputFolderCleanUp]">
+              <ui:ForEach.Body>
+                <ActivityAction x:TypeArguments="x:Object">
+                  <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="x:Object" Name="filePath" />
+                  </ActivityAction.Argument>
+                  <Sequence DisplayName="Body" sap2010:WorkflowViewState.IdRef="Sequence_34">
+                    <ui:LogMessage DisplayName="Log _ Previous Input Files moved to CleanUp" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="Warn" Message="[&quot;To clean up residue/ potential complications&quot;+filePath.ToString + &quot; : MOVED to .\CleanUp.\Today folder&quot;]" />
+                    <ui:MoveFile ContinueOnError="{x:Null}" Destination="[stCleanUpTodayFolder]" DisplayName="Move File" sap2010:WorkflowViewState.IdRef="MoveFile_3" Overwrite="False" Path="[filePath.ToString]" />
+                  </Sequence>
+                </ActivityAction>
+              </ui:ForEach.Body>
+            </ui:ForEach>
+          </Sequence>
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="Init_ Make Output Folder" sap2010:WorkflowViewState.IdRef="Sequence_37">
+            <Sequence.Variables>
+              <Variable x:TypeArguments="s:String[]" Name="stInputFileFolderCleanUp" />
+            </Sequence.Variables>
+            <ui:RetryScope DisplayName="Retry Scope_ Make Output folder" sap2010:WorkflowViewState.IdRef="RetryScope_8" NumberOfRetries="3" RetryInterval="00:00:05">
+              <ui:RetryScope.ActivityBody>
+                <ActivityAction>
+                  <Sequence DisplayName="Action" sap2010:WorkflowViewState.IdRef="Sequence_36">
+                    <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Directory" sap2010:WorkflowViewState.IdRef="CreateDirectory_8" Path="[stOutputFolder]" />
+                    <ui:PathExists DisplayName="Path Exists" Exists="[boOutputFolderExists]" sap2010:WorkflowViewState.IdRef="PathExists_13" Path="[stOutputFolder]" PathType="Folder" />
+                  </Sequence>
+                </ActivityAction>
+              </ui:RetryScope.ActivityBody>
+              <ui:RetryScope.Condition>
+                <ActivityFunc x:TypeArguments="x:Boolean">
+                  <p:IsTrue DisplayName="Is true" sap2010:WorkflowViewState.IdRef="IsTrue_8" Input="[boOutputFolderExists]" />
+                </ActivityFunc>
+              </ui:RetryScope.Condition>
+            </ui:RetryScope>
+          </Sequence>
+        </If.Else>
+      </If>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="*default for ManualInputFile = &quot;NO&quot; in Config.xlsx \ Setting sheet&#xA;&#xA;If manual input file = &quot;YES&quot; in Config.xlsx \ Setting sheet&#xA;&#xA;then : &#xA;check stinputfilepath&#xA;&#xA;else:&#xA;{&#xA;   If&#xA;   &quot;.\InputFile&quot;&#xA;   folder exists,&#xA;&#xA;      then, move all and any files inside to :&#xA;      .\CleanUp\Datetime.Today folder &#xA;&#xA;      else, make :&#xA;      &quot;.\InputFile&quot; folder&#xA;}" DisplayName="Check if InputFile has been provided manually" sap2010:WorkflowViewState.IdRef="Sequence_32">
+      <Sequence.Variables>
+        <Variable x:TypeArguments="x:Boolean" Name="boCleanUpTodayFolderExists" />
+        <Variable x:TypeArguments="x:String" Default="https://docs.google.com/spreadsheets/d/" Name="stGoogleSSHttps" />
+        <Variable x:TypeArguments="x:String" Default="1bY8qTSNiCYe93vdE5w-9dIrtBQEe5cefBrdwI4-jphY" Name="stGoogleSSURL" />
+        <Variable x:TypeArguments="x:String" Default="986567056" Name="stGoogleSSgid" />
+      </Sequence.Variables>
+      <If Condition="[in_ManualInputFileFlag = &quot;YES&quot;]" sap2010:WorkflowViewState.IdRef="If_6">
+        <If.Then>
+          <Sequence sap2010:Annotation.AnnotationText="If ManualInputFile exists in InputFile folder&#xA;&#xA;Proceed,&#xA;&#xA;else : throw BusinessRuleException" DisplayName="Check If ManualInputFile has been provided" sap2010:WorkflowViewState.IdRef="Sequence_46">
+            <Sequence.Variables>
+              <Variable x:TypeArguments="x:Boolean" Name="boInputFileExists" />
+            </Sequence.Variables>
+            <ui:PathExists DisplayName="Path Exists" Exists="[boInputFileExists]" sap2010:WorkflowViewState.IdRef="PathExists_14" Path="[in_ManualInputFilePath]" PathType="File" />
+            <If Condition="[boInputFileExists]" DisplayName="If Manual Input File is missing, throw business rule exception" sap2010:WorkflowViewState.IdRef="If_5">
+              <If.Then>
+                <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_9" Level="Info" Message="[stInputFilePath + &quot; = &quot; + boInputFileExists.ToString]" />
+              </If.Then>
+              <If.Else>
+                <Sequence sap2010:WorkflowViewState.IdRef="Sequence_45">
+                  <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_10" Level="Error" Message="[stInputFilePath + &quot; = &quot; + boInputFileExists.ToString +vbcrlf + &quot;Business Error : InputFile missing when Manual InputFile flag is set to 'YES'&quot;]" />
+                  <Throw Exception="[new BusinessRuleException(&quot;Check ManualInputFile flag AND InputFile in InputFile folder&quot;)]" sap2010:WorkflowViewState.IdRef="Throw_1" />
+                </Sequence>
+              </If.Else>
+            </If>
+          </Sequence>
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="ManualInputFile = NO" sap2010:WorkflowViewState.IdRef="Sequence_54">
+            <Sequence DisplayName="Make InputFile folder or move any files to CleanUp \ today folder&quot;" sap2010:WorkflowViewState.IdRef="Sequence_47">
+              <ui:PathExists DisplayName="Path Exists" Exists="[boInputFileFolderExists]" sap2010:WorkflowViewState.IdRef="PathExists_10" Path="[stInputFileFolder]" PathType="Folder" />
+              <If sap2010:Annotation.AnnotationText=" If&#xA;   &quot;.\InputFile&quot;&#xA;   folder exists,&#xA;&#xA;      then, move all and any files inside to :&#xA;      .\CleanUp\Datetime.Today folder &#xA;&#xA;      else, make :&#xA;      &quot;.\InputFile&quot; folder" Condition="[boInputFileFolderExists]" DisplayName="If InputFile folder exists" sap2010:WorkflowViewState.IdRef="If_2">
+                <If.Then>
+                  <Sequence DisplayName="Init_ Move any files to CleanUpToday Folder" sap2010:WorkflowViewState.IdRef="Sequence_31">
+                    <Sequence.Variables>
+                      <Variable x:TypeArguments="s:String[]" Name="stInputFileFolderCleanUp" />
+                    </Sequence.Variables>
+                    <Assign sap2010:WorkflowViewState.IdRef="Assign_12">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="s:String[]">[stInputFileFolderCleanUp]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="s:String[]">[Directory.GetFiles(stInputFileFolder)]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <ui:ForEach x:TypeArguments="x:Object" CurrentIndex="{x:Null}" DisplayName="For Each" sap2010:WorkflowViewState.IdRef="ForEach`1_2" Values="[stInputFileFolderCleanUp]">
+                      <ui:ForEach.Body>
+                        <ActivityAction x:TypeArguments="x:Object">
+                          <ActivityAction.Argument>
+                            <DelegateInArgument x:TypeArguments="x:Object" Name="filePath" />
+                          </ActivityAction.Argument>
+                          <Sequence DisplayName="Body" sap2010:WorkflowViewState.IdRef="Sequence_30">
+                            <ui:LogMessage DisplayName="Log _ Previous Input Files moved to CleanUp" sap2010:WorkflowViewState.IdRef="LogMessage_4" Level="Warn" Message="[&quot;To clean up residue/ potential complications&quot;+filePath.ToString + &quot; : MOVED to .\CleanUp.\Today folder&quot;]" />
+                            <ui:MoveFile ContinueOnError="{x:Null}" Destination="[stCleanUpTodayFolder]" DisplayName="Move File" sap2010:WorkflowViewState.IdRef="MoveFile_2" Overwrite="False" Path="[filePath.ToString]" />
+                          </Sequence>
+                        </ActivityAction>
+                      </ui:ForEach.Body>
+                    </ui:ForEach>
+                  </Sequence>
+                </If.Then>
+                <If.Else>
+                  <Sequence DisplayName="Init_ Make InputFile Folder" sap2010:WorkflowViewState.IdRef="Sequence_33">
+                    <Sequence.Variables>
+                      <Variable x:TypeArguments="s:String[]" Name="stInputFileFolderCleanUp" />
+                    </Sequence.Variables>
+                    <ui:RetryScope DisplayName="Retry Scope_ Make InputFile folder" sap2010:WorkflowViewState.IdRef="RetryScope_7" NumberOfRetries="3" RetryInterval="00:00:05">
+                      <ui:RetryScope.ActivityBody>
+                        <ActivityAction>
+                          <Sequence DisplayName="Action" sap2010:WorkflowViewState.IdRef="Sequence_28">
+                            <ui:CreateDirectory ContinueOnError="{x:Null}" DisplayName="Create Directory" sap2010:WorkflowViewState.IdRef="CreateDirectory_7" Path="[stInputFileFolder]" />
+                            <ui:PathExists DisplayName="Path Exists" Exists="[boInputFileFolderExists]" sap2010:WorkflowViewState.IdRef="PathExists_11" Path="[stInputFileFolder]" PathType="Folder" />
+                          </Sequence>
+                        </ActivityAction>
+                      </ui:RetryScope.ActivityBody>
+                      <ui:RetryScope.Condition>
+                        <ActivityFunc x:TypeArguments="x:Boolean">
+                          <p:IsTrue DisplayName="Is true" sap2010:WorkflowViewState.IdRef="IsTrue_7" Input="[boInputFileFolderExists]" />
+                        </ActivityFunc>
+                      </ui:RetryScope.Condition>
+                    </ui:RetryScope>
+                  </Sequence>
+                </If.Else>
+              </If>
+            </Sequence>
+            <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_3" Text="// for each, loop through each input files listed on Config.xlsx : check , move to CleanUp | proceed , download &amp; move to InputFile folder&#xA;" />
+            <ui:CommentOut DisplayName="For Each _Comment Out" sap2010:WorkflowViewState.IdRef="CommentOut_4">
+              <ui:CommentOut.Body>
+                <Sequence DisplayName="Ignored Activities" sap2010:WorkflowViewState.IdRef="Sequence_49">
+                  <ui:ForEach x:TypeArguments="x:Object" CurrentIndex="{x:Null}" DisplayName="For Each_ expected input files" sap2010:WorkflowViewState.IdRef="ForEach`1_4">
+                    <ui:ForEach.Body>
+                      <ActivityAction x:TypeArguments="x:Object">
+                        <ActivityAction.Argument>
+                          <DelegateInArgument x:TypeArguments="x:Object" Name="item" />
+                        </ActivityAction.Argument>
+                        <Sequence DisplayName="Body" sap2010:WorkflowViewState.IdRef="Sequence_48" />
+                      </ActivityAction>
+                    </ui:ForEach.Body>
+                  </ui:ForEach>
+                </Sequence>
+              </ui:CommentOut.Body>
+            </ui:CommentOut>
+            <Sequence DisplayName="Loop_Download Yes flagged inputfiles on Config.xlsx\InputFile" sap2010:WorkflowViewState.IdRef="Sequence_70">
+              <ui:CommentOut DisplayName="Comment Out" sap2010:WorkflowViewState.IdRef="CommentOut_11">
+                <ui:CommentOut.Body>
+                  <Sequence DisplayName="Ignored Activities" sap2010:WorkflowViewState.IdRef="Sequence_76">
+                    <Assign DisplayName="Assign Run checked CheckWFs to arg" sap2010:WorkflowViewState.IdRef="Assign_24">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="sd:DataTable">[out_dtInputFileToDL]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="sd:DataTable">[dtInputFileConfig.Select("[GET] = 'Yes'").CopyToDataTable]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                  </Sequence>
+                </ui:CommentOut.Body>
+              </ui:CommentOut>
+              <ui:GetEnvironmentFolder DisplayName="Get Environment Folder" FolderPath="[stUserProfilePath]" sap2010:WorkflowViewState.IdRef="GetEnvironmentFolder_1" SpecialFolder="UserProfile" />
+              <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_2" Text="// eventually loop through, SET stDownloadFileName as per Config.xlsx&#xA;" />
+              <ui:CommentOut DisplayName="Comment Out" sap2010:WorkflowViewState.IdRef="CommentOut_7">
+                <ui:CommentOut.Body>
+                  <Sequence DisplayName="Ignored Activities" sap2010:WorkflowViewState.IdRef="Sequence_66">
+                    <Sequence sap2010:Annotation.AnnotationText="Delete CheckWFs rows with Run Column : NO flag" DisplayName="Get CheckWFs to Run and NOT RUN " sap2010:WorkflowViewState.IdRef="Sequence_65">
+                      <ui:AddDataColumn x:TypeArguments="x:Object" Column="{x:Null}" DefaultValue="{x:Null}" AllowDBNull="True" AutoIncrement="False" ColumnName="RunFlag" DataTable="[dtChecksConfig]" DisplayName="Add RunFlag Column" sap2010:WorkflowViewState.IdRef="AddDataColumn`1_1" MaxLength="100" Unique="False" />
+                      <ui:ForEachRow CurrentIndex="{x:Null}" DataTable="[dtChecksConfig]" DisplayName="Invoke each xamls listed in Config.xlsx CheckWFs sheet " sap2010:WorkflowViewState.IdRef="ForEachRow_1">
+                        <ui:ForEachRow.Body>
+                          <ActivityAction x:TypeArguments="sd:DataRow">
+                            <ActivityAction.Argument>
+                              <DelegateInArgument x:TypeArguments="sd:DataRow" Name="CheckWFs" />
+                            </ActivityAction.Argument>
+                            <Sequence DisplayName="Body" sap2010:WorkflowViewState.IdRef="Sequence_64">
+                              <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_15" Level="Info" Message="[string.Format(&quot;Checking Run flag for {0}&quot;, CheckWFs(1).ToString)]" />
+                              <If Condition="[CheckWFs.Item(&quot;Run&quot;).ToString = &quot;Yes&quot;]" sap2010:WorkflowViewState.IdRef="If_7">
+                                <If.Then>
+                                  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_62">
+                                    <ui:LogMessage DisplayName="Log Message_ Run Flag = Yes" sap2010:WorkflowViewState.IdRef="LogMessage_16" Level="Warn" Message="[string.Format(&quot;Checking Run flag for {0} is {1}.&quot;, CheckWFs(1).ToString, CheckWFs(0).ToString)]" />
+                                    <Assign sap2010:WorkflowViewState.IdRef="Assign_22">
+                                      <Assign.To>
+                                        <OutArgument x:TypeArguments="x:Object">[CheckWFs(3)]</OutArgument>
+                                      </Assign.To>
+                                      <Assign.Value>
+                                        <InArgument x:TypeArguments="x:Object">["Yes"]</InArgument>
+                                      </Assign.Value>
+                                    </Assign>
+                                  </Sequence>
+                                </If.Then>
+                                <If.Else>
+                                  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_63">
+                                    <ui:LogMessage DisplayName="Log Message_ Run Flag = No" sap2010:WorkflowViewState.IdRef="LogMessage_17" Level="Warn" Message="[string.Format(&quot;Checking Run flag for {0} is {1}.&quot;, CheckWFs(1).ToString, CheckWFs(0).ToString)]" />
+                                    <Assign sap2010:WorkflowViewState.IdRef="Assign_23">
+                                      <Assign.To>
+                                        <OutArgument x:TypeArguments="x:Object">[CheckWFs(3)]</OutArgument>
+                                      </Assign.To>
+                                      <Assign.Value>
+                                        <InArgument x:TypeArguments="x:Object">["No"]</InArgument>
+                                      </Assign.Value>
+                                    </Assign>
+                                  </Sequence>
+                                </If.Else>
+                              </If>
+                            </Sequence>
+                          </ActivityAction>
+                        </ui:ForEachRow.Body>
+                      </ui:ForEachRow>
+                    </Sequence>
+                  </Sequence>
+                </ui:CommentOut.Body>
+              </ui:CommentOut>
+              <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_18" Level="Info" Message="[&quot;Download InputFile(s) with Yes flag : START&quot;]" />
+              <ui:ForEachRow CurrentIndex="{x:Null}" DataTable="[in_dtInputFileToDL]" DisplayName="Invoke each xamls listed in Config.xlsx CheckWFs sheet " sap2010:WorkflowViewState.IdRef="ForEachRow_2">
+                <ui:ForEachRow.Body>
+                  <ActivityAction x:TypeArguments="sd:DataRow">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="sd:DataRow" Name="InputFile" />
+                    </ActivityAction.Argument>
+                    <Sequence DisplayName="Body" sap2010:WorkflowViewState.IdRef="Sequence_71">
+                      <Assign DisplayName="Assign_ inputfile name to check" sap2010:WorkflowViewState.IdRef="Assign_4">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:String">[stDownloadFileName]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:String">[InputFile("InputFileName").ToString]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                      <Sequence DisplayName="Check if Download folder needs clean up" sap2010:WorkflowViewState.IdRef="Sequence_9">
+                        <Assign sap2010:WorkflowViewState.IdRef="Assign_5">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[stDownloadFilePath]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[stUserProfilePath +"\Downloads\"+ stDownloadFileName]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <ui:PathExists DisplayName="Path Exists" Exists="[boDLFileCleanNeeded]" sap2010:WorkflowViewState.IdRef="PathExists_1" Path="[stDownloadFilePath]" PathType="File" />
+                        <If sap2010:Annotation.AnnotationText=" if Download folder have file with same name as inputfile, &#xA;&#xA;then : &#xA;move the file to  .\CleanUp \ today folder&#xA;&#xA;else : &#xA;leave log and proceed " Condition="[boDLFileCleanNeeded]" DisplayName="If_ if Download folder have file with same name as inputfile" sap2010:WorkflowViewState.IdRef="If_4">
+                          <If.Then>
+                            <Sequence sap2010:WorkflowViewState.IdRef="Sequence_41">
+                              <ui:MoveFile ContinueOnError="{x:Null}" Destination="[stCleanUpTodayFolder]" DisplayName="Move File" sap2010:WorkflowViewState.IdRef="MoveFile_4" Overwrite="False" Path="[stDownloadFilePath]" />
+                              <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Warn" Message="[&quot;To clean up residue/ potential complications&quot;+stDownloadFilePath + &quot; : MOVED to .\CleanUp\ today folder&quot;]" />
+                            </Sequence>
+                          </If.Then>
+                          <If.Else>
+                            <Sequence sap2010:WorkflowViewState.IdRef="Sequence_50">
+                              <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="Info" Message="[stDownloadFilePath + &quot; : does not exist = Safe to start download InputFile&quot;]" />
+                            </Sequence>
+                          </If.Else>
+                        </If>
+                      </Sequence>
+                      <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_20" Level="Info" Message="[string.Format(&quot;Run {0} download : START&quot;, InputFile(1).ToString)]" />
+                      <If Condition="[in_ChromeDLSetting = &quot;manual&quot;]" sap2010:WorkflowViewState.IdRef="If_8">
+                        <If.Then>
+                          <Sequence DisplayName="Manual Download setting route" sap2010:WorkflowViewState.IdRef="Sequence_73">
+                            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_23" Level="Info" Message="[&quot;Chrome Download Setting from Config.xlsx = manual&quot;]" />
+                            <Assign DisplayName="Assign stDownloadFilePath for manual DL" sap2010:WorkflowViewState.IdRef="Assign_28">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="x:String">[stDownloadFilePath]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="x:String">[IO.Directory.GetCurrentDirectory + InputFile("InputFilePath").ToString.Substring(1)]</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_24" Level="Info" Message="[&quot;stDownloadFilePath = &quot;+stDownloadFilePath]" />
+                            <ui:CommentOut DisplayName="Comment Out" sap2010:WorkflowViewState.IdRef="CommentOut_9">
+                              <ui:CommentOut.Body>
+                                <Sequence DisplayName="Ignored Activities" sap2010:WorkflowViewState.IdRef="Sequence_74">
+                                  <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke DownloadGoogleSpreadsheets_Manual workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="DownloadGoogleSpreadsheets_Manual.xaml">
+                                    <ui:InvokeWorkflowFile.Arguments>
+                                      <InArgument x:TypeArguments="x:String" x:Key="stDownloadFilePath" />
+                                      <InArgument x:TypeArguments="x:String" x:Key="stInputFileFolder" />
+                                      <InArgument x:TypeArguments="x:String" x:Key="stGoogleSSHttps" />
+                                      <InArgument x:TypeArguments="x:String" x:Key="stGoogleSSURL" />
+                                      <InArgument x:TypeArguments="x:String" x:Key="stGoogleSSgid" />
+                                      <InArgument x:TypeArguments="x:String" x:Key="in_CloseChromeFlag" />
+                                    </ui:InvokeWorkflowFile.Arguments>
+                                  </ui:InvokeWorkflowFile>
+                                </Sequence>
+                              </ui:CommentOut.Body>
+                            </ui:CommentOut>
+                            <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke DownloadInputFileGoogleSpreadsheets.Manual workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="DownloadInputFileGoogleSpreadsheets.Manual.xaml">
+                              <ui:InvokeWorkflowFile.Arguments>
+                                <InArgument x:TypeArguments="x:String" x:Key="stDownloadFilePath">[stDownloadFilePath]</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="stInputFileFolder">[in_InputFileFolder]</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="stGoogleSSHttps">[InputFile("GoogleSSHttps").ToString]</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="stGoogleSSURL">[InputFile("GoogleSSURL").ToString]</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="stGoogleSSgid">[InputFile("GoogleSSgid").ToString]</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="in_CloseChromeFlag">[in_CloseChromeFlag]</InArgument>
+                              </ui:InvokeWorkflowFile.Arguments>
+                            </ui:InvokeWorkflowFile>
+                          </Sequence>
+                        </If.Then>
+                        <If.Else>
+                          <Sequence DisplayName="Default Download setting route" sap2010:WorkflowViewState.IdRef="Sequence_72">
+                            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_22" Level="Info" Message="[&quot;Chrome Download Setting from Config.xlsx = default&quot;]" />
+                            <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" sap2010:Annotation.AnnotationText="" DisplayName="Invoke DownloadInputFileGoogleSpreadsheets workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="DownloadInputFileGoogleSpreadsheets.xaml">
+                              <ui:InvokeWorkflowFile.Arguments>
+                                <InArgument x:TypeArguments="x:String" x:Key="stDownloadFilePath">[stDownloadFilePath]</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="stInputFileFolder">[in_InputFileFolder]</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="stGoogleSSHttps">[InputFile("GoogleSSHttps").ToString]</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="stGoogleSSgid">[InputFile("GoogleSSgid").ToString]</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="stGoogleSSURL">[InputFile("GoogleSSURL").ToString]</InArgument>
+                                <InArgument x:TypeArguments="x:String" x:Key="in_CloseChromeFlag">[in_CloseChromeFlag]</InArgument>
+                              </ui:InvokeWorkflowFile.Arguments>
+                            </ui:InvokeWorkflowFile>
+                          </Sequence>
+                        </If.Else>
+                      </If>
+                      <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_21" Level="Info" Message="[string.Format(&quot;Run {0} download : COMPLETED&quot;, InputFile(1).ToString)]" />
+                    </Sequence>
+                  </ActivityAction>
+                </ui:ForEachRow.Body>
+              </ui:ForEachRow>
+              <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_19" Level="Info" Message="[&quot;Download InputFile(s) with Yes flag : COMPLETED&quot;]" />
+            </Sequence>
+          </Sequence>
+        </If.Else>
+      </If>
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="based on flag. w default = not close &#xA;&#xA;implement later" DisplayName="Close Chrome or NOT" sap2010:WorkflowViewState.IdRef="Sequence_56" />
+    <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_1" Text="// Now build +vbcrlf + 1. grab inputfile names from config + VV. check download folder to see whether the same name input files exist VV. if exist, move them to CleanUpToday folder" />
+    <sads:DebugSymbol.Symbol>d1FDOlxVc2Vyc1wwOTAxNTQ4M1xEb2N1bWVudHNcVWlQYXRoXEZSX1JQQV9SZXBvcnRpbmdfVjIuNFxHb29nbGVTcHJlYWRzaGVldERMLnhhbWzXAVYDrgQOAgEBXjReYwIBAmYFmAEQAwGHApkBBdsBEAMBzwHcAQWWAhADAaUBlwIFqgQQAgEFqwQFqwTEAQIBBKwEBawE+wECAQNnB2eLAQMBpAJoB28QAwGfAnAHdxADAZoCeAd/EAMBlQKAAQeHARADAZECiAEHjwEQAwGMApABB5cBEAMBiAKdAQedAa0BAwGCAp4BB9oBDAMB0AHgAQfgAawBAwHKAeEBB5UCDAMBpgGaAjaaAl8CAQibAjabAmQCAQecAjacAkECAQaeAgepBAwCAQltMm1GAwGiAmozakYDAaACdTJ1QwMBnQJyM3JDAwGbAn0yfUQDAZgCejN6RAMBlgKFATKFAWkDAZQCggEzggFJAwGSAo0BMo0BSAMBjwKKATOKAUsDAY0ClQFMlQFvAwGLApIBTZIBYgMBiQKdATedAVADAYUCnQGFAZ0BmAEDAYMCngEVngEyAwHRAaABC8IBFgMB4wHFAQvYARYDAdMB4AE34AFPAwHNAeABhQHgAZcBAwHLAeEBFeEBLQMBpwHjAQv9ARYDAbkBgAILkwIWAwGpAZ4CFZ4CQQIBCqACC7ACFgMBkwGzAgunBBYCAQykAQ2yAR0DAfMBswENwQEdAwHkAckBDdcBHQMB1AHoAQ3vARYDAcYB8AEN/AEaAwG6AYQCDZICHQMBqgGkAg2kArUBAwGgAaUCDa8CEgMBlAG0Ag3qAhgCAWnrAg3rAuIBAgFo7AIN+wIdAgFn/AINpgQYAgENpAGcAaQBpgEDAYECpAGKAaQBjQEDAYACpwETqgEeAwH3Aa8BE68BgAEDAfQBswGhAbMBqwEDAfIBswGPAbMBkgEDAfEBtgETuQEeAwHoAb4BE74BhQEDAeUByQGiAckBrAEDAeIByQGQAckBkwEDAeEBzAETzwEeAwHYAdQBE9QBhgEDAdUB7QE67QFeAwHJAeoBO+oBUgMBxwHwAZgB8AGxAQMBxAH2ARP5AR4DAbsBhAKbAYQCpQEDAbgBhAKJAYQCjAEDAbcBhwITigIeAwGuAY8CE48CfwMBqwGkAj2kAlIDAaMBpAKIAaQCogEDAaEBpQIbpQIwAwGVAacCEacCwwEDAZwBqgIRrQIcAwGXAbUCD7UCugEDAY4BtgIP6QIUAgFq/QIPigMfAgFmiwMPiwPFAQIBY4wDD4wDmwECAWKNAw+9Ax8CAWG+Aw++A7sBAgFfvwMPpAQfAgEQpQQPpQS/AQIBDqgBFagBsgEDAf0BqQEVqQG7AQMB+AGvAWSvAX0DAfUBtwEVtwG3AQMB7gG4ARW4AcUBAwHpAb4BZL4BggEDAeYBzQEVzQG3AQMB3gHOARXOAcYBAwHZAdQBZdQBgwEDAdYB9wEV9wGlAgMBwQH4ARX4AdYBAwG8AYgCFYgCsQEDAbQBiQIViQK6AQMBrwGPAmSPAnwDAawBpwJ+pwLAAQMBnQGrAhOrAqsCAwGaAawCE6wCuAEDAZgBtQI/tQJaAwGRAbUCkAG1AqUBAwGPAbYCogK2Ar0CAgFruAIT0QIeAgF91AIT5wIeAgFtiwNYiwNtAgFkvgN9vgO4AQIBYL8DQL8DVgIBXcUDFaEEIAIBEaUEfaUEvAECAQ+oAZwBqAGvAQMB/gGpAUWpAV4DAfsBqQGTAakBpgEDAfkBtwGcAbcBtAEDAe8BuAFFuAFjAwHsAbgBmAG4AbABAwHqAc0BnAHNAbQBAwHfAc4BRc4BYwMB3AHOAZkBzgGxAQMB2gH3AaIB9wGiAgMBwgH4AUn4AWEDAb8B+AG+AfgB0wEDAb0BiAKcAYgCrgEDAbUBiQJFiQJdAwGyAYkCkwGJAqUBAwGwAasCggGrAqgCAwGbAawCJKwCiwEDAZkBvAIVwwIeAwGKAcQCFdACIgIBftgCFeYCJQIBbsYDF80DIAIBWc4DF+UDIgIBPeYDF+YD1gECATvnAxefBBwCARSgBBegBNoBAgESwQJCwQJpAwGNAb4CQ74CXQMBiwHEAqABxAK8AQMBiAHKAhvNAiYCAX/YAqYB2AKwAQIBfNgClAHYApcBAgF72wIb3gImAgFy4wIb4wKKAQIBb8sDQssDZwIBXMgDQ8gDVwIBWs8DGdYDIgIBU9cDGdcDvgECAU7YAxnkAx4CAT7mA4UB5gPTAQIBPOcDJecDUAIBFekDG44EJgIBJZEEG50EJgIBF6AEhQGgBNcBAgETywIdywKtAgMBhQHMAh3MAt4BAwGAAdwCHdwCvAECAXjdAh3dAsgBAgFz4wJs4wKHAQIBcNQDRNQDegIBVtEDRdEDWQIBVNcDSdcDYAIBUdcDlQHXA6sBAgFP2APzAdgDigICAT/aAx3dAygCAUXgAx3iAygCAUHqAx3qA88BAgE56wMd8gMmAgE18wMd8wPGAQIBMvQDHYMELQIBMYQEHY0ENQIBJpIEHZIE0AECASOTBB2cBDUCARjLAqoBywKqAgMBhgHMAlHMAmkDAYMBzALGAcwC2wEDAYEB3AKkAdwCuQECAXndAk3dAmgCAXbdAp4B3QKzAQIBdNsDH9sD4QECAUncAx/cA5ACAgFG4QMf4QPoAQIBQuoDiwHqA8wBAgE68ANI8AOdAQIBOO0DSe0DXQIBNvMDiwHzA8MBAgEziwRjiwR3AgEvigReigSBAQIBLogEYIgEhQECAS2GBGOGBHcCASuJBF6JBIEBAgEqhATvAYQEoAICASmHBGKHBHYCASeSBIsBkgTNAQIBJJoEY5oEdwIBIZgEXpgEgQECASCXBGCXBIUBAgEflQRjlQR3AgEdmQRemQSBAQIBHJMEjQKTBLcCAgEblgRilgR2AgEZ2wNT2wNrAgFM2wPIAdsD3gECAUrcA4wB3AONAgIBR+EDjAHhA+UBAgFD</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Comment_5" sap:VirtualizedContainerService.HintSize="314,74" />
+      <sap2010:ViewStateData Id="Assign_7" sap:VirtualizedContainerService.HintSize="314,60" />
+      <sap2010:ViewStateData Id="Assign_8" sap:VirtualizedContainerService.HintSize="314,60" />
+      <sap2010:ViewStateData Id="Assign_9" sap:VirtualizedContainerService.HintSize="314,60" />
+      <sap2010:ViewStateData Id="Assign_20" sap:VirtualizedContainerService.HintSize="314,60" />
+      <sap2010:ViewStateData Id="Assign_29" sap:VirtualizedContainerService.HintSize="314,60" />
+      <sap2010:ViewStateData Id="Assign_27" sap:VirtualizedContainerService.HintSize="314,60" />
+      <sap2010:ViewStateData Id="Sequence_61" sap:VirtualizedContainerService.HintSize="1567,798">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PathExists_6" sap:VirtualizedContainerService.HintSize="785,90" />
+      <sap2010:ViewStateData Id="CreateDirectory_4" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="PathExists_7" sap:VirtualizedContainerService.HintSize="314,90" />
+      <sap2010:ViewStateData Id="Sequence_22" sap:VirtualizedContainerService.HintSize="336,276">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="IsTrue_4" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="RetryScope_4" sap:VirtualizedContainerService.HintSize="358,458">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CreateDirectory_5" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="PathExists_8" sap:VirtualizedContainerService.HintSize="314,90" />
+      <sap2010:ViewStateData Id="Sequence_23" sap:VirtualizedContainerService.HintSize="336,276">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="IsTrue_5" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="RetryScope_5" sap:VirtualizedContainerService.HintSize="358,458">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_24" sap:VirtualizedContainerService.HintSize="380,1080">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CreateDirectory_9" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="PathExists_16" sap:VirtualizedContainerService.HintSize="314,90" />
+      <sap2010:ViewStateData Id="Sequence_58" sap:VirtualizedContainerService.HintSize="336,276">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="IsTrue_12" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="RetryScope_12" sap:VirtualizedContainerService.HintSize="358,458">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_26" sap:VirtualizedContainerService.HintSize="380,582">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="785,1230">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_27" sap:VirtualizedContainerService.HintSize="1567,1672">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PathExists_12" sap:VirtualizedContainerService.HintSize="779,90" />
+      <sap2010:ViewStateData Id="Assign_13" sap:VirtualizedContainerService.HintSize="352,60" />
+      <sap2010:ViewStateData Id="LogMessage_5" sap:VirtualizedContainerService.HintSize="314,93" />
+      <sap2010:ViewStateData Id="MoveFile_3" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="Sequence_34" sap:VirtualizedContainerService.HintSize="336,279">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEach`1_3" sap:VirtualizedContainerService.HintSize="352,414" />
+      <sap2010:ViewStateData Id="Sequence_35" sap:VirtualizedContainerService.HintSize="374,638">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CreateDirectory_8" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="PathExists_13" sap:VirtualizedContainerService.HintSize="314,90" />
+      <sap2010:ViewStateData Id="Sequence_36" sap:VirtualizedContainerService.HintSize="336,276">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="IsTrue_8" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="RetryScope_8" sap:VirtualizedContainerService.HintSize="358,458">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_37" sap:VirtualizedContainerService.HintSize="380,582">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_3" sap:VirtualizedContainerService.HintSize="779,788" />
+      <sap2010:ViewStateData Id="Sequence_38" sap:VirtualizedContainerService.HintSize="1567,1214">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PathExists_14" sap:VirtualizedContainerService.HintSize="675,90" />
+      <sap2010:ViewStateData Id="LogMessage_9" sap:VirtualizedContainerService.HintSize="314,93" />
+      <sap2010:ViewStateData Id="LogMessage_10" sap:VirtualizedContainerService.HintSize="314,93" />
+      <sap2010:ViewStateData Id="Throw_1" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="Sequence_45" sap:VirtualizedContainerService.HintSize="336,279">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_5" sap:VirtualizedContainerService.HintSize="675,429" />
+      <sap2010:ViewStateData Id="Sequence_46" sap:VirtualizedContainerService.HintSize="697,775">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="PathExists_10" sap:VirtualizedContainerService.HintSize="779,90" />
+      <sap2010:ViewStateData Id="Assign_12" sap:VirtualizedContainerService.HintSize="352,60" />
+      <sap2010:ViewStateData Id="LogMessage_4" sap:VirtualizedContainerService.HintSize="314,93" />
+      <sap2010:ViewStateData Id="MoveFile_2" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="Sequence_30" sap:VirtualizedContainerService.HintSize="336,279">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEach`1_2" sap:VirtualizedContainerService.HintSize="352,414" />
+      <sap2010:ViewStateData Id="Sequence_31" sap:VirtualizedContainerService.HintSize="374,638">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CreateDirectory_7" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="PathExists_11" sap:VirtualizedContainerService.HintSize="314,90" />
+      <sap2010:ViewStateData Id="Sequence_28" sap:VirtualizedContainerService.HintSize="336,276">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="IsTrue_7" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="RetryScope_7" sap:VirtualizedContainerService.HintSize="358,458">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_33" sap:VirtualizedContainerService.HintSize="380,582">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_2" sap:VirtualizedContainerService.HintSize="779,944">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_47" sap:VirtualizedContainerService.HintSize="801,1198">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Comment_3" sap:VirtualizedContainerService.HintSize="801,114" />
+      <sap2010:ViewStateData Id="Sequence_48" sap:VirtualizedContainerService.HintSize="200,100">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEach`1_4" sap:VirtualizedContainerService.HintSize="286,234" />
+      <sap2010:ViewStateData Id="Sequence_49" sap:VirtualizedContainerService.HintSize="308,358">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CommentOut_4" sap:VirtualizedContainerService.HintSize="801,52">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_24" sap:VirtualizedContainerService.HintSize="242,60" />
+      <sap2010:ViewStateData Id="Sequence_76" sap:VirtualizedContainerService.HintSize="264,184">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CommentOut_11" sap:VirtualizedContainerService.HintSize="771,262" />
+      <sap2010:ViewStateData Id="GetEnvironmentFolder_1" sap:VirtualizedContainerService.HintSize="771,62" />
+      <sap2010:ViewStateData Id="Comment_2" sap:VirtualizedContainerService.HintSize="771,75" />
+      <sap2010:ViewStateData Id="AddDataColumn`1_1" sap:VirtualizedContainerService.HintSize="749,22" />
+      <sap2010:ViewStateData Id="LogMessage_15" sap:VirtualizedContainerService.HintSize="697,91" />
+      <sap2010:ViewStateData Id="LogMessage_16" sap:VirtualizedContainerService.HintSize="314,91" />
+      <sap2010:ViewStateData Id="Assign_22" sap:VirtualizedContainerService.HintSize="314,60" />
+      <sap2010:ViewStateData Id="Sequence_62" sap:VirtualizedContainerService.HintSize="336,315">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_17" sap:VirtualizedContainerService.HintSize="314,93" />
+      <sap2010:ViewStateData Id="Assign_23" sap:VirtualizedContainerService.HintSize="314,60" />
+      <sap2010:ViewStateData Id="Sequence_63" sap:VirtualizedContainerService.HintSize="336,317">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_7" sap:VirtualizedContainerService.HintSize="697,464" />
+      <sap2010:ViewStateData Id="Sequence_64" sap:VirtualizedContainerService.HintSize="719,719">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEachRow_1" sap:VirtualizedContainerService.HintSize="749,867">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_65" sap:VirtualizedContainerService.HintSize="771,1081">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_66" sap:VirtualizedContainerService.HintSize="793,1204">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CommentOut_7" sap:VirtualizedContainerService.HintSize="771,52">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_18" sap:VirtualizedContainerService.HintSize="771,93" />
+      <sap2010:ViewStateData Id="Assign_4" sap:VirtualizedContainerService.HintSize="719,60" />
+      <sap2010:ViewStateData Id="Assign_5" sap:VirtualizedContainerService.HintSize="697,60" />
+      <sap2010:ViewStateData Id="PathExists_1" sap:VirtualizedContainerService.HintSize="697,90" />
+      <sap2010:ViewStateData Id="MoveFile_4" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="LogMessage_6" sap:VirtualizedContainerService.HintSize="314,93" />
+      <sap2010:ViewStateData Id="Sequence_41" sap:VirtualizedContainerService.HintSize="336,279">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_7" sap:VirtualizedContainerService.HintSize="314,93" />
+      <sap2010:ViewStateData Id="Sequence_50" sap:VirtualizedContainerService.HintSize="336,217">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_4" sap:VirtualizedContainerService.HintSize="697,553">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_9" sap:VirtualizedContainerService.HintSize="719,907">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_20" sap:VirtualizedContainerService.HintSize="719,93" />
+      <sap2010:ViewStateData Id="LogMessage_23" sap:VirtualizedContainerService.HintSize="314,93" />
+      <sap2010:ViewStateData Id="Assign_28" sap:VirtualizedContainerService.HintSize="314,60" />
+      <sap2010:ViewStateData Id="LogMessage_24" sap:VirtualizedContainerService.HintSize="314,93" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_3" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="Sequence_74" sap:VirtualizedContainerService.HintSize="336,211">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CommentOut_9" sap:VirtualizedContainerService.HintSize="314,52">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_2" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="Sequence_73" sap:VirtualizedContainerService.HintSize="336,669">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_22" sap:VirtualizedContainerService.HintSize="314,93" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_1" sap:VirtualizedContainerService.HintSize="314,115">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_72" sap:VirtualizedContainerService.HintSize="336,372">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_8" sap:VirtualizedContainerService.HintSize="719,819" />
+      <sap2010:ViewStateData Id="LogMessage_21" sap:VirtualizedContainerService.HintSize="719,93" />
+      <sap2010:ViewStateData Id="Sequence_71" sap:VirtualizedContainerService.HintSize="741,2256">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEachRow_2" sap:VirtualizedContainerService.HintSize="771,2405">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_19" sap:VirtualizedContainerService.HintSize="771,93" />
+      <sap2010:ViewStateData Id="Sequence_70" sap:VirtualizedContainerService.HintSize="801,3406">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_54" sap:VirtualizedContainerService.HintSize="823,5014">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_6" sap:VirtualizedContainerService.HintSize="1545,5164" />
+      <sap2010:ViewStateData Id="Sequence_32" sap:VirtualizedContainerService.HintSize="1567,5603">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_56" sap:VirtualizedContainerService.HintSize="1567,176">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Comment_1" sap:VirtualizedContainerService.HintSize="1567,134" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="1589,9921">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Main_1" sap:VirtualizedContainerService.HintSize="1629,10001" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

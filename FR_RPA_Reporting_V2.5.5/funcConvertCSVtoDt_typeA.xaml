@@ -1,0 +1,217 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="funcConvertCSVtoDt"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:sd="clr-namespace:System.Data;assembly=System.Data"
+ xmlns:ui="http://schemas.uipath.com/workflow/activities"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="strInfilePath" Type="InArgument(x:String)" />
+    <x:Property Name="dtOutResultTable" Type="OutArgument(sd:DataTable)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap2010:WorkflowViewState.IdRef>funcConvertCSVtoDt_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Xml.Serialization</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Plugin.Workflow</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="funcConvertCSVtoDt" sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="ui:GenericValue" Name="strProcessName" />
+      <Variable x:TypeArguments="x:String" Name="tmpID" />
+      <Variable x:TypeArguments="x:Boolean" Name="tmpResult" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dttmp" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dttmp2" />
+    </Sequence.Variables>
+    <ui:ReadCsvFile DataTable="[dttmp]" Delimitator="Comma" DisplayName="Read CSV" Encoding="UTF-8" FilePath="[strInfilePath]" sap2010:WorkflowViewState.IdRef="ReadCsvFile_1" IncludeColumnNames="False" />
+    <ui:RemoveDataRow Row="{x:Null}" DataTable="[dttmp]" DisplayName="Remove Data Row" sap2010:WorkflowViewState.IdRef="RemoveDataRow_1" RowIndex="0" />
+    <ui:AddDataColumn x:TypeArguments="x:String" Column="{x:Null}" DefaultValue="{x:Null}" AllowDBNull="True" AutoIncrement="False" ColumnName="ProcessID" DataTable="[dttmp]" DisplayName="Add Data Column" sap2010:WorkflowViewState.IdRef="AddDataColumn`1_1" MaxLength="100" Unique="False" />
+    <ui:AddDataColumn x:TypeArguments="x:Int32" Column="{x:Null}" DefaultValue="{x:Null}" AllowDBNull="True" AutoIncrement="False" ColumnName="Count" DataTable="[dttmp]" DisplayName="Add Data Column" sap2010:WorkflowViewState.IdRef="AddDataColumn`1_10" MaxLength="100" Unique="False" />
+    <ui:ForEachRow CurrentIndex="{x:Null}" DataTable="[dttmp]" DisplayName="For Each Row" sap2010:WorkflowViewState.IdRef="ForEachRow_2">
+      <ui:ForEachRow.Body>
+        <ActivityAction x:TypeArguments="sd:DataRow">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="sd:DataRow" Name="row" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Body" sap2010:WorkflowViewState.IdRef="Sequence_4">
+            <Assign sap2010:WorkflowViewState.IdRef="Assign_7">
+              <Assign.To>
+                <OutArgument x:TypeArguments="ui:GenericValue">[strProcessName]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="ui:GenericValue">[row("Column2").ToString]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke funcProcessNameNormalization workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="funcProcessNameNormalization.xaml">
+              <ui:InvokeWorkflowFile.Arguments>
+                <InArgument x:TypeArguments="x:String" x:Key="strInProcessName">[strProcessName]</InArgument>
+                <OutArgument x:TypeArguments="x:String" x:Key="strOutProcessID">[tmpID]</OutArgument>
+                <OutArgument x:TypeArguments="x:Boolean" x:Key="boOutResult">[tmpResult]</OutArgument>
+              </ui:InvokeWorkflowFile.Arguments>
+            </ui:InvokeWorkflowFile>
+            <Assign sap2010:WorkflowViewState.IdRef="Assign_8">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:Object">[row("ProcessID")]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:Object">[tmpID]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <Assign sap2010:WorkflowViewState.IdRef="Assign_9">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:Object">[row("Count")]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:Object">[row("Column3").ToString.Replace(",", "")]</InArgument>
+              </Assign.Value>
+            </Assign>
+          </Sequence>
+        </ActivityAction>
+      </ui:ForEachRow.Body>
+    </ui:ForEachRow>
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_17">
+      <Assign.To>
+        <OutArgument x:TypeArguments="sd:DataTable">[dttmp2]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="sd:DataTable">[dttmp.DefaultView.ToTable(true, “ProcessID”)]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:AddDataColumn x:TypeArguments="x:Int32" Column="{x:Null}" DefaultValue="{x:Null}" AllowDBNull="True" AutoIncrement="False" ColumnName="Count" DataTable="[dttmp2]" DisplayName="Add Data Column" sap2010:WorkflowViewState.IdRef="AddDataColumn`1_11" MaxLength="100" Unique="False" />
+    <ui:ForEachRow CurrentIndex="{x:Null}" DataTable="[dttmp2]" DisplayName="For Each Row" sap2010:WorkflowViewState.IdRef="ForEachRow_4">
+      <ui:ForEachRow.Body>
+        <ActivityAction x:TypeArguments="sd:DataRow">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="sd:DataRow" Name="row" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Body" sap2010:WorkflowViewState.IdRef="Sequence_7">
+            <Sequence.Variables>
+              <Variable x:TypeArguments="x:String" Name="strPID" />
+            </Sequence.Variables>
+            <Assign sap2010:WorkflowViewState.IdRef="Assign_18">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:String">[strPID]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:String">[row("ProcessID").ToString]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <Assign sap2010:WorkflowViewState.IdRef="Assign_19">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:Object">[row("Count")]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:Object">[dttmp.Compute("SUM(Count)", "'"+ strPID + "' = ProcessID")]</InArgument>
+              </Assign.Value>
+            </Assign>
+          </Sequence>
+        </ActivityAction>
+      </ui:ForEachRow.Body>
+    </ui:ForEachRow>
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_15">
+      <Assign.To>
+        <OutArgument x:TypeArguments="sd:DataTable">[dtOutResultTable]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="sd:DataTable">[dttmp2]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <sads:DebugSymbol.Symbol>d09DOlxVc2Vyc1wwOTAxMjczNVxEZXNrdG9wXEZSX1JQQV9SZXBvcnRpbmdfVjIuNS41XGZ1bmNDb252ZXJ0Q1NWdG9EdF90eXBlQS54YW1sMUkDrwEOAgEBUQVRzQECAT1SBVKZAQIBOVMFU6MCAgE1VAVUnwICATFVBX4VAgEbfwWGAQ4CARaHAQWHAaACAgESiAEFpQEVAgEHpgEFrQEOAgECUV1RZAIBQlEfUSgCAUBRblF/AgE+UpMBUpYBAgE8UjBSOQIBOlOQAVObAQIBOFOmAVOvAQIBNlSPAVSWAQIBNFShAVSqAQIBMlU2VT8CAS9bC3sWAgEchAE0hAFiAgEZgQE1gQE9AgEXhwGPAYcBlgECARWHAaEBhwGrAQIBE4gBNogBQAIBEI4BC6IBFgIBCKsBNKsBPAIBBagBNagBRwIBA1wNYxYCAStkDWolAgEkaw1yFgIBIHMNehYCAR2SAQ2ZARYCAQyaAQ2hARYCAQlhP2FYAgEuXkBeUAIBLGdRZ1gCASlmUWZhAgEoZNEBZPQBAgEnaE5oWQIBJXA4cD8CASJtOW1LAgEheDh4YgIBH3U5dUcCAR6XATiXAVMCAQ+UATmUAUECAQ2fATifAXQCAQucATmcAUcCAQo=</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="ReadCsvFile_1" sap:VirtualizedContainerService.HintSize="367.2,60" />
+      <sap2010:ViewStateData Id="RemoveDataRow_1" sap:VirtualizedContainerService.HintSize="367.2,22.4" />
+      <sap2010:ViewStateData Id="AddDataColumn`1_1" sap:VirtualizedContainerService.HintSize="367.2,22.4" />
+      <sap2010:ViewStateData Id="AddDataColumn`1_10" sap:VirtualizedContainerService.HintSize="367.2,22.4" />
+      <sap2010:ViewStateData Id="Assign_7" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_2" sap:VirtualizedContainerService.HintSize="314.4,88" />
+      <sap2010:ViewStateData Id="Assign_8" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="Assign_9" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="Sequence_4" sap:VirtualizedContainerService.HintSize="336.8,512.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEachRow_2" sap:VirtualizedContainerService.HintSize="367.2,661.6" />
+      <sap2010:ViewStateData Id="Assign_17" sap:VirtualizedContainerService.HintSize="367.2,60" />
+      <sap2010:ViewStateData Id="AddDataColumn`1_11" sap:VirtualizedContainerService.HintSize="367.2,22.4" />
+      <sap2010:ViewStateData Id="Assign_18" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="Assign_19" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="Sequence_7" sap:VirtualizedContainerService.HintSize="265.6,284.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEachRow_4" sap:VirtualizedContainerService.HintSize="367.2,433.6" />
+      <sap2010:ViewStateData Id="Assign_15" sap:VirtualizedContainerService.HintSize="367.2,60" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="389.6,1809.6">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="funcConvertCSVtoDt_1" sap:VirtualizedContainerService.HintSize="429.6,1889.6" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

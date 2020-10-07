@@ -1,0 +1,391 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="ProdKibana_OpenDist_Login" this:ProdKibana_OpenDist_Login.in_KibanaURL="https://rpa-dashboard.fastretailing.com/_plugin/kibana/login"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:p="http://schemas.microsoft.com/workflow/2012/07/xaml/activities"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:ss="clr-namespace:System.Security;assembly=mscorlib"
+ xmlns:this="clr-namespace:"
+ xmlns:ui="http://schemas.uipath.com/workflow/activities"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property sap2010:Annotation.AnnotationText="String Type.&#xA;Enter Full Kibana URL that lands on login page." Name="in_KibanaURL" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="String Type.&#xA;&#xA;Input Kibana credential asset name on Orchestrator.&#xA;&#xA;If left empty OR the asset name fails to acquire credential from Orchestrator, &#xA;workflow will show input dialog, requesting user to manually input credential to Kibana." Name="in_AssetKibanaCredential" Type="InArgument(x:String)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap2010:WorkflowViewState.IdRef>Main_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>System.Security</x:String>
+      <x:String>System.Net</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Plugin.Workflow</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:Annotation.AnnotationText="" sap2010:WorkflowViewState.IdRef="Sequence_2">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:String" Name="strKibanaUserID" />
+      <Variable x:TypeArguments="ss:SecureString" Name="pwKibanaUserPW" />
+      <Variable x:TypeArguments="x:String" Name="strInputPW" />
+      <Variable x:TypeArguments="ui:Browser" Name="brLoggedinKibana" />
+      <Variable x:TypeArguments="x:Int32" Name="iCounter" />
+    </Sequence.Variables>
+    <Sequence DisplayName="Acquire Kibana Open Distro Credential" sap2010:WorkflowViewState.IdRef="Sequence_29">
+      <Sequence.Variables>
+        <Variable x:TypeArguments="x:String" Name="stAssetKibanaID" />
+        <Variable x:TypeArguments="ss:SecureString" Name="ssAssetKibanaPW" />
+      </Sequence.Variables>
+      <ui:RetryScope DisplayName="Retry Scope" sap2010:WorkflowViewState.IdRef="RetryScope_4" NumberOfRetries="3" RetryInterval="00:00:05">
+        <ui:RetryScope.ActivityBody>
+          <ActivityAction>
+            <Sequence DisplayName="Action" sap2010:WorkflowViewState.IdRef="Sequence_43">
+              <ui:GetRobotCredential sap2010:Annotation.AnnotationText="timeout 3min&#xA;Attempt to get credential from OC using in_AssetKibanaCredential value" AssetName="[in_AssetKibanaCredential]" DisplayName="Get Credential" sap2010:WorkflowViewState.IdRef="GetRobotCredential_2" Password="[ssAssetKibanaPW]" TimeoutMS="30000" Username="[stAssetKibanaID]" />
+              <Assign DisplayName="Private: Convert asset ID for login" sap2010:WorkflowViewState.IdRef="Assign_22">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:String">[strKibanaUserID]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:String">[stAssetKibanaID]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <Assign DisplayName="Private: Convert asset PW for login" sap2010:WorkflowViewState.IdRef="Assign_23">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="ss:SecureString">[pwKibanaUserPW]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="ss:SecureString">[ssAssetKibanaPW]</InArgument>
+                </Assign.Value>
+              </Assign>
+            </Sequence>
+          </ActivityAction>
+        </ui:RetryScope.ActivityBody>
+        <ui:RetryScope.Condition>
+          <ActivityFunc x:TypeArguments="x:Boolean" />
+        </ui:RetryScope.Condition>
+      </ui:RetryScope>
+    </Sequence>
+    <ui:OpenBrowser UiBrowser="{x:Null}" BrowserType="Chrome" DisplayName="Open Chrome_Kibana URL" Hidden="False" sap2010:WorkflowViewState.IdRef="OpenBrowser_1" NewSession="True" Private="False" Url="[in_KibanaURL]">
+      <ui:OpenBrowser.Body>
+        <ActivityAction x:TypeArguments="x:Object">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="x:Object" Name="ContextTarget" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_1">
+            <Sequence.Variables>
+              <Variable x:TypeArguments="x:Boolean" Name="bobrKibana" />
+              <Variable x:TypeArguments="x:Boolean" Name="boNeedLogin" />
+            </Sequence.Variables>
+            <ui:MaximizeWindow Window="{x:Null}" DisplayName="Maximize Window" sap2010:WorkflowViewState.IdRef="MaximizeWindow_1" />
+            <ui:RetryScope sap2010:Annotation.AnnotationText="max wait = 30sec = 3times every 10sec" DisplayName="Wait until Chrome Kibana + index gets recognized" sap2010:WorkflowViewState.IdRef="RetryScope_3" NumberOfRetries="3" RetryInterval="00:00:10">
+              <ui:RetryScope.ActivityBody>
+                <ActivityAction>
+                  <Sequence DisplayName="Action" sap2010:WorkflowViewState.IdRef="Sequence_14">
+                    <ui:UiElementExists DisplayName="Element Exists 'P'" Exists="[bobrKibana]" sap2010:WorkflowViewState.IdRef="UiElementExists_1">
+                      <ui:UiElementExists.Target>
+                        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" InformativeScreenshot="1019c6e96f493eabe1c49a5a3d18a71b" Selector="&lt;html app='chrome.exe' title='Kibana' /&gt;" TimeoutMS="3000" WaitForReady="INTERACTIVE" />
+                      </ui:UiElementExists.Target>
+                    </ui:UiElementExists>
+                    <ui:CommentOut DisplayName="Comment Out" sap2010:WorkflowViewState.IdRef="CommentOut_1">
+                      <ui:CommentOut.Body>
+                        <Sequence DisplayName="Ignored Activities" sap2010:WorkflowViewState.IdRef="Sequence_25">
+                          <ui:ImageFound DisplayName="Image Exists 'chrome.exe  Kibana'" Found="[bobrKibana]" sap2010:WorkflowViewState.IdRef="ImageFound_1">
+                            <ui:ImageFound.Image>
+                              <ui:ImageTarget Image="{x:Null}" Accuracy="0.8" TargetImageBase64="iVBORw0KGgoAAAANSUhEUgAAACIAAAAZCAYAAABU+vysAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHGSURBVEhLzZZLSwJRGIb7VS36By3aB1HQLmhjm6ALtQgisNnYTQpdtKjMTRdqkYQFpm3CDC2ztIzSSqPMGun6Nqe+mjN6GlBmrAdekJlXvoePmaM1qIAbZxjnlg3dsA6PZPejtn7q11QkkurZEg7nwzo85oh0+YTD+bAOj2QPCAW+U5FIxh4SDueTte9R+wtTNiLvXguH85FDGWp/Uf5G3t4BbwSYXAcmPMBqELh7pJsquaW4UIAltxynlkp5G4mlgY5poNGmTcs4EIhRSUXeucK1LfgjwD6zayISyVu4FsMYGvGh1bKgI3IvA22OUgk+hykqF6Es8TNlED3Oot/qRV2Do0hkfls8nI+0QmXjuEjfo3PAw4n0usTD+TSNUtl4VBGL4NkQpfBMXzAWVcS6LB7Mp91JZeNRRXyH4uF8XAEqG48qwhhbEwuw9LmB1zcqGo9WhMHenuYxrcSUcrjJT1Qwh1IRxssrcKQcblHl3MgX6KK5iEX+gP8jkkrkseFKYn74AG4pik33GS5PH+h29ahxdIcgSsSv/Rk3m19FWNIn1duMroh3Lkk189EVmR3ap5r56IrMDCr/1KqErohn+oRqZgN8AMtpFwFeGTflAAAAAElFTkSuQmCC" />
+                            </ui:ImageFound.Image>
+                            <ui:ImageFound.Target>
+                              <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="{x:Null}" TimeoutMS="3000" WaitForReady="INTERACTIVE" />
+                            </ui:ImageFound.Target>
+                          </ui:ImageFound>
+                        </Sequence>
+                      </ui:CommentOut.Body>
+                    </ui:CommentOut>
+                  </Sequence>
+                </ActivityAction>
+              </ui:RetryScope.ActivityBody>
+              <ui:RetryScope.Condition>
+                <ActivityFunc x:TypeArguments="x:Boolean">
+                  <p:IsTrue DisplayName="Is true" sap2010:WorkflowViewState.IdRef="IsTrue_3" Input="[bobrKibana]" />
+                </ActivityFunc>
+              </ui:RetryScope.Condition>
+            </ui:RetryScope>
+            <ui:UiElementExists DisplayName="Element Exists 'LI'" Exists="[boNeedLogin]" sap2010:WorkflowViewState.IdRef="UiElementExists_2">
+              <ui:UiElementExists.Target>
+                <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" InformativeScreenshot="2e4ea7efcd98b775f4d713433291290d" Selector="&lt;html app='chrome.exe' title='Kibana' /&gt;&lt;webctrl tag='BUTTON' aaname='Log in' /&gt;" TimeoutMS="3000" WaitForReady="INTERACTIVE" />
+              </ui:UiElementExists.Target>
+            </ui:UiElementExists>
+            <If Condition="[not boNeedLogin]" sap2010:WorkflowViewState.IdRef="If_15">
+              <If.Then>
+                <ui:RetryScope DisplayName="Retry Scope" sap2010:WorkflowViewState.IdRef="RetryScope_6" NumberOfRetries="3" RetryInterval="00:00:05">
+                  <ui:RetryScope.ActivityBody>
+                    <ActivityAction>
+                      <Sequence DisplayName="Action" sap2010:WorkflowViewState.IdRef="Sequence_46">
+                        <ui:UiElementExists Exists="{x:Null}" DisplayName="Element Exists 'LI'" sap2010:WorkflowViewState.IdRef="UiElementExists_4">
+                          <ui:UiElementExists.Target>
+                            <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" InformativeScreenshot="21a91feb038a28a19144da0fb22b0c97" Selector="&lt;html app='chrome.exe' title='Kibana' /&gt;&lt;webctrl aaname='Discover' /&gt;" TimeoutMS="3000" WaitForReady="INTERACTIVE" />
+                          </ui:UiElementExists.Target>
+                        </ui:UiElementExists>
+                      </Sequence>
+                    </ActivityAction>
+                  </ui:RetryScope.ActivityBody>
+                  <ui:RetryScope.Condition>
+                    <ActivityFunc x:TypeArguments="x:Boolean" />
+                  </ui:RetryScope.Condition>
+                </ui:RetryScope>
+              </If.Then>
+              <If.Else>
+                <Sequence sap2010:WorkflowViewState.IdRef="Sequence_44">
+                  <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_32" Level="Info" Message="[&quot;Kibana login page loaded&quot;]" />
+                  <ui:TypeInto DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" Activate="True" ClickBeforeTyping="False" DisplayName="Type Into 'chrome.exe Chrome'" EmptyField="False" sap2010:WorkflowViewState.IdRef="TypeInto_2" SendWindowMessages="False" SimulateType="True" Text="[strKibanaUserID]">
+                    <ui:TypeInto.Target>
+                      <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" TimeoutMS="{x:Null}" InformativeScreenshot="1a79f55183115308f5188598266eb0c7" Selector="&lt;html app='chrome.exe' title='Kibana' /&gt;&lt;webctrl id='opendistro_security.username' tag='INPUT' /&gt;" WaitForReady="COMPLETE" />
+                    </ui:TypeInto.Target>
+                  </ui:TypeInto>
+                  <ui:TypeSecureText DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" Activate="True" ClickBeforeTyping="False" DisplayName="Private: Type Secure Text" EmptyField="False" sap2010:WorkflowViewState.IdRef="TypeSecureText_2" SecureText="[pwKibanaUserPW]" SendWindowMessages="False" SimulateType="True">
+                    <ui:TypeSecureText.Target>
+                      <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" TimeoutMS="{x:Null}" InformativeScreenshot="b9f4391f53381355ebf719e5a6379ad0" Selector="&lt;html app='chrome.exe' title='Kibana' /&gt;&lt;webctrl id='opendistro_security.password' tag='INPUT' /&gt;" WaitForReady="COMPLETE" />
+                    </ui:TypeSecureText.Target>
+                  </ui:TypeSecureText>
+                  <ui:SendHotkey DelayBefore="{x:Null}" DelayMS="{x:Null}" Activate="True" ClickBeforeTyping="False" DelayBetweenKeys="150" DisplayName="Send Hotkey" EmptyField="False" sap2010:WorkflowViewState.IdRef="SendHotkey_5" Key="tab" KeyModifiers="None" SendWindowMessages="False" SpecialKey="True">
+                    <ui:SendHotkey.Target>
+                      <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="{x:Null}" TimeoutMS="{x:Null}" WaitForReady="COMPLETE" />
+                    </ui:SendHotkey.Target>
+                  </ui:SendHotkey>
+                  <ui:SendHotkey DelayBefore="{x:Null}" DelayMS="{x:Null}" Activate="True" ClickBeforeTyping="False" DelayBetweenKeys="150" DisplayName="Send Hotkey" EmptyField="False" sap2010:WorkflowViewState.IdRef="SendHotkey_6" Key="enter" KeyModifiers="None" SendWindowMessages="False" SpecialKey="True">
+                    <ui:SendHotkey.Target>
+                      <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="{x:Null}" TimeoutMS="{x:Null}" WaitForReady="COMPLETE" />
+                    </ui:SendHotkey.Target>
+                  </ui:SendHotkey>
+                  <Delay Duration="00:00:05" sap2010:WorkflowViewState.IdRef="Delay_1" />
+                  <ui:RetryScope DisplayName="Retry Scope" sap2010:WorkflowViewState.IdRef="RetryScope_5" NumberOfRetries="3" RetryInterval="00:00:05">
+                    <ui:RetryScope.ActivityBody>
+                      <ActivityAction>
+                        <Sequence DisplayName="Action" sap2010:WorkflowViewState.IdRef="Sequence_45">
+                          <ui:UiElementExists Exists="{x:Null}" DisplayName="Element Exists 'LI'" sap2010:WorkflowViewState.IdRef="UiElementExists_3">
+                            <ui:UiElementExists.Target>
+                              <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" InformativeScreenshot="21a91feb038a28a19144da0fb22b0c97" Selector="&lt;html app='chrome.exe' title='Kibana' /&gt;&lt;webctrl aaname='Discover' /&gt;" TimeoutMS="3000" WaitForReady="INTERACTIVE" />
+                            </ui:UiElementExists.Target>
+                          </ui:UiElementExists>
+                        </Sequence>
+                      </ActivityAction>
+                    </ui:RetryScope.ActivityBody>
+                    <ui:RetryScope.Condition>
+                      <ActivityFunc x:TypeArguments="x:Boolean" />
+                    </ui:RetryScope.Condition>
+                  </ui:RetryScope>
+                </Sequence>
+              </If.Else>
+            </If>
+          </Sequence>
+        </ActivityAction>
+      </ui:OpenBrowser.Body>
+    </ui:OpenBrowser>
+    <sads:DebugSymbol.Symbol>d1tDOlxVc2Vyc1wwOTAxMjczNVxEb3dubG9hZHNcS2liYW5hU2V0VGltZVBlcmlvZFF1ZXJ5RExfVjMuMy42XEtpYmFuYV9PcGVuRGlzdF9Mb2dpbi5PQy54YW1sRgF7AbgBAQJMA+oBDgIBAVQFdRACAT12BegBFgIBAlkHdBcCAT52yQF22QECATt8C+UBFgIBA1mBAVmLAQIBU1lvWXICAVJcDW4YAgE/gQENgQGFAQIBOoIBDaEBHQIBLaIBDaYBIgIBKKcBDeQBEgIBBF0PXesCAgFKXg9lGAIBRWYPbRgCAUCCAfYBggGAAgIBOYIB5AGCAecBAgE4hQETmQEeAgExngETngF1AgEupAGLAaQB6QECASykAfQBpAH6AQIBK6IBSqIBWQIBKacBG6cBLgIBBakBEbgBIQIBIbsBEeIBHAIBB13EAl3LAgIBUV2sAV3IAQIBT13VAl3oAgIBTV2mAl25AgIBS2M6Y0sCAUhgO2BMAgFGa0FrUgIBQ2hCaFICAUGGARWKASoCATOLARWYASUCATKeAWSeAXICAS+pAYsBqQGVAQIBJ6kBeakBfAIBJqwBF7IBIgIBIrwBE7wBrAECAR+9ARPBASECARvCARPGAScCARfHARPLASMCARTMARPQASMCARHRARPRAVoCAQ/SARPhASMCAQiIAZMBiAHDAQIBN4gBzgGIAdQBAgE2hgFRhgFfAgE0rQEZsQEuAgEjvAGBAbwBqQECASC/AaYBvwGVAgIBHr0BsAK9AcMCAgEcxAGmAcQBlQICARrCAY8CwgGhAgIBGMcBhwHHAYwBAgEWxwHtAccB8gECARXMAYcBzAGMAQIBE8wB7QHMAfQBAgES0QEj0QEtAgEQ0gGNAdIBlwECAQ7SAXvSAX4CAQ3VARnbASQCAQmvAZcBrwHqAQIBJa8B9QGvAfsBAgEk1gEb2gEwAgEK2AGZAdgB7AECAQzYAfcB2AH9AQIBCw==</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="GetRobotCredential_2" sap:VirtualizedContainerService.HintSize="243.2,114.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_22" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="Assign_23" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="Sequence_43" sap:VirtualizedContainerService.HintSize="265.6,439.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="RetryScope_4" sap:VirtualizedContainerService.HintSize="314.4,695.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsPinned">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_29" sap:VirtualizedContainerService.HintSize="200,52.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="MaximizeWindow_1" sap:VirtualizedContainerService.HintSize="676,22.4" />
+      <sap2010:ViewStateData Id="UiElementExists_1" sap:VirtualizedContainerService.HintSize="200,52.8" />
+      <sap2010:ViewStateData Id="ImageFound_1" sap:VirtualizedContainerService.HintSize="314.4,107.2" />
+      <sap2010:ViewStateData Id="Sequence_25" sap:VirtualizedContainerService.HintSize="336.8,232">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CommentOut_1" sap:VirtualizedContainerService.HintSize="200,52.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_14" sap:VirtualizedContainerService.HintSize="222.4,270.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="IsTrue_3" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="RetryScope_3" sap:VirtualizedContainerService.HintSize="676,560.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="UiElementExists_2" sap:VirtualizedContainerService.HintSize="676,52.8" />
+      <sap2010:ViewStateData Id="UiElementExists_4" sap:VirtualizedContainerService.HintSize="200,52.8" />
+      <sap2010:ViewStateData Id="Sequence_46" sap:VirtualizedContainerService.HintSize="222.4,177.6">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="RetryScope_6" sap:VirtualizedContainerService.HintSize="314.4,433.6">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsPinned">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_32" sap:VirtualizedContainerService.HintSize="314.4,52.8" />
+      <sap2010:ViewStateData Id="TypeInto_2" sap:VirtualizedContainerService.HintSize="314.4,52.8" />
+      <sap2010:ViewStateData Id="TypeSecureText_2" sap:VirtualizedContainerService.HintSize="314.4,52.8" />
+      <sap2010:ViewStateData Id="SendHotkey_5" sap:VirtualizedContainerService.HintSize="314.4,52.8" />
+      <sap2010:ViewStateData Id="SendHotkey_6" sap:VirtualizedContainerService.HintSize="314.4,52.8" />
+      <sap2010:ViewStateData Id="Delay_1" sap:VirtualizedContainerService.HintSize="314.4,22.4" />
+      <sap2010:ViewStateData Id="UiElementExists_3" sap:VirtualizedContainerService.HintSize="200,52.8" />
+      <sap2010:ViewStateData Id="Sequence_45" sap:VirtualizedContainerService.HintSize="222.4,177.6">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="RetryScope_5" sap:VirtualizedContainerService.HintSize="314.4,433.6">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsPinned">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_44" sap:VirtualizedContainerService.HintSize="336.8,1084.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_15" sap:VirtualizedContainerService.HintSize="676,1234.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsPinned">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="698.4,2115.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="OpenBrowser_1" sap:VirtualizedContainerService.HintSize="712.8,2215.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="222.4,298.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Main_1" sap:VirtualizedContainerService.HintSize="262.4,378.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="ShouldCollapseAll">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

@@ -1,0 +1,1298 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="ManualDLChromeKibanaExport" this:ManualDLChromeKibanaExport.in_strKibanaBaseURL="https://rpa-dashboard.fastretailing.com/_plugin/kibana/app/kibana#/visualize/edit/f5560680-bf86-11ea-af3e-fb03f75ac9e6?_g=(refreshInterval:(pause:!t,value:0),time:(from:'{0}T{1}Z',mode:absolute,to:'{2}T{3}Z'))" this:ManualDLChromeKibanaExport.in_strEndTime="14:59:59.999" this:ManualDLChromeKibanaExport.in_strStartTime="15:00:00.000"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:p="http://schemas.microsoft.com/workflow/2012/07/xaml/activities"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:this="clr-namespace:"
+ xmlns:ui="http://schemas.uipath.com/workflow/activities"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property sap2010:Annotation.AnnotationText="Optional, if in_int32QueryPeriodInDays is provided.&#xA;String Type.&#xA;Enter end date to query in &quot;yyyy/MM/dd&quot; format.&#xA;&#xA;IN_int32QueryPeriodInDays takes superiority over this.&#xA;This is optional if in_in32QueryPeriodInDays has been set." Name="in_strEndDate" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="REQUIRED.&#xA;String Type.&#xA;Enter start date to query in &quot;yyyy/MM/dd&quot; format&#xA;&#xA;IF used with in_strEndDate, Kibana will be queried from &quot;in_strStartDate&quot; to in_strEndDate&quot;.&#xA;&#xA;IF used with in_int32QueryPeriodInDays, Kibana will be queried for dates between &quot;in_strStartDate&quot; and &quot;in_int32QueryPeriodInDays&quot; before or after &quot;in_strStartDate&quot;.&#xA;&#xA;&#xA;" Name="in_strStartDate" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="REQUIRED.&#xA;String Type.&#xA;Default value will query FR Prod Kibana \ vis_Common_process_usage_Weekly.&#xA;&#xA;To query different Kibana report, input URL here with start date portion, start time portion, end date portion, and end time portion replaced to {0},{1},{2},{3} correspondingly." Name="in_strKibanaBaseURL" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="Required, if in_strEndDate is NOT provided.&#xA;Optional, if in_strEndDate is provided.&#xA;Int32 Type.&#xA;Send period to query in days. &#xA;&#xA;Ex) 6 would search : start date to 6 days AFTER start date&#xA;Ex) -30 would search : 30 days BEFORE start date to start date&#xA;&#xA;This takes superiority over in_strEndDate.&#xA;This is optional if in_strEndDate has been set." Name="in_int32QueryPeriodInDays" Type="InArgument(x:Int32)" />
+    <x:Property sap2010:Annotation.AnnotationText="REQUIRED.&#xA;Do NOT adjust this unless timezone difference will be accounted for between Kibana &amp; your location.&#xA;&#xA;String Type.&#xA;Enter end time to query in &quot;HH:mm:ss.SSS&quot; format.&#xA;&#xA;By default, this is set to 14:59:59.999, &#xA;which is 23:59:59.999 in Japan time." Name="in_strEndTime" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="REQUIRED.&#xA;Do NOT adjust this unless timezone difference will be accounted for between Kibana &amp; your location.&#xA;&#xA;String Type.&#xA;Enter start time to query in &quot;HH:mm:ss.SSS&quot; format.&#xA;&#xA;By default, this is set to 15:00:00.000, &#xA;which is 00:00:00.000 in Japan time." Name="in_strStartTime" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="REQUIRED.&#xA;String type. &#xA;&#xA;Input full directory path for the exported Kibana file to be saved as, including the file name and format.&#xA;&#xA;*File format can only be set as .csv format" Name="in_strKibanaExportedCSVName" Type="InArgument(x:String)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap2010:WorkflowViewState.IdRef>KibanaExportPopupRecogTest_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>Microsoft.Activities</x:String>
+      <x:String>System.Globalization</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>Microsoft.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualStudio.Services.Common</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Plugin.Workflow</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:Annotation.AnnotationText="Saves queried report as .csv file when Chrome browser's download setting is set to prompt file save location.&#xA;Chrome browser will NOT be closed after download has been completed." DisplayName="ManualDLChromeKibanaExport" sap2010:WorkflowViewState.IdRef="Sequence_7">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="ui:UiElement" Name="boFormattedExists" />
+      <Variable x:TypeArguments="x:Boolean" Name="bobrKibana" />
+      <Variable x:TypeArguments="x:String" Name="strKibanaQueryURL" />
+    </Sequence.Variables>
+    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_18" Level="Info" Message="[&quot;ManualDLChromeKibanaExport.xaml : START&quot;]" />
+    <Sequence DisplayName="Received Args Log" sap2010:WorkflowViewState.IdRef="Sequence_15">
+      <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_17" Level="Info" Message="[&quot;in_strKibanaExportedCSVName= &quot; + in_strKibanaExportedCSVName]" />
+      <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_16" Level="Info" Message="[&quot;in_strStartDate = &quot; +in_strStartDate]" />
+      <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_20" Level="Info" Message="[&quot;in_strEndDate = &quot; +in_strEndDate]" />
+      <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_21" Level="Info" Message="[&quot;in_int32QueryPeriodInDays = &quot; +in_int32QueryPeriodInDays.ToString]" />
+    </Sequence>
+    <Sequence sap2010:Annotation.AnnotationText="Due to timezone issue, default hours are assigned to query = start at 00:00:00 and to end at 23:59:59 Japan time. &#xA;&#xA;The actual default values to this is start = 15:00:00.000 &amp; end = 14:59:59.999 &#xA;&#xA;Do NOT adjust in_strStartTime &amp; in_strEndTime unless timezone difference will be accounted for between Kibana &amp; your location; Therefore, you will adjust Start Date and End Date accordingly." DisplayName="Construct Query URL" sap2010:WorkflowViewState.IdRef="Sequence_113">
+      <Sequence.Variables>
+        <Variable x:TypeArguments="s:DateTime" Name="daStartDateTime" />
+        <Variable x:TypeArguments="s:DateTime" Name="daEndDateTime" />
+      </Sequence.Variables>
+      <If Condition="[String.IsNullOrWhiteSpace(in_int32QueryPeriodInDays.ToString) = True OrElse in_int32QueryPeriodInDays = 0]" sap2010:WorkflowViewState.IdRef="If_6">
+        <If.Then>
+          <Sequence sap2010:Annotation.AnnotationText="start date +1 = real queried start date with 00:00:00.000&#xA;&#xA;thus need to calculate start date -1 for actual user set query start date" DisplayName="Contruct Query URL with in_strEndDate" sap2010:WorkflowViewState.IdRef="Sequence_97">
+            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_108" Level="Info" Message="[&quot;in_int32QueryPeriodInDays = NULL or &quot; + in_int32QueryPeriodInDays.ToString]" />
+            <TryCatch DisplayName="Try Catch - START DATE - String" sap2010:WorkflowViewState.IdRef="TryCatch_24">
+              <TryCatch.Try>
+                <Sequence DisplayName="Try parse as string date time, if fail, try OADate" sap2010:WorkflowViewState.IdRef="Sequence_90">
+                  <Sequence.Variables>
+                    <Variable x:TypeArguments="x:String" Name="strTostrDate" />
+                  </Sequence.Variables>
+                  <Assign sap2010:WorkflowViewState.IdRef="Assign_81">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">[in_strStartDate]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">[Convert.ToDateTime(in_strStartDate.ToString).AddDays(-1).ToString("yyyy-MM-dd")]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_109" Level="Info" Message="[&quot;Start Date was read as String&quot;]" />
+                  <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_110" Level="Info" Message="[&quot;URL Start date = &quot;+ in_strStartDate]" />
+                </Sequence>
+              </TryCatch.Try>
+              <TryCatch.Catches>
+                <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_24">
+                  <ActivityAction x:TypeArguments="s:Exception">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                    </ActivityAction.Argument>
+                    <Sequence sap2010:WorkflowViewState.IdRef="Sequence_93">
+                      <TryCatch DisplayName="Try Catch - START DATE - OADATE" sap2010:WorkflowViewState.IdRef="TryCatch_23">
+                        <TryCatch.Try>
+                          <Sequence sap2010:WorkflowViewState.IdRef="Sequence_91">
+                            <Assign sap2010:Annotation.AnnotationText="//&#xA;**FYI, To account for timezone related complication, this date gets calculated by -1day when converting to query URL. This results in queried output's start date to be user's set date in Japan timezone.&#xA;//&#xA;&#xA;Need to account for timezone calculation. &#xA;&#xA;If user input 2020-01-02 as start date, &#xA;&#xA;to ensure that query to start on 2020-01-02, &#xA;&#xA;query URL's start date MUST be subtracted by 1 day (= 2020-01-01) with CURRENT design of hardcoded hh:mm:ss.SSS " DisplayName="NOTE!!_ Convert in_strStartDate to OADate" sap2010:WorkflowViewState.IdRef="Assign_82">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="s:DateTime">[daStartDateTime]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="s:DateTime">[DateTime.FromOADate(Convert.ToDouble(in_strStartDate)).AddDays(-1)]</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_111" Level="Info" Message="[&quot;Start Date was read as OADate&quot;]" />
+                            <Assign DisplayName="Assign_Convert OADate to formatted string" sap2010:WorkflowViewState.IdRef="Assign_83">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="x:String">[in_strStartDate]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="x:String">[daStartDateTime.ToString("yyyy-MM-dd")]</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_112" Level="Info" Message="[&quot;URL Start date = &quot;+ in_strStartDate]" />
+                          </Sequence>
+                        </TryCatch.Try>
+                        <TryCatch.Catches>
+                          <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_23">
+                            <ActivityAction x:TypeArguments="s:Exception">
+                              <ActivityAction.Argument>
+                                <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                              </ActivityAction.Argument>
+                              <Sequence sap2010:WorkflowViewState.IdRef="Sequence_92">
+                                <Rethrow sap2010:WorkflowViewState.IdRef="Rethrow_9" />
+                              </Sequence>
+                            </ActivityAction>
+                          </Catch>
+                        </TryCatch.Catches>
+                      </TryCatch>
+                    </Sequence>
+                  </ActivityAction>
+                </Catch>
+              </TryCatch.Catches>
+            </TryCatch>
+            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_113" Level="Info" Message="[&quot;URL Start date to query = &quot;+ in_strStartDate]" />
+            <TryCatch DisplayName="Try Catch - END DATE - STRING" sap2010:WorkflowViewState.IdRef="TryCatch_26">
+              <TryCatch.Try>
+                <Sequence DisplayName="Try parse as string date time, if fail, try OADate" sap2010:WorkflowViewState.IdRef="Sequence_94">
+                  <Sequence.Variables>
+                    <Variable x:TypeArguments="x:String" Name="strTostrDate" />
+                  </Sequence.Variables>
+                  <Assign sap2010:WorkflowViewState.IdRef="Assign_84">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:String">[in_strEndDate]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:String">[Convert.ToDateTime(in_strEndDate.ToString).ToString("yyyy-MM-dd")]</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_114" Level="Info" Message="[&quot;End Date was read as String&quot;]" />
+                  <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_115" Level="Info" Message="[&quot;URL End date = &quot;+ in_strEndDate]" />
+                </Sequence>
+              </TryCatch.Try>
+              <TryCatch.Catches>
+                <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_26">
+                  <ActivityAction x:TypeArguments="s:Exception">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                    </ActivityAction.Argument>
+                    <TryCatch DisplayName="Try Catch - END DATE - OADATE" sap2010:WorkflowViewState.IdRef="TryCatch_25">
+                      <TryCatch.Try>
+                        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_95">
+                          <Assign DisplayName="Assign_ Convert in_strStartDate to OADate" sap2010:WorkflowViewState.IdRef="Assign_85">
+                            <Assign.To>
+                              <OutArgument x:TypeArguments="s:DateTime">[daEndDateTime]</OutArgument>
+                            </Assign.To>
+                            <Assign.Value>
+                              <InArgument x:TypeArguments="s:DateTime">[DateTime.FromOADate(Convert.ToDouble(in_strEndDate))]</InArgument>
+                            </Assign.Value>
+                          </Assign>
+                          <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_116" Level="Info" Message="[&quot;End Date was read as OADate&quot;]" />
+                          <Assign DisplayName="Assign_Convert OADate to formatted string" sap2010:WorkflowViewState.IdRef="Assign_86">
+                            <Assign.To>
+                              <OutArgument x:TypeArguments="x:String">[in_strEndDate]</OutArgument>
+                            </Assign.To>
+                            <Assign.Value>
+                              <InArgument x:TypeArguments="x:String">[daEndDateTime.ToString("yyyy-MM-dd")]</InArgument>
+                            </Assign.Value>
+                          </Assign>
+                          <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_117" Level="Info" Message="[&quot;URL End date = &quot;+ in_strEndDate]" />
+                        </Sequence>
+                      </TryCatch.Try>
+                      <TryCatch.Catches>
+                        <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_25">
+                          <ActivityAction x:TypeArguments="s:Exception">
+                            <ActivityAction.Argument>
+                              <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                            </ActivityAction.Argument>
+                            <Sequence sap2010:WorkflowViewState.IdRef="Sequence_96">
+                              <Rethrow sap2010:WorkflowViewState.IdRef="Rethrow_10" />
+                            </Sequence>
+                          </ActivityAction>
+                        </Catch>
+                      </TryCatch.Catches>
+                    </TryCatch>
+                  </ActivityAction>
+                </Catch>
+              </TryCatch.Catches>
+            </TryCatch>
+            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_118" Level="Info" Message="[&quot;URL End date to query = &quot;+ in_strEndDate]" />
+            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_119" Level="Info" Message="[&quot;with user set Start &amp; End Date : KibanaQueryURL is = &quot;]" />
+          </Sequence>
+        </If.Then>
+        <If.Else>
+          <Sequence DisplayName="Contruct Query URL with in_int32QueryPeriodInDays" sap2010:WorkflowViewState.IdRef="Sequence_112">
+            <If sap2010:Annotation.AnnotationText="decide which should be start date? = if the num is positive, v. neg = go back IS start date, positive = go forward is start date&#xA;&#xA;or set start date, and can only go forward?&#xA;&#xA;positive num = start date : " Condition="[in_int32QueryPeriodInDays &gt;0]" sap2010:WorkflowViewState.IdRef="If_5">
+              <If.Then>
+                <Sequence sap2010:WorkflowViewState.IdRef="Sequence_104">
+                  <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_142" Level="Info" Message="[&quot;in_int32QueryPeriodInDays has been received as = &quot; + in_int32QueryPeriodInDays.ToString]" />
+                  <TryCatch DisplayName="Try Catch" sap2010:WorkflowViewState.IdRef="TryCatch_28">
+                    <TryCatch.Try>
+                      <Sequence DisplayName="Try parse as string date time, if fail, try OADate" sap2010:WorkflowViewState.IdRef="Sequence_98">
+                        <Sequence.Variables>
+                          <Variable x:TypeArguments="x:String" Name="strTostrDate" />
+                        </Sequence.Variables>
+                        <Assign sap2010:WorkflowViewState.IdRef="Assign_87">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[in_strStartDate]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[Convert.ToDateTime(in_strStartDate.ToString).AddDays(-1).ToString("yyyy-MM-dd")]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_120" Level="Info" Message="[&quot;Date was read as String&quot;]" />
+                        <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_121" Level="Info" Message="[&quot;URL Start date = &quot;+ in_strStartDate]" />
+                      </Sequence>
+                    </TryCatch.Try>
+                    <TryCatch.Catches>
+                      <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_28">
+                        <ActivityAction x:TypeArguments="s:Exception">
+                          <ActivityAction.Argument>
+                            <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                          </ActivityAction.Argument>
+                          <TryCatch DisplayName="Try Catch - OADATE" sap2010:WorkflowViewState.IdRef="TryCatch_27">
+                            <TryCatch.Try>
+                              <Sequence sap2010:WorkflowViewState.IdRef="Sequence_99">
+                                <Assign sap2010:Annotation.AnnotationText="//&#xA;**FYI, To account for timezone related complication, this date gets calculated by -1day when converting to query URL. This results in queried output's start date to be user's set date in Japan timezone.&#xA;//&#xA;&#xA;Need to account for timezone calculation. &#xA;&#xA;If user input 2020-01-02 as start date, &#xA;&#xA;to ensure that query to start on 2020-01-02, &#xA;&#xA;query URL's start date MUST be subtracted by 1 day (= 2020-01-01) with CURRENT design of hardcoded hh:mm:ss.SSS " DisplayName="NOTE!!_ Convert in_strStartDate to OADate" sap2010:WorkflowViewState.IdRef="Assign_88">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="s:DateTime">[daStartDateTime]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="s:DateTime">[DateTime.FromOADate(Convert.ToDouble(in_strStartDate)).AddDays(-1)]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_122" Level="Info" Message="[&quot;Date was read as OADate&quot;]" />
+                                <Assign DisplayName="Assign_Convert OADate to formatted string" sap2010:WorkflowViewState.IdRef="Assign_89">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:String">[in_strStartDate]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:String">[daStartDateTime.ToString("yyyy-MM-dd")]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_123" Level="Info" Message="[&quot;URL Start date = &quot;+ in_strStartDate]" />
+                              </Sequence>
+                            </TryCatch.Try>
+                            <TryCatch.Catches>
+                              <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_27">
+                                <ActivityAction x:TypeArguments="s:Exception">
+                                  <ActivityAction.Argument>
+                                    <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                                  </ActivityAction.Argument>
+                                  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_100">
+                                    <Rethrow sap2010:WorkflowViewState.IdRef="Rethrow_11" />
+                                  </Sequence>
+                                </ActivityAction>
+                              </Catch>
+                            </TryCatch.Catches>
+                          </TryCatch>
+                        </ActivityAction>
+                      </Catch>
+                    </TryCatch.Catches>
+                  </TryCatch>
+                  <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_124" Level="Info" Message="[&quot;URL Start date to query = &quot;+ in_strStartDate]" />
+                  <TryCatch DisplayName="Try Catch - END DATE - STRING" sap2010:WorkflowViewState.IdRef="TryCatch_30">
+                    <TryCatch.Try>
+                      <Sequence DisplayName="Try parse as string date time, if fail, try OADate" sap2010:WorkflowViewState.IdRef="Sequence_101">
+                        <Sequence.Variables>
+                          <Variable x:TypeArguments="x:String" Name="strTostrDate" />
+                        </Sequence.Variables>
+                        <Assign sap2010:WorkflowViewState.IdRef="Assign_90">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[in_strEndDate]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[Convert.ToDateTime(in_strStartDate.ToString).AddDays(in_int32QueryPeriodInDays).ToString("yyyy-MM-dd")]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_125" Level="Info" Message="[&quot;Date was read as String&quot;]" />
+                        <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_126" Level="Info" Message="[&quot;URL End date = &quot;+ in_strEndDate]" />
+                      </Sequence>
+                    </TryCatch.Try>
+                    <TryCatch.Catches>
+                      <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_30">
+                        <ActivityAction x:TypeArguments="s:Exception">
+                          <ActivityAction.Argument>
+                            <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                          </ActivityAction.Argument>
+                          <TryCatch DisplayName="Try Catch - OADATE" sap2010:WorkflowViewState.IdRef="TryCatch_29">
+                            <TryCatch.Try>
+                              <Sequence sap2010:WorkflowViewState.IdRef="Sequence_102">
+                                <Assign sap2010:Annotation.AnnotationText="Also calculates end date by assigned in_int32QueryPeriodInDays" DisplayName="Assign_ Convert in_strStartDate to OADate" sap2010:WorkflowViewState.IdRef="Assign_91">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="s:DateTime">[daEndDateTime]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="s:DateTime">[DateTime.FromOADate(Convert.ToDouble(in_strStartDate)).AddDays(in_int32QueryPeriodInDays)]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_127" Level="Info" Message="[&quot;Date was read as OADate&quot;]" />
+                                <Assign DisplayName="Assign_Convert OADate to formatted string" sap2010:WorkflowViewState.IdRef="Assign_92">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:String">[in_strEndDate]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:String">[daEndDateTime.ToString("yyyy-MM-dd")]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_128" Level="Info" Message="[&quot;URL End date = &quot;+ in_strEndDate]" />
+                              </Sequence>
+                            </TryCatch.Try>
+                            <TryCatch.Catches>
+                              <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_29">
+                                <ActivityAction x:TypeArguments="s:Exception">
+                                  <ActivityAction.Argument>
+                                    <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                                  </ActivityAction.Argument>
+                                  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_103">
+                                    <Rethrow sap2010:WorkflowViewState.IdRef="Rethrow_12" />
+                                  </Sequence>
+                                </ActivityAction>
+                              </Catch>
+                            </TryCatch.Catches>
+                          </TryCatch>
+                        </ActivityAction>
+                      </Catch>
+                    </TryCatch.Catches>
+                  </TryCatch>
+                  <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_129" Level="Info" Message="[&quot;URL End date to query = &quot;+ in_strEndDate]" />
+                  <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_130" Level="Info" Message="[&quot;with user set Start &amp; positive duration days : KibanaQueryURL is = &quot;]" />
+                </Sequence>
+              </If.Then>
+              <If.Else>
+                <Sequence sap2010:WorkflowViewState.IdRef="Sequence_111">
+                  <Sequence sap2010:Annotation.AnnotationText="int32_QueryPeriodInDays will be used to calculate desired &quot;starting point&quot; of query. &#xA;&#xA;To accommodate Kibana's absolute time setting, &#xA;&#xA;extra -1day to query starting date is needed at URL &#xA;&#xA;to run query at desired starting date " DisplayName="Adjust in_int32QueryPeriodInDays" sap2010:WorkflowViewState.IdRef="Sequence_115">
+                    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_143" Level="Info" Message="[&quot;in_int32QueryPeriodInDays has been received as = &quot; + in_int32QueryPeriodInDays.ToString]" />
+                    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_144" Level="Info" Message="[&quot;Add -1 to in_int32QueryPeriodInDays to accommodate Kibana's absolute time setting, as in_int32QueryPeriodInDays will be used to calculate query starting date : START &quot;]" />
+                    <Assign DisplayName="Add -1 to int32_QueryPeriodInDays value" sap2010:WorkflowViewState.IdRef="Assign_100">
+                      <Assign.To>
+                        <OutArgument x:TypeArguments="x:Int32">[in_int32QueryPeriodInDays]</OutArgument>
+                      </Assign.To>
+                      <Assign.Value>
+                        <InArgument x:TypeArguments="x:Int32">[in_int32QueryPeriodInDays-1]</InArgument>
+                      </Assign.Value>
+                    </Assign>
+                    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_145" Level="Info" Message="[&quot;Add -1 to in_int32QueryPeriodInDays to accommodate Kibana's absolute time setting, as in_int32QueryPeriodInDays will be used to calculate query starting date : COMPLETED &quot;]" />
+                    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_146" Level="Info" Message="[&quot;Kibana absolute time setting adjusted : in_int32QueryPeriodInDays : new value is = &quot; + in_int32QueryPeriodInDays.ToString]" />
+                  </Sequence>
+                  <TryCatch DisplayName="Try Catch - END DATE - STRING" sap2010:WorkflowViewState.IdRef="TryCatch_34">
+                    <TryCatch.Try>
+                      <Sequence DisplayName="Try parse as string date time, if fail, try OADate" sap2010:WorkflowViewState.IdRef="Sequence_108">
+                        <Sequence.Variables>
+                          <Variable x:TypeArguments="x:String" Name="strTostrDate" />
+                        </Sequence.Variables>
+                        <Assign sap2010:WorkflowViewState.IdRef="Assign_96">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[in_strEndDate]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[Convert.ToDateTime(in_strStartDate.ToString).ToString("yyyy-MM-dd")]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_136" Level="Info" Message="[&quot;Date was read as String&quot;]" />
+                        <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_137" Level="Info" Message="[&quot;URL End date = &quot;+ in_strEndDate]" />
+                      </Sequence>
+                    </TryCatch.Try>
+                    <TryCatch.Catches>
+                      <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_34">
+                        <ActivityAction x:TypeArguments="s:Exception">
+                          <ActivityAction.Argument>
+                            <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                          </ActivityAction.Argument>
+                          <TryCatch DisplayName="Try Catch - OADATE" sap2010:WorkflowViewState.IdRef="TryCatch_33">
+                            <TryCatch.Try>
+                              <Sequence sap2010:WorkflowViewState.IdRef="Sequence_109">
+                                <Assign sap2010:Annotation.AnnotationText="//&#xA;**User input start date is now end date because in_int32QueryPeriodInDays is negative value, meaning user wants to search past days&#xA;&#xA;This makes that there is no longer need to calculate -1 day to user input start date, as user input start date will be used as end date in query URL, not as start date in query URL.&#xA;" DisplayName="NOTE!!_ Convert in_strStartDate to OADate" sap2010:WorkflowViewState.IdRef="Assign_97">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="s:DateTime">[daEndDateTime]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="s:DateTime">[DateTime.FromOADate(Convert.ToDouble(in_strStartDate))]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_138" Level="Info" Message="[&quot;Date was read as OADate&quot;]" />
+                                <Assign DisplayName="Assign_Convert OADate to formatted string" sap2010:WorkflowViewState.IdRef="Assign_98">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:String">[in_strEndDate]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:String">[daEndDateTime.ToString("yyyy-MM-dd")]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_139" Level="Info" Message="[&quot;URL End date = &quot;+ in_strEndDate]" />
+                              </Sequence>
+                            </TryCatch.Try>
+                            <TryCatch.Catches>
+                              <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_33">
+                                <ActivityAction x:TypeArguments="s:Exception">
+                                  <ActivityAction.Argument>
+                                    <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                                  </ActivityAction.Argument>
+                                  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_110">
+                                    <Rethrow sap2010:WorkflowViewState.IdRef="Rethrow_14" />
+                                  </Sequence>
+                                </ActivityAction>
+                              </Catch>
+                            </TryCatch.Catches>
+                          </TryCatch>
+                        </ActivityAction>
+                      </Catch>
+                    </TryCatch.Catches>
+                  </TryCatch>
+                  <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_140" Level="Info" Message="[&quot;URL End date to query = &quot;+ in_strEndDate]" />
+                  <TryCatch DisplayName="Try Catch" sap2010:WorkflowViewState.IdRef="TryCatch_32">
+                    <TryCatch.Try>
+                      <Sequence DisplayName="Try parse as string date time, if fail, try OADate" sap2010:WorkflowViewState.IdRef="Sequence_105">
+                        <Sequence.Variables>
+                          <Variable x:TypeArguments="x:String" Name="strTostrDate" />
+                        </Sequence.Variables>
+                        <Assign sap2010:WorkflowViewState.IdRef="Assign_93">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:String">[in_strStartDate]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:String">[Convert.ToDateTime(in_strStartDate.ToString).AddDays(in_int32QueryPeriodInDays).ToString("yyyy-MM-dd")]</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_131" Level="Info" Message="[&quot;Date was read as String&quot;]" />
+                        <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_132" Level="Info" Message="[&quot;URL Start date = &quot;+ in_strStartDate]" />
+                      </Sequence>
+                    </TryCatch.Try>
+                    <TryCatch.Catches>
+                      <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_32">
+                        <ActivityAction x:TypeArguments="s:Exception">
+                          <ActivityAction.Argument>
+                            <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                          </ActivityAction.Argument>
+                          <TryCatch DisplayName="Try Catch - OADATE" sap2010:WorkflowViewState.IdRef="TryCatch_31">
+                            <TryCatch.Try>
+                              <Sequence sap2010:WorkflowViewState.IdRef="Sequence_106">
+                                <Assign sap2010:Annotation.AnnotationText="Also calculates end date by assigned in_int32QueryPeriodInDays" DisplayName="Assign_ Convert in_strStartDate to OADate" sap2010:WorkflowViewState.IdRef="Assign_94">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="s:DateTime">[daStartDateTime]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="s:DateTime">[DateTime.FromOADate(Convert.ToDouble(in_strStartDate)).AddDays(in_int32QueryPeriodInDays)]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_133" Level="Info" Message="[&quot;Date was read as OADate&quot;]" />
+                                <Assign DisplayName="Assign_Convert OADate to formatted string" sap2010:WorkflowViewState.IdRef="Assign_95">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:String">[in_strStartDate]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:String">[daStartDateTime.ToString("yyyy-MM-dd")]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                                <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_134" Level="Info" Message="[&quot;URL Start date = &quot;+ in_strStartDate]" />
+                              </Sequence>
+                            </TryCatch.Try>
+                            <TryCatch.Catches>
+                              <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_31">
+                                <ActivityAction x:TypeArguments="s:Exception">
+                                  <ActivityAction.Argument>
+                                    <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                                  </ActivityAction.Argument>
+                                  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_107">
+                                    <Rethrow sap2010:WorkflowViewState.IdRef="Rethrow_13" />
+                                  </Sequence>
+                                </ActivityAction>
+                              </Catch>
+                            </TryCatch.Catches>
+                          </TryCatch>
+                        </ActivityAction>
+                      </Catch>
+                    </TryCatch.Catches>
+                  </TryCatch>
+                  <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_135" Level="Info" Message="[&quot;URL Start date to query = &quot;+ in_strStartDate]" />
+                  <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_141" Level="Info" Message="[&quot;with user set Start &amp; negative duration days : KibanaQueryURL is = &quot;]" />
+                </Sequence>
+              </If.Else>
+            </If>
+          </Sequence>
+        </If.Else>
+      </If>
+    </Sequence>
+    <Assign sap2010:Annotation.AnnotationText="for StartTime, &quot;hh:mm:ss.SSS&quot; will be set to 15:00:00.000 by default&#xA;--This should be 00:00:00.000 in Japan time&#xA;&#xA;for EndTime, &quot;hh:mm:ss.SSS&quot; will be set to 14:59:59.999 by default&#xA;--This should be 23:59:59.999 in Japan time" DisplayName="SET _ Contruct Query URL" sap2010:WorkflowViewState.IdRef="Assign_30">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:String">[strKibanaQueryURL]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:String">[string.Format(in_strKibanaBaseURL,in_strStartDate,in_strStartTime,in_strEndDate,in_strEndTime)]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_26" Level="Info" Message="[vbcrlf + strKibanaQueryURL]" />
+    <ui:BrowserScope Browser="{x:Null}" SearchScope="{x:Null}" TimeoutMS="{x:Null}" UiBrowser="{x:Null}" BrowserType="Chrome" DisplayName="Navigate to target Kibana visualization w. set time period query" sap2010:WorkflowViewState.IdRef="BrowserScope_1" InformativeScreenshot="ca727269906de8a58f348979f708d3b4" Selector="&lt;html app='chrome.exe' title='*Kibana*' /&gt;">
+      <ui:BrowserScope.Body>
+        <ActivityAction x:TypeArguments="x:Object">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="x:Object" Name="ContextTarget" />
+          </ActivityAction.Argument>
+          <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_9">
+            <Sequence.Variables>
+              <Variable x:TypeArguments="x:String" Name="strEndDate" />
+              <Variable x:TypeArguments="ui:Browser" Name="brNav" />
+            </Sequence.Variables>
+            <ui:NavigateTo Browser="{x:Null}" DisplayName="Navigate To" sap2010:WorkflowViewState.IdRef="NavigateTo_1" Url="[strKibanaQueryURL]" />
+          </Sequence>
+        </ActivityAction>
+      </ui:BrowserScope.Body>
+    </ui:BrowserScope>
+    <Delay DisplayName="Delay 5sec for load" Duration="00:00:10" sap2010:WorkflowViewState.IdRef="Delay_3" />
+    <ui:RetryScope sap2010:Annotation.AnnotationText="max wait = 15sec = 15times every 5sec" DisplayName="Wait until Chrome Kibana + index gets recognized" sap2010:WorkflowViewState.IdRef="RetryScope_3" NumberOfRetries="15" RetryInterval="00:00:05">
+      <ui:RetryScope.ActivityBody>
+        <ActivityAction>
+          <Sequence DisplayName="Action" sap2010:WorkflowViewState.IdRef="Sequence_14">
+            <ui:UiElementExists DisplayName="Element Exists 'P'" Exists="[bobrKibana]" sap2010:WorkflowViewState.IdRef="UiElementExists_1">
+              <ui:UiElementExists.Target>
+                <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" InformativeScreenshot="7b0b4e16f20fe18f3990cde48fbfd210" Selector="&lt;html app='chrome.exe' title='*' /&gt;&lt;webctrl aaname='Formatted' parentid='kibana-body' tag='SPAN' /&gt;" TimeoutMS="3000" WaitForReady="COMPLETE" />
+              </ui:UiElementExists.Target>
+            </ui:UiElementExists>
+          </Sequence>
+        </ActivityAction>
+      </ui:RetryScope.ActivityBody>
+      <ui:RetryScope.Condition>
+        <ActivityFunc x:TypeArguments="x:Boolean">
+          <p:IsTrue DisplayName="Is true" sap2010:WorkflowViewState.IdRef="IsTrue_3" Input="[bobrKibana]" />
+        </ActivityFunc>
+      </ui:RetryScope.Condition>
+    </ui:RetryScope>
+    <Sequence DisplayName="Download report, confirm download, move to Input folder" sap2010:WorkflowViewState.IdRef="Sequence_12">
+      <Sequence.Variables>
+        <Variable x:TypeArguments="x:Int32" Name="iCounter" />
+        <Variable x:TypeArguments="x:Int32" Name="iCheckCounter" />
+        <Variable x:TypeArguments="x:Boolean" Name="boDownloadFilePath" />
+        <Variable x:TypeArguments="x:Boolean" Name="boFileDownloadSuccess" />
+      </Sequence.Variables>
+      <Assign DisplayName="代入" sap2010:WorkflowViewState.IdRef="Assign_6">
+        <Assign.To>
+          <OutArgument x:TypeArguments="x:Int32">[iCounter]</OutArgument>
+        </Assign.To>
+        <Assign.Value>
+          <InArgument x:TypeArguments="x:Int32">0</InArgument>
+        </Assign.Value>
+      </Assign>
+      <ui:RetryScope DisplayName="Retry Scope_up to 3 times per 3min_Initiate download" sap2010:WorkflowViewState.IdRef="RetryScope_2" NumberOfRetries="3" RetryInterval="00:00:10">
+        <ui:RetryScope.ActivityBody>
+          <ActivityAction>
+            <Sequence DisplayName="Action" sap2010:WorkflowViewState.IdRef="Sequence_11">
+              <Assign DisplayName="代入" sap2010:WorkflowViewState.IdRef="Assign_7">
+                <Assign.To>
+                  <OutArgument x:TypeArguments="x:Int32">[iCounter]</OutArgument>
+                </Assign.To>
+                <Assign.Value>
+                  <InArgument x:TypeArguments="x:Int32">[iCounter+1]</InArgument>
+                </Assign.Value>
+              </Assign>
+              <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_13" Level="Info" Message="[&quot;Exporting Kibana query result as .csv file : &quot; + in_strKibanaExportedCSVName + &quot; : attempt = &quot; + iCounter.ToString]" />
+              <ui:Click DelayBefore="{x:Null}" DelayMS="{x:Null}" ClickType="CLICK_SINGLE" DisplayName="Click 'Formatted' to initiate csv download" sap2010:WorkflowViewState.IdRef="Click_1" KeyModifiers="None" MouseButton="BTN_LEFT" SendWindowMessages="False" SimulateClick="True">
+                <ui:Click.CursorPosition>
+                  <ui:CursorPosition Position="Center">
+                    <ui:CursorPosition.OffsetX>
+                      <InArgument x:TypeArguments="x:Int32" />
+                    </ui:CursorPosition.OffsetX>
+                    <ui:CursorPosition.OffsetY>
+                      <InArgument x:TypeArguments="x:Int32" />
+                    </ui:CursorPosition.OffsetY>
+                  </ui:CursorPosition>
+                </ui:Click.CursorPosition>
+                <ui:Click.Target>
+                  <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" TimeoutMS="{x:Null}" InformativeScreenshot="5bf01023dd2987790e040526cf4dadbd" Selector="&lt;html app='chrome.exe' title='*' /&gt;&lt;webctrl aaname='Formatted' parentid='kibana-body' tag='SPAN' /&gt;" WaitForReady="COMPLETE" />
+                </ui:Click.Target>
+              </ui:Click>
+              <Sequence sap2010:Annotation.AnnotationText="" DisplayName="save CSV with full directory path " sap2010:WorkflowViewState.IdRef="Sequence_6">
+                <ui:OnUiElementAppear FoundElement="{x:Null}" sap2010:Annotation.AnnotationText="" ContinueOnError="False" DisplayName="[On Element Appear] CSV save Chrome Popup recog" sap2010:WorkflowViewState.IdRef="OnUiElementAppear_1" RepeatForever="False" WaitActive="False" WaitVisible="False">
+                  <ui:OnUiElementAppear.Body>
+                    <ui:WindowScope ApplicationWindow="{x:Null}" SearchScope="{x:Null}" TimeoutMS="{x:Null}" Window="{x:Null}" ContinueOnError="False" DisplayName="[Attach Window] CSV save Chrome Popup focus" sap2010:WorkflowViewState.IdRef="WindowScope_1" InformativeScreenshot="f72fcb3177fca9d8f1811aa142825fd8" Selector="&lt;wnd app='chrome.exe' cls='#32770' /&gt;">
+                      <ui:WindowScope.Body>
+                        <ActivityAction x:TypeArguments="x:Object">
+                          <ActivityAction.Argument>
+                            <DelegateInArgument x:TypeArguments="x:Object" Name="ContextTarget" />
+                          </ActivityAction.Argument>
+                          <Sequence sap2010:WorkflowViewState.IdRef="Sequence_5">
+                            <Sequence.Variables>
+                              <Variable x:TypeArguments="x:Int32" Name="in32Counter" />
+                            </Sequence.Variables>
+                            <ui:SetToClipboard DisplayName="[Set To Clipboard] 保存先ファイルパス" sap2010:WorkflowViewState.IdRef="SetToClipboard_1" Text="[in_strKibanaExportedCSVName]" />
+                            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_52" Level="Info" Message="[&quot;Download file path = &quot; + in_strKibanaExportedCSVName]" />
+                            <ui:ElementScope UiElement="{x:Null}" sap2010:Annotation.AnnotationText="User's environment has unstable internet speed. &#xA;Aritificial delay is NOT an ideal design, but should provide enough buffer. " DisplayName="[Element Scope] Set Download popup as scope to send hotkeys" sap2010:WorkflowViewState.IdRef="ElementScope_1">
+                              <ui:ElementScope.Body>
+                                <ActivityAction x:TypeArguments="x:Object">
+                                  <ActivityAction.Argument>
+                                    <DelegateInArgument x:TypeArguments="x:Object" Name="ContextTarget" />
+                                  </ActivityAction.Argument>
+                                  <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_1">
+                                    <ui:SetFocus DelayBefore="{x:Null}" DelayMS="{x:Null}" DisplayName="[Set Focus] ファイル名入力欄" sap2010:WorkflowViewState.IdRef="SetFocus_1">
+                                      <ui:SetFocus.Target>
+                                        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" TimeoutMS="{x:Null}" InformativeScreenshot="56aeb0e35beffc1e923e12d581aacd6c" Selector="&lt;ctrl role='editable text' idx='1' /&gt;" WaitForReady="COMPLETE" />
+                                      </ui:SetFocus.Target>
+                                    </ui:SetFocus>
+                                    <Delay DisplayName="待機_1sec" Duration="00:00:01" sap2010:WorkflowViewState.IdRef="Delay_1" />
+                                    <ui:SendHotkey DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" Activate="True" sap2010:Annotation.AnnotationText="Outputフォルダに保存。Set Textは不安定。&#xA;ファイル名は20190131時点で初期表示の「fr_pcitmlst」を使い、通常売変指示と緊急売変指示で下記のように使い分けている。&#xA;&#xA;i.e.通常版--fr_pcitmlst_PriceChange#.xlsx&#xA;i.e.緊急版--fr_pcitmlst_PriceChange#_URG.xlsx" ClickBeforeTyping="False" DisplayName="[Send Hotkey] 貼り付け" EmptyField="False" sap2010:WorkflowViewState.IdRef="SendHotkey_1" Key="v" KeyModifiers="Ctrl" SendWindowMessages="False" SpecialKey="False">
+                                      <ui:SendHotkey.Target>
+                                        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" TimeoutMS="{x:Null}" InformativeScreenshot="d67c3ef89c05a381ed79815b34405721" Selector="&lt;ctrl role='editable text' idx='1' /&gt;" WaitForReady="COMPLETE" />
+                                      </ui:SendHotkey.Target>
+                                    </ui:SendHotkey>
+                                    <Delay DisplayName="待機_1" Duration="00:00:01" sap2010:WorkflowViewState.IdRef="Delay_2" />
+                                    <ui:SendHotkey DelayBetweenKeys="{x:Null}" Activate="True" sap2010:Annotation.AnnotationText="Send Window Messageは効かないかった" ClickBeforeTyping="False" DelayBefore="0" DelayMS="0" DisplayName="[Send Hotkey] 保存" EmptyField="False" sap2010:WorkflowViewState.IdRef="SendHotkey_2" Key="s" KeyModifiers="Alt" SendWindowMessages="False" SpecialKey="False">
+                                      <ui:SendHotkey.Target>
+                                        <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="{x:Null}" TimeoutMS="{x:Null}" InformativeScreenshot="f65650a193a8436e358bed5bc74c5801" WaitForReady="COMPLETE" />
+                                      </ui:SendHotkey.Target>
+                                    </ui:SendHotkey>
+                                  </Sequence>
+                                </ActivityAction>
+                              </ui:ElementScope.Body>
+                              <ui:ElementScope.Target>
+                                <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" TimeoutMS="{x:Null}" Selector="&lt;wnd app='chrome.exe' cls='#32770' /&gt;&lt;ctrl role='dialog' /&gt;" WaitForReady="COMPLETE" />
+                              </ui:ElementScope.Target>
+                            </ui:ElementScope>
+                            <Assign DisplayName="代入" sap2010:WorkflowViewState.IdRef="Assign_8">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="x:Int32">[in32Counter]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="x:Int32">0</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                            <ui:RetryScope sap2010:Annotation.AnnotationText="3分間3秒単位でファイルダウンロード完了を確認。&#xA;失敗したらエラー。 Continue on Error = TRUE&#xA;# boFileDownloadSuccess = True, moves on from retry scope" ContinueOnError="True" DisplayName="[Retry Scope] ファイル正常ダウンロード確認" sap2010:WorkflowViewState.IdRef="RetryScope_1" NumberOfRetries="180" RetryInterval="00:00:03">
+                              <ui:RetryScope.ActivityBody>
+                                <ActivityAction>
+                                  <Sequence DisplayName="シーケンス" sap2010:WorkflowViewState.IdRef="Sequence_3">
+                                    <Sequence DisplayName="操作" sap2010:WorkflowViewState.IdRef="Sequence_2">
+                                      <Assign DisplayName="代入" sap2010:WorkflowViewState.IdRef="Assign_1">
+                                        <Assign.To>
+                                          <OutArgument x:TypeArguments="x:Int32">[in32Counter]</OutArgument>
+                                        </Assign.To>
+                                        <Assign.Value>
+                                          <InArgument x:TypeArguments="x:Int32">[in32Counter+1]</InArgument>
+                                        </Assign.Value>
+                                      </Assign>
+                                      <ui:LogMessage DisplayName="メッセージをログ" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[&quot;CSV File Download Checking : START : Run No. &lt; &quot; + in32Counter.ToString + &quot; &gt; for file:&quot; + in_strKibanaExportedCSVName]" />
+                                      <ui:PathExists DisplayName="パスの有無を確認" Exists="[boFileDownloadSuccess]" sap2010:WorkflowViewState.IdRef="PathExists_1" Path="[in_strKibanaExportedCSVName]" PathType="File" />
+                                      <ui:LogMessage DisplayName="メッセージをログ" sap2010:WorkflowViewState.IdRef="LogMessage_3" Level="Info" Message="[&quot;CSV File Download Checking : END : Run No. &lt; &quot; + in32Counter.ToString + &quot; &gt; For File :&quot; + in_strKibanaExportedCSVName]" />
+                                    </Sequence>
+                                  </Sequence>
+                                </ActivityAction>
+                              </ui:RetryScope.ActivityBody>
+                              <ui:RetryScope.Condition>
+                                <ActivityFunc x:TypeArguments="x:Boolean">
+                                  <p:IsTrue DisplayName="Is true" sap2010:WorkflowViewState.IdRef="IsTrue_1" Input="[boFileDownloadSuccess]" />
+                                </ActivityFunc>
+                              </ui:RetryScope.Condition>
+                            </ui:RetryScope>
+                            <ui:LogMessage sap2010:Annotation.AnnotationText="売変指示データファイル保存場所パスを出力" DisplayName="[Log message] 実行ログ" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Info" Message="[&quot;Save Location -&quot; + in_strKibanaExportedCSVName]" />
+                          </Sequence>
+                        </ActivityAction>
+                      </ui:WindowScope.Body>
+                    </ui:WindowScope>
+                  </ui:OnUiElementAppear.Body>
+                  <ui:OnUiElementAppear.Target>
+                    <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" TimeoutMS="{x:Null}" InformativeScreenshot="f72fcb3177fca9d8f1811aa142825fd8" Selector="&lt;wnd app='chrome.exe' cls='#32770' /&gt;&lt;ctrl role='dialog' /&gt;" WaitForReady="COMPLETE" />
+                  </ui:OnUiElementAppear.Target>
+                </ui:OnUiElementAppear>
+              </Sequence>
+            </Sequence>
+          </ActivityAction>
+        </ui:RetryScope.ActivityBody>
+        <ui:RetryScope.Condition>
+          <ActivityFunc x:TypeArguments="x:Boolean">
+            <p:IsTrue DisplayName="Is true" sap2010:WorkflowViewState.IdRef="IsTrue_2" Input="[boFileDownloadSuccess]" />
+          </ActivityFunc>
+        </ui:RetryScope.Condition>
+      </ui:RetryScope>
+      <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_14" Level="Info" Message="[&quot;Export Kibana query result as .csv file : &quot; + in_strKibanaExportedCSVName + &quot; download success = &quot; + boDownloadFilePath.ToString]" />
+    </Sequence>
+    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_19" Level="Info" Message="[&quot;ManualDLChromeKibanaExport.xaml : COMPLETED&quot;]" />
+    <sads:DebugSymbol.Symbol>d2BDOlxVc2Vyc1wwOTAxMjczNVxEZXNrdG9wXEZSX1JQQV9SZXBvcnRpbmdfVjIuNS41XEtpYmFuYVZpc3VhbGl6ZS1DaHJvbWVNYW51YWxTZXR0aW5nRXhwb3J0LnhhbWykAgGEAQHWAgEEAcUDAdIDAQMBhgMBkwMBAlMD1AUOAgEBWQVZrQEDAfUCWgVfEAMB6AJgBZQEEAIBf5UEBZwEDgIBdp0EBZ0ElAECAXSeBAWtBBcCAW6uBAWuBG4CAWyvBAXABBUCAWDBBAXRBRACAQTSBQXSBbEBAgECWXNZqgEDAfYCWwdbwwEDAfICXAdcqwEDAe8CXQddpwEDAewCXgdeyAEDAekCZQeTBAwDAYABmgQwmgSQAQIBeZcEMZcERAIBd50Ec50EkQECAXWeBMECngTzAgIBc6QEC6oEFgIBb64EN64EQQIBba8E7wGvBPkBAgFrrwTcAa8E4AECAWqyBAu4BBYCAWS9BAu9BG0CAWHIBAfPBBACAVzQBAfPBRcCAQnQBQfQBZECAgEF0gVz0gWuAQIBA1t1W8ABAwHzAlx1XKgBAwHwAl11XaQBAwHtAl51XsUBAwHqAmUVZYIBAwGBAWcL7gEWAwGhAvEBC5EEFgMBhAGpBA2pBJQBAgFwswQNtwQiAgFlvQRcvQRqAgFizQQxzQQyAgFfygQyygQ8AgFd0ASqAdAEtAECAVvQBJgB0ASbAQIBWtMEDccFGAIBDcwFDcwFegIBCtAFddAFjgICAQZoDWjYAQMB5QJpDaoBGAMBxwKrAQ2rAboBAwHEAqwBDesBGAMBpwLsAQ3sAbYBAwGkAu0BDe0ByAEDAaIC8gENkAQSAwGFAakEfKkEkQECAXG1BIsBtQT8AQIBabUEhwK1BI0CAgFoswRJswRXAgFm1AQP2wQYAgFV3AQP3ASLAgIBUd0ED+sEGgIBT+wED8YFGgIBDswFXswFdwIBC2h8aNUBAwHmAmsReRwDAdsCgQEVpgEgAwHIAqsBfKsBtwEDAcUCrgERvAEcAwG6AsQBFecBIAMBqALsAXzsAbMBAwGlAu0BfO0BxQEDAaMC8gGbAvIBvgIDAYYB9AER+QIcAwHbAfwCEY4EHAMBiAHZBDnZBEUCAVjWBDrWBEQCAVbcBH3cBIgCAgFS6QSiAekEkwICAVDtBBHFBSgCAQ9vE3YcAwHhAncTd7IBAwHfAngTeLcBAwHcAoIBF6UBIgMByQKyARO5ARwDAcACugETugGwAQMBvgK7ARO7AbMBAwG7AsYBGdkBJAMBqwLhAR3jASgDAakC9QET9QHrAQMBngL2ARO1Ah4DAYECtgITtgLAAQMB/gG3AhP2Ah4DAeEB9wIT9wK8AQMB3gH4AhP4AtwBAwHcAf0CE4oDHgMBywGLAxPKAx4DAa4BywMTywO8AQMBqwHMAxOLBB4DAY4BjAQTjATAAQMBiwGNBBONBNwBAwGJAe0EdO0EewIBEO8EFcAFJgIBE+0E/gHtBIUCAgERwwWkAcMF7QECARJ0PnSPAQMB5AJxP3FQAwHiAneCAXevAQMB4AJ4ggF4tAEDAd0ChAEblwEmAwHMAp8BH6EBKgMBygK3AT63AYEBAwHDArQBP7QBTgMBwQK6AYIBugGtAQMBvwK7AYIBuwGwAQMBvALHARvOASQDAbYCzwEbzwG4AQMBtALQARvXASQDAa8C2AEb2AG7AQMBrALiAR/iAVcDAaoC9QGCAfUB6AEDAZ8C+AEXhgIiAwGUAo4CG7ECJgMBggK2AoIBtgK9AQMB/wG5AhfHAiIDAfQBzwIb8gImAwHiAfcCggH3ArkBAwHfAfgCggH4AtkBAwHdAf4CFf4C7QEDAdgB/wIV/wK9AgMB1gGAAxWHAx4DAdEBiAMViAPBAgMBzwGJAxWJA48CAwHMAY0DF5sDIgMBwQGjAxvGAyYDAa8BywOCAcsDuQEDAawBzgMX3AMiAwGhAeQDG4cEJgMBjwGMBIIBjAS9AQMBjAGNBIIBjQTZAQMBigHvBMQC7wTxAgIBTu8EkAHvBJcBAgFN9QQbvQUmAgEUhQEdjAEmAwHXAo0BHY0BvAEDAdUCjgEdlQEmAwHQApYBHZYBwQEDAc0CoAEhoAFYAwHLAswBSMwBfgMBuQLJAUnJAVgDAbcCzwGKAc8BtQEDAbUC1QFG1QFsAwGyAtIBR9IBVgMBsALYAYoB2AG4AQMBrQL8ARmDAiIDAZoChAIZhAKyAQMBmAKFAhmFAr0BAwGVApACH6MCKgMBhQKrAiOtAi4DAYMCvQIZxAIiAwH6AcUCGcUCsgEDAfgBxgIZxgK5AQMB9QHRAh/kAioDAeUB7AIj7gIuAwHjAf4ChAH+AuoBAwHZAf8ChAH/AroCAwHXAYUDP4UDXAMB1AGCA0CCA1sDAdIBiAOEAYgDvgIDAdABiQOEAYkDjAIDAc0BkQMZmAMiAwHHAZkDGZkDsgEDAcUBmgMZmgO5AQMBwgGlAx+4AyoDAbIBwAMjwgMuAwGwAdIDGdkDIgMBpwHaAxnaA7IBAwGlAdsDGdsDvQEDAaIB5gMf+QMqAwGSAYEEI4MELgMBkAH5BB35BLUBAgFK+gQd+gTRAQIBR/sEHZkFLwIBN5oFHaEFJgIBM6IFHbsFLQIBGLwFHbwFigICARWKAUqKAY4BAwHaAocBS4cBXAMB2AKNAYwBjQG5AQMB1gKTAUiTAXADAdMCkAFJkAFaAwHRApYBjAGWAb4BAwHOAoECRIEClQEDAZ0C/gFF/gFWAwGbAoQCiAGEAq8BAwGZAoUCiAGFAroBAwGWApECIZgCKgMBkAKZAiGZAroBAwGOApoCIaECKgMBiQKiAiGiAsUBAwGGAqwCJawCXQMBhALCAkTCAqwBAwH9Ab8CRb8CVAMB+wHFAogBxQKvAQMB+QHGAogBxgK2AQMB9gHSAiHZAioDAfAB2gIh2gK6AQMB7gHbAiHiAioDAekB4wIh4wLBAQMB5gHtAiXtAl0DAeQBlgNElgOJAQMBygGTA0WTA1QDAcgBmQOIAZkDrwEDAcYBmgOIAZoDtgEDAcMBpgMhrQMqAwG9Aa4DIa4DugEDAbsBrwMhtgMqAwG2AbcDIbcDwQEDAbMBwQMlwQNdAwGxAdcDRNcDrAEDAaoB1ANF1ANWAwGoAdoDiAHaA68BAwGmAdsDiAHbA7oBAwGjAecDIe4DKgMBnQHvAyHvA7oBAwGbAfADIfcDKgMBlgH4AyH4A8UBAwGTAYIEJYIEXQMBkQH5BJMB+QSyAQIBS/oEiwH6BM4BAgFIlwV3lwXAAQIBRoEFI5MFLgIBOJ8FR58FSAIBNpwFSJwFVQIBNKIF3gGiBeQBAgEyogXjAqIF7QICATGiBc8CogXUAgIBMKUFI7MFLgIBHLgFI7gFkAECARm8BcoBvAWHAgIBFpYCTpYCkgEDAZMCkwJPkwJgAwGRApkCkAGZArcBAwGPAp8CTJ8CdAMBjAKcAk2cAl4DAYoCogKQAaICwgEDAYcC1wJO1wKpAQMB8wHUAk/UAl4DAfEB2gKQAdoCtwEDAe8B4AJM4AJyAwHsAd0CTd0CXAMB6gHjApAB4wK+AQMB5wGrA06rA4YBAwHAAagDT6gDXgMBvgGuA5ABrgO3AQMBvAG0A0y0A3IDAbkBsQNNsQNcAwG3AbcDkAG3A74BAwG0AewDTuwDqQEDAaAB6QNP6QNgAwGeAe8DkAHvA7cBAwGcAfUDTPUDdAMBmQHyA03yA14DAZcB+AOQAfgDwgEDAZQBggUlhgUzAgFEhwUlhwWCAQIBQogFJYwFNQIBP40FJY0FfwIBPY4FJZIFNQIBOaYFJbIFMAIBHbgFdLgFjQECARqEBbgBhAXlAQIBRYcFS4cFVQIBQ4oFuAGKBeUBAgFBiAXyA4gF9QMCAUCNBUiNBVICAT6OBdIBjgXVAQIBPI4FxgGOBckBAgE7jgW7Ao4FvgICATqnBSeuBTACASuvBSevBakCAgEnsAUnsAXUAQIBIrEFJ7EFqAICAR6sBVGsBWACAS6pBVKpBV8CASyvBZEBrwWmAgIBKLAFVLAFbQIBJbAFogGwBcEBAgEjsQWRAbEFpQICAR8=</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="LogMessage_18" sap:VirtualizedContainerService.HintSize="1425.6,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_17" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_16" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_20" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_21" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_15" sap:VirtualizedContainerService.HintSize="1425.6,616">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_108" sap:VirtualizedContainerService.HintSize="417.6,92.8" />
+      <sap2010:ViewStateData Id="Assign_81" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_109" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_110" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_90" sap:VirtualizedContainerService.HintSize="336.8,450.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_82" sap:VirtualizedContainerService.HintSize="314.4,408">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_111" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Assign_83" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_112" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_91" sap:VirtualizedContainerService.HintSize="336.8,898.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Rethrow_9" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Sequence_92" sap:VirtualizedContainerService.HintSize="222.4,147.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Catch`1_23" sap:VirtualizedContainerService.HintSize="404,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_23" sap:VirtualizedContainerService.HintSize="418.4,1129.6" />
+      <sap2010:ViewStateData Id="Sequence_93" sap:VirtualizedContainerService.HintSize="440.8,1214.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Catch`1_24" sap:VirtualizedContainerService.HintSize="403.2,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_24" sap:VirtualizedContainerService.HintSize="417.6,681.6" />
+      <sap2010:ViewStateData Id="LogMessage_113" sap:VirtualizedContainerService.HintSize="417.6,92.8" />
+      <sap2010:ViewStateData Id="Assign_84" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_114" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_115" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_94" sap:VirtualizedContainerService.HintSize="336.8,450.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_85" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_116" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Assign_86" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_117" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_95" sap:VirtualizedContainerService.HintSize="336.8,550.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Rethrow_10" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Sequence_96" sap:VirtualizedContainerService.HintSize="222.4,147.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Catch`1_25" sap:VirtualizedContainerService.HintSize="404,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_25" sap:VirtualizedContainerService.HintSize="418.4,781.6" />
+      <sap2010:ViewStateData Id="Catch`1_26" sap:VirtualizedContainerService.HintSize="403.2,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_26" sap:VirtualizedContainerService.HintSize="417.6,681.6" />
+      <sap2010:ViewStateData Id="LogMessage_118" sap:VirtualizedContainerService.HintSize="417.6,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_119" sap:VirtualizedContainerService.HintSize="417.6,92.8" />
+      <sap2010:ViewStateData Id="Sequence_97" sap:VirtualizedContainerService.HintSize="440,2119.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_142" sap:VirtualizedContainerService.HintSize="417.6,92.8" />
+      <sap2010:ViewStateData Id="Assign_87" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_120" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_121" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_98" sap:VirtualizedContainerService.HintSize="336.8,450.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_88" sap:VirtualizedContainerService.HintSize="314.4,408">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_122" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Assign_89" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_123" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_99" sap:VirtualizedContainerService.HintSize="336.8,898.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Rethrow_11" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Sequence_100" sap:VirtualizedContainerService.HintSize="222.4,147.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Catch`1_27" sap:VirtualizedContainerService.HintSize="404,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_27" sap:VirtualizedContainerService.HintSize="418.4,1129.6" />
+      <sap2010:ViewStateData Id="Catch`1_28" sap:VirtualizedContainerService.HintSize="403.2,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_28" sap:VirtualizedContainerService.HintSize="417.6,681.6" />
+      <sap2010:ViewStateData Id="LogMessage_124" sap:VirtualizedContainerService.HintSize="417.6,92.8" />
+      <sap2010:ViewStateData Id="Assign_90" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_125" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_126" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_101" sap:VirtualizedContainerService.HintSize="336.8,450.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_91" sap:VirtualizedContainerService.HintSize="314.4,104">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_127" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Assign_92" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_128" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_102" sap:VirtualizedContainerService.HintSize="336.8,594.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Rethrow_12" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Sequence_103" sap:VirtualizedContainerService.HintSize="222.4,147.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Catch`1_29" sap:VirtualizedContainerService.HintSize="404,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_29" sap:VirtualizedContainerService.HintSize="418.4,825.6" />
+      <sap2010:ViewStateData Id="Catch`1_30" sap:VirtualizedContainerService.HintSize="403.2,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_30" sap:VirtualizedContainerService.HintSize="417.6,681.6" />
+      <sap2010:ViewStateData Id="LogMessage_129" sap:VirtualizedContainerService.HintSize="417.6,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_130" sap:VirtualizedContainerService.HintSize="417.6,92.8" />
+      <sap2010:ViewStateData Id="Sequence_104" sap:VirtualizedContainerService.HintSize="440,2059.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_143" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_144" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Assign_100" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_145" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_146" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_115" sap:VirtualizedContainerService.HintSize="417.6,856">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_96" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_136" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_137" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_108" sap:VirtualizedContainerService.HintSize="336.8,450.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_97" sap:VirtualizedContainerService.HintSize="314.4,280">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_138" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Assign_98" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_139" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_109" sap:VirtualizedContainerService.HintSize="336.8,770.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Rethrow_14" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Sequence_110" sap:VirtualizedContainerService.HintSize="222.4,147.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Catch`1_33" sap:VirtualizedContainerService.HintSize="404,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_33" sap:VirtualizedContainerService.HintSize="418.4,1001.6" />
+      <sap2010:ViewStateData Id="Catch`1_34" sap:VirtualizedContainerService.HintSize="403.2,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_34" sap:VirtualizedContainerService.HintSize="417.6,681.6" />
+      <sap2010:ViewStateData Id="LogMessage_140" sap:VirtualizedContainerService.HintSize="417.6,92.8" />
+      <sap2010:ViewStateData Id="Assign_93" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_131" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_132" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_105" sap:VirtualizedContainerService.HintSize="336.8,450.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_94" sap:VirtualizedContainerService.HintSize="314.4,104">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_133" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Assign_95" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_134" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_106" sap:VirtualizedContainerService.HintSize="336.8,594.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Rethrow_13" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Sequence_107" sap:VirtualizedContainerService.HintSize="222.4,147.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Catch`1_31" sap:VirtualizedContainerService.HintSize="404,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_31" sap:VirtualizedContainerService.HintSize="418.4,825.6" />
+      <sap2010:ViewStateData Id="Catch`1_32" sap:VirtualizedContainerService.HintSize="403.2,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_32" sap:VirtualizedContainerService.HintSize="417.6,681.6" />
+      <sap2010:ViewStateData Id="LogMessage_135" sap:VirtualizedContainerService.HintSize="417.6,92.8" />
+      <sap2010:ViewStateData Id="LogMessage_141" sap:VirtualizedContainerService.HintSize="417.6,92.8" />
+      <sap2010:ViewStateData Id="Sequence_111" sap:VirtualizedContainerService.HintSize="440,2822.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_5" sap:VirtualizedContainerService.HintSize="904.8,3064">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_112" sap:VirtualizedContainerService.HintSize="927.2,3188.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_6" sap:VirtualizedContainerService.HintSize="1392,3338.4" />
+      <sap2010:ViewStateData Id="Sequence_113" sap:VirtualizedContainerService.HintSize="1425.6,3555.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_30" sap:VirtualizedContainerService.HintSize="1425.6,216">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_26" sap:VirtualizedContainerService.HintSize="1425.6,92.8" />
+      <sap2010:ViewStateData Id="NavigateTo_1" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="Sequence_9" sap:VirtualizedContainerService.HintSize="336.8,184.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="BrowserScope_1" sap:VirtualizedContainerService.HintSize="1425.6,332">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Delay_3" sap:VirtualizedContainerService.HintSize="1425.6,22.4" />
+      <sap2010:ViewStateData Id="UiElementExists_1" sap:VirtualizedContainerService.HintSize="314.4,107.2" />
+      <sap2010:ViewStateData Id="Sequence_14" sap:VirtualizedContainerService.HintSize="336.8,232">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="IsTrue_3" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="RetryScope_3" sap:VirtualizedContainerService.HintSize="1425.6,442.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_6" sap:VirtualizedContainerService.HintSize="532.8,60" />
+      <sap2010:ViewStateData Id="Assign_7" sap:VirtualizedContainerService.HintSize="488,60" />
+      <sap2010:ViewStateData Id="LogMessage_13" sap:VirtualizedContainerService.HintSize="488,92.8" />
+      <sap2010:ViewStateData Id="Click_1" sap:VirtualizedContainerService.HintSize="488,107.2" />
+      <sap2010:ViewStateData Id="SetToClipboard_1" sap:VirtualizedContainerService.HintSize="414.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_52" sap:VirtualizedContainerService.HintSize="414.4,92.8" />
+      <sap2010:ViewStateData Id="SetFocus_1" sap:VirtualizedContainerService.HintSize="314.4,107.2" />
+      <sap2010:ViewStateData Id="Delay_1" sap:VirtualizedContainerService.HintSize="314.4,22.4" />
+      <sap2010:ViewStateData Id="SendHotkey_1" sap:VirtualizedContainerService.HintSize="314.4,280">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Delay_2" sap:VirtualizedContainerService.HintSize="314.4,22.4" />
+      <sap2010:ViewStateData Id="SendHotkey_2" sap:VirtualizedContainerService.HintSize="314.4,184">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="336.8,900.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ElementScope_1" sap:VirtualizedContainerService.HintSize="414.4,1069.6">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_8" sap:VirtualizedContainerService.HintSize="414.4,60" />
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="314.4,60" />
+      <sap2010:ViewStateData Id="LogMessage_2" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="PathExists_1" sap:VirtualizedContainerService.HintSize="314.4,90.4" />
+      <sap2010:ViewStateData Id="LogMessage_3" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="336.8,580.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_3" sap:VirtualizedContainerService.HintSize="359.2,705.6">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="IsTrue_1" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="RetryScope_1" sap:VirtualizedContainerService.HintSize="414.4,948">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_6" sap:VirtualizedContainerService.HintSize="414.4,120.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_5" sap:VirtualizedContainerService.HintSize="436.8,2676">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="WindowScope_1" sap:VirtualizedContainerService.HintSize="451.2,2823.2" />
+      <sap2010:ViewStateData Id="OnUiElementAppear_1" sap:VirtualizedContainerService.HintSize="465.6,3028">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_6" sap:VirtualizedContainerService.HintSize="488,3180.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_11" sap:VirtualizedContainerService.HintSize="510.4,3685.6">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="IsTrue_2" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="RetryScope_2" sap:VirtualizedContainerService.HintSize="532.8,3868" />
+      <sap2010:ViewStateData Id="LogMessage_14" sap:VirtualizedContainerService.HintSize="532.8,92.8" />
+      <sap2010:ViewStateData Id="Sequence_12" sap:VirtualizedContainerService.HintSize="1425.6,4225.6">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_19" sap:VirtualizedContainerService.HintSize="1426,91" />
+      <sap2010:ViewStateData Id="Sequence_7" sap:VirtualizedContainerService.HintSize="1448,10215.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="KibanaExportPopupRecogTest_1" sap:VirtualizedContainerService.HintSize="1488,10295.2" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

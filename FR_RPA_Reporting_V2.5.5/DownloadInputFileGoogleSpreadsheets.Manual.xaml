@@ -1,0 +1,400 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="DownloadInputFileGoogleSpreadsheets"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:p="http://schemas.microsoft.com/workflow/2012/07/xaml/activities"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:this="clr-namespace:"
+ xmlns:ui="http://schemas.uipath.com/workflow/activities"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="stDownloadFilePath" Type="InArgument(x:String)" />
+    <x:Property Name="stInputFileFolder" Type="InArgument(x:String)" />
+    <x:Property Name="boDownloadFilePath" Type="InArgument(x:Boolean)" />
+    <x:Property Name="stGoogleSSHttps" Type="InArgument(x:String)" />
+    <x:Property Name="iCounter" Type="InArgument(x:Int32)" />
+    <x:Property Name="stGoogleSSURL" Type="InArgument(x:String)" />
+    <x:Property Name="stGoogleSSgid" Type="InArgument(x:String)" />
+    <x:Property Name="in_CloseChromeFlag" Type="InArgument(x:String)" />
+  </x:Members>
+  <this:DownloadInputFileGoogleSpreadsheets.stGoogleSSgid>
+    <InArgument x:TypeArguments="x:String">
+      <Literal x:TypeArguments="x:String" Value="" />
+    </InArgument>
+  </this:DownloadInputFileGoogleSpreadsheets.stGoogleSSgid>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap2010:WorkflowViewState.IdRef>DownloadInputFileGoogleSpreadsheets_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>Microsoft.Activities.Expressions</x:String>
+      <x:String>Microsoft.Activities.Messaging</x:String>
+      <x:String>Microsoft.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>UiPath.Orchestrator.Client</x:String>
+      <x:String>UiPath.Orchestrator.Client.Models</x:String>
+      <x:String>UiPath.Excel.Activities</x:String>
+      <x:String>UiPath.CSV.Activities</x:String>
+      <x:String>UiPath.Excel</x:String>
+      <x:String>UiPath.CSV</x:String>
+      <x:String>UiPath.Mail.Activities</x:String>
+      <x:String>UiPath.Mail.Exchange.Activities</x:String>
+      <x:String>UiPath.Mail.IMAP.Activities</x:String>
+      <x:String>UiPath.Mail.Outlook.Activities</x:String>
+      <x:String>UiPath.Mail.POP3.Activities</x:String>
+      <x:String>UiPath.Mail.SMTP.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>Microsoft.VisualBasic.CompilerServices</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>Microsoft.Activities</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Plugin.Workflow</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.OrchestratorClient</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Excel.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail.Activities</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence DisplayName="Download InputFile GoogleSpreadsheet(s)_ManualSetting" sap2010:WorkflowViewState.IdRef="Sequence_53">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:Int32" Name="iCounter" />
+      <Variable x:TypeArguments="ui:Browser" Name="brChromeTab" />
+    </Sequence.Variables>
+    <Assign DisplayName="代入" sap2010:WorkflowViewState.IdRef="Assign_18">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:Int32">[iCounter]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:Int32">0</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:RetryScope DisplayName="Retry Scope_ per 5min up to 3 times" sap2010:WorkflowViewState.IdRef="RetryScope_10" NumberOfRetries="3" RetryInterval="00:05:05">
+      <ui:RetryScope.ActivityBody>
+        <ActivityAction>
+          <Sequence DisplayName="Action" sap2010:WorkflowViewState.IdRef="Sequence_52">
+            <Sequence.Variables>
+              <Variable x:TypeArguments="x:Int32" Name="iCheckCounter" />
+            </Sequence.Variables>
+            <Assign sap2010:WorkflowViewState.IdRef="Assign_15">
+              <Assign.To>
+                <OutArgument x:TypeArguments="x:Int32">[iCounter]</OutArgument>
+              </Assign.To>
+              <Assign.Value>
+                <InArgument x:TypeArguments="x:Int32">[iCounter+1]</InArgument>
+              </Assign.Value>
+            </Assign>
+            <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_11" Level="Info" Message="[&quot;Download input file : &quot; + stDownloadFilePath + &quot;attempt = &quot; + iCounter.ToString]" />
+            <ui:OpenBrowser BrowserType="Chrome" DisplayName="ブラウザーを開く" Hidden="False" sap2010:WorkflowViewState.IdRef="OpenBrowser_3" NewSession="True" Private="False" UiBrowser="[brChromeTab]" Url="[stGoogleSSHttps + stGoogleSSURL +&quot;/export?format=xlsx&quot;+ stGoogleSSgid]">
+              <ui:OpenBrowser.Body>
+                <ActivityAction x:TypeArguments="x:Object">
+                  <ActivityAction.Argument>
+                    <DelegateInArgument x:TypeArguments="x:Object" Name="ContextTarget" />
+                  </ActivityAction.Argument>
+                  <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_51" />
+                </ActivityAction>
+              </ui:OpenBrowser.Body>
+            </ui:OpenBrowser>
+            <Sequence sap2010:Annotation.AnnotationText="" DisplayName="save CSV with full directory path " sap2010:WorkflowViewState.IdRef="Sequence_61">
+              <ui:OnUiElementAppear FoundElement="{x:Null}" sap2010:Annotation.AnnotationText="" ContinueOnError="False" DisplayName="[On Element Appear] CSV save Chrome Popup recog" sap2010:WorkflowViewState.IdRef="OnUiElementAppear_1" RepeatForever="False" WaitActive="False" WaitVisible="False">
+                <ui:OnUiElementAppear.Body>
+                  <ui:WindowScope ApplicationWindow="{x:Null}" SearchScope="{x:Null}" TimeoutMS="{x:Null}" Window="{x:Null}" ContinueOnError="False" DisplayName="[Attach Window] CSV save Chrome Popup focus" sap2010:WorkflowViewState.IdRef="WindowScope_1" InformativeScreenshot="f72fcb3177fca9d8f1811aa142825fd8" Selector="&lt;wnd app='chrome.exe' cls='#32770' /&gt;">
+                    <ui:WindowScope.Body>
+                      <ActivityAction x:TypeArguments="x:Object">
+                        <ActivityAction.Argument>
+                          <DelegateInArgument x:TypeArguments="x:Object" Name="ContextTarget" />
+                        </ActivityAction.Argument>
+                        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_60">
+                          <Sequence.Variables>
+                            <Variable x:TypeArguments="x:Int32" Name="in32Counter" />
+                          </Sequence.Variables>
+                          <ui:SetToClipboard DisplayName="[Set To Clipboard] 保存先ファイルパス" sap2010:WorkflowViewState.IdRef="SetToClipboard_1" Text="[stDownloadFilePath]" />
+                          <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_16" Level="Info" Message="[&quot;Download file path = &quot; + stDownloadFilePath]" />
+                          <ui:ElementScope UiElement="{x:Null}" sap2010:Annotation.AnnotationText="User's environment has unstable internet speed. &#xA;Aritificial delay is NOT an ideal design, but should provide enough buffer. " DisplayName="[Element Scope] Set Download popup as scope to send hotkeys" sap2010:WorkflowViewState.IdRef="ElementScope_1">
+                            <ui:ElementScope.Body>
+                              <ActivityAction x:TypeArguments="x:Object">
+                                <ActivityAction.Argument>
+                                  <DelegateInArgument x:TypeArguments="x:Object" Name="ContextTarget" />
+                                </ActivityAction.Argument>
+                                <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_57">
+                                  <ui:SetFocus DelayBefore="{x:Null}" DelayMS="{x:Null}" DisplayName="[Set Focus] ファイル名入力欄" sap2010:WorkflowViewState.IdRef="SetFocus_1">
+                                    <ui:SetFocus.Target>
+                                      <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" TimeoutMS="{x:Null}" InformativeScreenshot="56aeb0e35beffc1e923e12d581aacd6c" Selector="&lt;ctrl role='editable text' idx='1' /&gt;" WaitForReady="COMPLETE" />
+                                    </ui:SetFocus.Target>
+                                  </ui:SetFocus>
+                                  <Delay DisplayName="待機_1sec" Duration="00:00:01" sap2010:WorkflowViewState.IdRef="Delay_2" />
+                                  <ui:SendHotkey DelayBefore="{x:Null}" DelayBetweenKeys="{x:Null}" DelayMS="{x:Null}" Activate="True" sap2010:Annotation.AnnotationText="Outputフォルダに保存。Set Textは不安定。&#xA;ファイル名は20190131時点で初期表示の「fr_pcitmlst」を使い、通常売変指示と緊急売変指示で下記のように使い分けている。&#xA;&#xA;i.e.通常版--fr_pcitmlst_PriceChange#.xlsx&#xA;i.e.緊急版--fr_pcitmlst_PriceChange#_URG.xlsx" ClickBeforeTyping="False" DisplayName="[Send Hotkey] 貼り付け" EmptyField="False" sap2010:WorkflowViewState.IdRef="SendHotkey_1" Key="v" KeyModifiers="Ctrl" SendWindowMessages="False" SpecialKey="False">
+                                    <ui:SendHotkey.Target>
+                                      <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" TimeoutMS="{x:Null}" InformativeScreenshot="d67c3ef89c05a381ed79815b34405721" Selector="&lt;ctrl role='editable text' idx='1' /&gt;" WaitForReady="COMPLETE" />
+                                    </ui:SendHotkey.Target>
+                                  </ui:SendHotkey>
+                                  <Delay DisplayName="待機_1" Duration="00:00:01" sap2010:WorkflowViewState.IdRef="Delay_3" />
+                                  <ui:SendHotkey DelayBetweenKeys="{x:Null}" Activate="True" sap2010:Annotation.AnnotationText="Send Window Messageは効かないかった" ClickBeforeTyping="False" DelayBefore="0" DelayMS="0" DisplayName="[Send Hotkey] 保存" EmptyField="False" sap2010:WorkflowViewState.IdRef="SendHotkey_2" Key="s" KeyModifiers="Alt" SendWindowMessages="False" SpecialKey="False">
+                                    <ui:SendHotkey.Target>
+                                      <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" Selector="{x:Null}" TimeoutMS="{x:Null}" InformativeScreenshot="f65650a193a8436e358bed5bc74c5801" WaitForReady="COMPLETE" />
+                                    </ui:SendHotkey.Target>
+                                  </ui:SendHotkey>
+                                </Sequence>
+                              </ActivityAction>
+                            </ui:ElementScope.Body>
+                            <ui:ElementScope.Target>
+                              <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" TimeoutMS="{x:Null}" Selector="&lt;wnd app='chrome.exe' cls='#32770' /&gt;&lt;ctrl role='dialog' /&gt;" WaitForReady="COMPLETE" />
+                            </ui:ElementScope.Target>
+                          </ui:ElementScope>
+                          <Assign DisplayName="代入" sap2010:WorkflowViewState.IdRef="Assign_20">
+                            <Assign.To>
+                              <OutArgument x:TypeArguments="x:Int32">[in32Counter]</OutArgument>
+                            </Assign.To>
+                            <Assign.Value>
+                              <InArgument x:TypeArguments="x:Int32">0</InArgument>
+                            </Assign.Value>
+                          </Assign>
+                          <ui:RetryScope sap2010:Annotation.AnnotationText="3分間3秒単位でファイルダウンロード完了を確認。&#xA;失敗したらエラー。 Continue on Error = TRUE&#xA;# boFileDownloadSuccess = True, moves on from retry scope" ContinueOnError="True" DisplayName="[Retry Scope] ファイル正常ダウンロード確認" sap2010:WorkflowViewState.IdRef="RetryScope_12" NumberOfRetries="180" RetryInterval="00:00:03">
+                            <ui:RetryScope.ActivityBody>
+                              <ActivityAction>
+                                <Sequence DisplayName="シーケンス" sap2010:WorkflowViewState.IdRef="Sequence_59">
+                                  <Sequence DisplayName="操作" sap2010:WorkflowViewState.IdRef="Sequence_58">
+                                    <Assign DisplayName="代入" sap2010:WorkflowViewState.IdRef="Assign_21">
+                                      <Assign.To>
+                                        <OutArgument x:TypeArguments="x:Int32">[in32Counter]</OutArgument>
+                                      </Assign.To>
+                                      <Assign.Value>
+                                        <InArgument x:TypeArguments="x:Int32">[in32Counter+1]</InArgument>
+                                      </Assign.Value>
+                                    </Assign>
+                                    <ui:LogMessage DisplayName="メッセージをログ" sap2010:WorkflowViewState.IdRef="LogMessage_17" Level="Info" Message="[&quot;CSV File Download Checking : START : Run No. &lt; &quot; + in32Counter.ToString + &quot; &gt; for file:&quot; + stDownloadFilePath]" />
+                                    <Delay DisplayName="Delay_5sec before download completion check" Duration="00:00:05" sap2010:WorkflowViewState.IdRef="Delay_4" />
+                                    <ui:PathExists DisplayName="パスの有無を確認" Exists="[boDownloadFilePath]" sap2010:WorkflowViewState.IdRef="PathExists_16" Path="[stDownloadFilePath]" PathType="File" />
+                                    <ui:LogMessage DisplayName="メッセージをログ" sap2010:WorkflowViewState.IdRef="LogMessage_18" Level="Info" Message="[&quot;CSV File Download Checking : END : Run No. &lt; &quot; + in32Counter.ToString + &quot; &gt; For File :&quot; + stDownloadFilePath]" />
+                                  </Sequence>
+                                </Sequence>
+                              </ActivityAction>
+                            </ui:RetryScope.ActivityBody>
+                            <ui:RetryScope.Condition>
+                              <ActivityFunc x:TypeArguments="x:Boolean">
+                                <p:IsTrue DisplayName="Is true" sap2010:WorkflowViewState.IdRef="IsTrue_12" Input="[boDownloadFilePath]" />
+                              </ActivityFunc>
+                            </ui:RetryScope.Condition>
+                          </ui:RetryScope>
+                          <ui:LogMessage sap2010:Annotation.AnnotationText="売変指示データファイル保存場所パスを出力" DisplayName="[Log message] 実行ログ" sap2010:WorkflowViewState.IdRef="LogMessage_19" Level="Info" Message="[&quot;Save Location -&quot; + stDownloadFilePath]" />
+                        </Sequence>
+                      </ActivityAction>
+                    </ui:WindowScope.Body>
+                  </ui:WindowScope>
+                </ui:OnUiElementAppear.Body>
+                <ui:OnUiElementAppear.Target>
+                  <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" TimeoutMS="{x:Null}" InformativeScreenshot="f72fcb3177fca9d8f1811aa142825fd8" Selector="&lt;wnd app='chrome.exe' cls='#32770' /&gt;&lt;ctrl role='dialog' /&gt;" WaitForReady="COMPLETE" />
+                </ui:OnUiElementAppear.Target>
+              </ui:OnUiElementAppear>
+            </Sequence>
+          </Sequence>
+        </ActivityAction>
+      </ui:RetryScope.ActivityBody>
+      <ui:RetryScope.Condition>
+        <ActivityFunc x:TypeArguments="x:Boolean">
+          <p:IsTrue DisplayName="Is true" sap2010:WorkflowViewState.IdRef="IsTrue_10" Input="[boDownloadFilePath]" />
+        </ActivityFunc>
+      </ui:RetryScope.Condition>
+    </ui:RetryScope>
+    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_12" Level="Info" Message="[&quot;Download input file : &quot; + stDownloadFilePath.ToString + &quot; download success = &quot; + boDownloadFilePath.ToString]" />
+    <If Condition="[in_CloseChromeFlag = &quot;YES&quot;]" sap2010:WorkflowViewState.IdRef="If_1">
+      <If.Then>
+        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_56">
+          <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_14" Level="Info" Message="[&quot;CloseChromeFlag = &quot; + in_CloseChromeFlag.ToString]" />
+          <ui:CloseTab Browser="[brChromeTab]" DisplayName="Close Tab" sap2010:WorkflowViewState.IdRef="CloseTab_1" />
+        </Sequence>
+      </If.Then>
+      <If.Else>
+        <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_15" Level="Info" Message="[&quot;CloseChromeFlag = &quot; + in_CloseChromeFlag.ToString]" />
+      </If.Else>
+    </If>
+    <ui:Comment sap2010:WorkflowViewState.IdRef="Comment_4" Text="// devide up between folder creation v. loop &amp; download invoke portion?????" />
+    <sads:DebugSymbol.Symbol>d2hDOlxVc2Vyc1wwOTAxNTQ4M1xEb2N1bWVudHNcVWlQYXRoXEZSX1JQQV9SZXBvcnRpbmdfVjIuMlxEb3dubG9hZElucHV0RmlsZUdvb2dsZVNwcmVhZHNoZWV0cy5NYW51YWwueGFtbFYaBxo2AQJoA4ICDgIBAW0FdA4CAW91BfMBFQIBFPQBBfQB+wECARD1AQX/AQoCAQOAAgWAApYBAgECci9yMAIBcm8wbzoCAXB1mAF1ogECAW51hgF1iQECAW14C+sBFgIBGPABC/ABdgIBFfQBc/QB+AECARH1ARP1ATsCAQT3AQn6ARQCAQn9AQn9AboBAgEGfA2DARYCAWiEAQ2EAeYBAgFkhQENjgEeAgFcjwEN6gEYAgEZ8AFd8AFzAgEW+AEL+AG8AQIBDfkBC/kBdwIBCv0Bd/0BtwECAQeBATeBAUMCAWt+OH5CAgFphAF7hAHjAQIBZYUBtAGFAcMBAgFihQHIAYUBmwICAV6LAROLAV4CAV2QAQ/pASYCARr4AXn4AbkBAgEO+QEg+QEvAgELkAFykAF5AgEbkgET5AEkAgEekAH8AZABgwICARznAaIB5wHrAQIBHZIBwgKSAe8CAgFbkgGOAZIBlQECAVqYARnhASQCAR+cARucAaoBAgFXnQEbnQHGAQIBVJ4BG7wBLQIBRL0BG8QBJAIBQMUBG98BKwIBI+ABG+ABgAICASCcAZEBnAGnAQIBWJ0BiQGdAcMBAgFVugF1ugG+AQIBU6QBIbYBLAIBRcIBRcIBRgIBQ78BRr8BUwIBQcUB3AHFAeIBAgE/xQHiAsUB7AICAT7FAc4CxQHTAgIBPcgBIdcBLAIBJ9wBIdwBjAECASTgAckB4AH9AQIBIaUBI6kBMQIBUaoBI6oBgAECAU+rASOvATMCAUywASOwAX0CAUqxASO1ATMCAUbJASPWAS4CASjcAXPcAYkBAgElpwG2AacB4wECAVKqAUmqAVMCAVCtAbYBrQHjAQIBTqsB8AOrAfMDAgFNsAFGsAFQAgFLsQHQAbEB0wECAUmxAcQBsQHHAQIBSLEBuQKxAbwCAgFHygEl0QEuAgE40gEl0gGfAgIBNNMBJdMBpgECATLUASXUAccBAgEt1QEl1QGeAgIBKc8BT88BXgIBO8wBUMwBXQIBOdIBkAHSAZwCAgE10wFv0wF5AgEz1AFS1AFoAgEw1AGeAdQBtAECAS7VAZAB1QGbAgIBKg==</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Assign_18" sap:VirtualizedContainerService.HintSize="675,60" />
+      <sap2010:ViewStateData Id="Assign_15" sap:VirtualizedContainerService.HintSize="486,60" />
+      <sap2010:ViewStateData Id="LogMessage_11" sap:VirtualizedContainerService.HintSize="486,91" />
+      <sap2010:ViewStateData Id="Sequence_51" sap:VirtualizedContainerService.HintSize="200,99">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="OpenBrowser_3" sap:VirtualizedContainerService.HintSize="486,198" />
+      <sap2010:ViewStateData Id="SetToClipboard_1" sap:VirtualizedContainerService.HintSize="414,59" />
+      <sap2010:ViewStateData Id="LogMessage_16" sap:VirtualizedContainerService.HintSize="414,91" />
+      <sap2010:ViewStateData Id="SetFocus_1" sap:VirtualizedContainerService.HintSize="314,106" />
+      <sap2010:ViewStateData Id="Delay_2" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="SendHotkey_1" sap:VirtualizedContainerService.HintSize="314,271">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Delay_3" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="SendHotkey_2" sap:VirtualizedContainerService.HintSize="314,181">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_57" sap:VirtualizedContainerService.HintSize="336,886">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ElementScope_1" sap:VirtualizedContainerService.HintSize="414,1051">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_20" sap:VirtualizedContainerService.HintSize="414,60" />
+      <sap2010:ViewStateData Id="Assign_21" sap:VirtualizedContainerService.HintSize="314,60" />
+      <sap2010:ViewStateData Id="LogMessage_17" sap:VirtualizedContainerService.HintSize="314,91" />
+      <sap2010:ViewStateData Id="Delay_4" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="PathExists_16" sap:VirtualizedContainerService.HintSize="314,89" />
+      <sap2010:ViewStateData Id="LogMessage_18" sap:VirtualizedContainerService.HintSize="314,91" />
+      <sap2010:ViewStateData Id="Sequence_58" sap:VirtualizedContainerService.HintSize="336,637">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_59" sap:VirtualizedContainerService.HintSize="358,761">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="IsTrue_12" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="RetryScope_12" sap:VirtualizedContainerService.HintSize="414,999">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_19" sap:VirtualizedContainerService.HintSize="414,121">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_60" sap:VirtualizedContainerService.HintSize="436,2705">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="WindowScope_1" sap:VirtualizedContainerService.HintSize="450,2851" />
+      <sap2010:ViewStateData Id="OnUiElementAppear_1" sap:VirtualizedContainerService.HintSize="464,3054">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_61" sap:VirtualizedContainerService.HintSize="486,3205">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_52" sap:VirtualizedContainerService.HintSize="508,3798">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="IsTrue_10" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="RetryScope_10" sap:VirtualizedContainerService.HintSize="675,3979" />
+      <sap2010:ViewStateData Id="LogMessage_12" sap:VirtualizedContainerService.HintSize="675,93" />
+      <sap2010:ViewStateData Id="LogMessage_14" sap:VirtualizedContainerService.HintSize="314,93" />
+      <sap2010:ViewStateData Id="CloseTab_1" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="Sequence_56" sap:VirtualizedContainerService.HintSize="336,279">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_15" sap:VirtualizedContainerService.HintSize="314,93" />
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="675,429" />
+      <sap2010:ViewStateData Id="Comment_4" sap:VirtualizedContainerService.HintSize="675,75" />
+      <sap2010:ViewStateData Id="Sequence_53" sap:VirtualizedContainerService.HintSize="697,4920">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="DownloadInputFileGoogleSpreadsheets_1" sap:VirtualizedContainerService.HintSize="737,5000" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>
