@@ -71,6 +71,7 @@
       <Variable x:TypeArguments="sd:DataTable" Name="dtTypeA_30d" />
       <Variable x:TypeArguments="sd:DataTable" Name="dtTypeA_90d" />
       <Variable x:TypeArguments="sd:DataTable" Name="dtTypeB_7d" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtRt" />
     </Sequence.Variables>
     <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke seq00_init workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="seq00_init.xaml">
       <ui:InvokeWorkflowFile.Arguments>
@@ -104,12 +105,11 @@
     </ui:InvokeWorkflowFile>
     <If Condition="[blDEBUG]" DisplayName="DEBUG INFO" sap2010:WorkflowViewState.IdRef="If_4">
       <If.Then>
-        <Sequence>
+        <Sequence sap2010:WorkflowViewState.IdRef="Sequence_4">
           <ui:WriteCsvFile Encoding="{x:Null}" AddHeaders="True" DataTable="[dtTypeA_7d]" Delimitator="Comma" DisplayName="Write CSV" FilePath="typea7d.csv" sap2010:WorkflowViewState.IdRef="WriteCsvFile_1" />
           <ui:WriteCsvFile Encoding="{x:Null}" AddHeaders="True" DataTable="[dtTypeA_30d]" Delimitator="Comma" DisplayName="Write CSV" FilePath="typea30d.csv" sap2010:WorkflowViewState.IdRef="WriteCsvFile_2" />
           <ui:WriteCsvFile Encoding="{x:Null}" AddHeaders="True" DataTable="[dtTypeA_90d]" Delimitator="Comma" DisplayName="Write CSV" FilePath="typea90d.csv" sap2010:WorkflowViewState.IdRef="WriteCsvFile_3" />
           <ui:WriteCsvFile Encoding="{x:Null}" AddHeaders="True" DataTable="[dtTypeb_7d]" Delimitator="Comma" DisplayName="Write CSV" FilePath="typeb7d.csv" sap2010:WorkflowViewState.IdRef="WriteCsvFile_4" />
-          <sap2010:WorkflowViewState.IdRef>Sequence_4</sap2010:WorkflowViewState.IdRef>
         </Sequence>
       </If.Then>
     </If>
@@ -125,11 +125,27 @@
         <ui:WriteCsvFile Encoding="{x:Null}" AddHeaders="True" DataTable="[dtPorcessManagementSheet]" Delimitator="Comma" DisplayName="Write CSV" FilePath="process.csv" sap2010:WorkflowViewState.IdRef="WriteCsvFile_5" />
       </If.Then>
     </If>
-    <sads:DebugSymbol.Symbol>dz5DOlxVc2Vyc1wwOTAxMjczNVxEZXNrdG9wXEZSX1JQQV9SZXBvcnRpbmdfVjIuNS41XG1haW5fMDEueGFtbC1BA4EBDgIBAUNOQ3ICAQNENUQ7AgECSwVPHQIBPlAFXwoCATNgBWgdAgEnaQVzCgIBE3QFeh0CAQt7BX8KAgEETWNNbwIBQEu3AUvIAQIBP1ATUB4CATRSCV0WAgE2ZUxlWQIBMWNLY1cCAS9mS2ZXAgEtYl9iawIBK2DJAWDsAQIBKmRMZFkCAShpE2keAgEUawlxFAIBFnZNdnMCARF3RndfAgEPeFJ4bAIBDXTCAXTeAQIBDHsTex4CAQV9CX3dAQIBB1KwAVK+AQIBPFgPWhoCATdsC2zRAQIBI20LbdMBAgEfbgtu0wECARtvC2/RAQIBF31KfWYCAQl9nAF9qQECAQhZEVm+AQIBOGxMbFoCASVskAFsnQECASRtTG1bAgEhbZEBbZ8BAgEgbkxuWwIBHW6RAW6fAQIBHG9Mb1oCARlvkAFvnQECARhZf1m7AQIBOQ==</sads:DebugSymbol.Symbol>
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke seq03_mergeTable workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_5" UnSafe="False" WorkflowFileName="seq03_mergeTable.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="dtInPMSs">[dtPorcessManagementSheet]</InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="dtIntypeA_7d">[dtTypeA_7d]</InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="dtIntypeA_30d">[dtTypeA_30d]</InArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="dtIntypeA_90d">[dtTypeA_90d]</InArgument>
+        <OutArgument x:TypeArguments="sd:DataTable" x:Key="dtOutResult">[dtRt]</OutArgument>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="dtIntypeB_7d">[dtTypeB_7d]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <WriteLine DisplayName="Write Line" Text="[dtRt.Rows.Count.ToString]" sap2010:WorkflowViewState.IdRef="WriteLine_1" />
+    <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke seq04_finalstep workflow" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="seq04_finalstep.xaml">
+      <ui:InvokeWorkflowFile.Arguments>
+        <InArgument x:TypeArguments="sd:DataTable" x:Key="dtInStep3Result">[dtRt]</InArgument>
+      </ui:InvokeWorkflowFile.Arguments>
+    </ui:InvokeWorkflowFile>
+    <sads:DebugSymbol.Symbol>dz5DOlxVc2Vyc1wwOTAxMjczNVxEZXNrdG9wXEZSX1JQQV9SZXBvcnRpbmdfVjIuNS41XG1haW5fMDEueGFtbDpBA5EBDgIBAUNOQ3ICAQNENUQ7AgECTAVQHQIBUlEFYAoCAUdhBWkdAgE7agVzCgIBJ3QFeh0CAR97BX8KAgEYgAEFiQEdAgEKigEFigF7AgEIiwEFjwEdAgEETmNObwIBVEy3AUzIAQIBU1ETUR4CAUhTCV4WAgFKZkxmWQIBRWRLZFcCAUNnS2dXAgFBY19jawIBP2HJAWHsAQIBPmVMZVkCATxqE2oeAgEobAlxFAIBKnZNdnMCASV3RndfAgEjeFJ4bAIBIXTCAXTeAQIBIHsTex4CARl9CX3dAQIBG4UBSoUBVwIBFoIBRYIBXwIBFIcBSYcBVQIBEoYBSYYBTwIBEIQBSoQBVwIBDoMBSYMBVQIBDIABvQGAAdQBAgELigEuigFKAgEJjQFMjQFSAgEGiwG8AYsB0gECAQVTsAFTvgECAVBZD1saAgFLbQtt0QECATduC27TAQIBM28Lb9MBAgEvcAtw0QECASt9Sn1mAgEdfZwBfakBAgEcWhFavgECAUxtTG1aAgE5bZABbZ0BAgE4bkxuWwIBNW6RAW6fAQIBNG9Mb1sCATFvkQFvnwECATBwTHBaAgEtcJABcJ0BAgEsWn9auwECAU0=</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="InvokeWorkflowFile_1" sap:VirtualizedContainerService.HintSize="464,88" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_1" sap:VirtualizedContainerService.HintSize="314,87" />
       <sap2010:ViewStateData Id="LogMessage_1" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
       <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="336.8,217.6">
         <sap:WorkflowViewStateService.ViewState>
@@ -146,7 +162,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="464,52.8">
+      <sap2010:ViewStateData Id="If_1" sap:VirtualizedContainerService.HintSize="314,51">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">False</x:Boolean>
@@ -154,7 +170,7 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="InvokeWorkflowFile_4" sap:VirtualizedContainerService.HintSize="464,88" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_4" sap:VirtualizedContainerService.HintSize="314,87" />
       <sap2010:ViewStateData Id="WriteCsvFile_1" sap:VirtualizedContainerService.HintSize="314.4,88" />
       <sap2010:ViewStateData Id="WriteCsvFile_2" sap:VirtualizedContainerService.HintSize="314.4,88" />
       <sap2010:ViewStateData Id="WriteCsvFile_3" sap:VirtualizedContainerService.HintSize="314.4,88" />
@@ -166,32 +182,35 @@
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="If_4" sap:VirtualizedContainerService.HintSize="464,746.4">
+      <sap2010:ViewStateData Id="If_4" sap:VirtualizedContainerService.HintSize="314,51">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
             <x:Boolean x:Key="IsPinned">False</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="InvokeWorkflowFile_2" sap:VirtualizedContainerService.HintSize="464,88" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_2" sap:VirtualizedContainerService.HintSize="314,87" />
       <sap2010:ViewStateData Id="WriteCsvFile_5" sap:VirtualizedContainerService.HintSize="314.4,88" />
-      <sap2010:ViewStateData Id="If_3" sap:VirtualizedContainerService.HintSize="464,237.6">
+      <sap2010:ViewStateData Id="If_3" sap:VirtualizedContainerService.HintSize="314,51">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
             <x:Boolean x:Key="IsPinned">False</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="486.4,1625.6">
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_5" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="WriteLine_1" sap:VirtualizedContainerService.HintSize="314,61" />
+      <sap2010:ViewStateData Id="InvokeWorkflowFile_6" sap:VirtualizedContainerService.HintSize="314,87" />
+      <sap2010:ViewStateData Id="Sequence_2" sap:VirtualizedContainerService.HintSize="336,1093">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="main_01_1" sap:VirtualizedContainerService.HintSize="526.4,987.2" />
+      <sap2010:ViewStateData Id="main_01_1" sap:VirtualizedContainerService.HintSize="376,1112" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>

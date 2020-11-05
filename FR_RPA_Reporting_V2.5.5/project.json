@@ -10,7 +10,9 @@
     "Microsoft.Activities": "[1.0.1]",
     "C00100_GDrive": "[1.0.7479.40351]",
     "Kibana-OpenDistro-Visualize_WithChromeBrowser": "[1.0.7564.25477]",
-    "UiPath.GSuite.Activities": "[1.2.8010]"
+    "UiPath.GSuite.Activities": "[1.2.8010]",
+    "UiPath.WebAPI.Activities": "[1.3.0]",
+    "C00300_SendGetEmail": "[1.0.7572.28029]"
   },
   "schemaVersion": "3.2",
   "studioVersion": "18.4.6.0",

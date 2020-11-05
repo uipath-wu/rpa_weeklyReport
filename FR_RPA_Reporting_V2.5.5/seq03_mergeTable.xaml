@@ -2,6 +2,7 @@
  xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
  xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
  xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
  xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
@@ -72,7 +73,8 @@
       <AssemblyReference>UiPath.Excel</AssemblyReference>
       <AssemblyReference>UiPath.Mail</AssemblyReference>
       <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
-      <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualStudio.Services.Common</AssemblyReference>
+      <AssemblyReference>UiPath.Studio.Plugin.Workflow</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Sequence DisplayName="seq03_mergeTable" sap2010:WorkflowViewState.IdRef="Sequence_1">
@@ -86,12 +88,9 @@
       <Variable x:TypeArguments="sd:DataTable" Name="dtStep4" />
       <Variable x:TypeArguments="sd:DataTable" Name="dtStep4_1" />
       <Variable x:TypeArguments="sd:DataTable" Name="dtStep5" />
+      <Variable x:TypeArguments="x:Double" Name="dototalRate" />
+      <Variable x:TypeArguments="sd:DataTable" Name="dtFinal" />
     </Sequence.Variables>
-    <ui:ReadCsvFile DataTable="[dtInPMSs]" Delimitator="Comma" DisplayName="Read CSV" Encoding="utf-8" FilePath="process.csv" sap2010:WorkflowViewState.IdRef="ReadCsvFile_1" />
-    <ui:ReadCsvFile DataTable="[dtIntypeA_90d]" Delimitator="Comma" DisplayName="Read CSV" Encoding="utf-8" FilePath="typea90d.csv" sap2010:WorkflowViewState.IdRef="ReadCsvFile_2" />
-    <ui:ReadCsvFile DataTable="[dtIntypeA_30d]" Delimitator="Comma" DisplayName="Read CSV" Encoding="utf-8" FilePath="typea30d.csv" sap2010:WorkflowViewState.IdRef="ReadCsvFile_3" />
-    <ui:ReadCsvFile DataTable="[dtIntypeA_7d]" Delimitator="Comma" DisplayName="Read CSV" Encoding="utf-8" FilePath="typea7d.csv" sap2010:WorkflowViewState.IdRef="ReadCsvFile_4" />
-    <ui:ReadCsvFile DataTable="[dtIntypeB_7d]" Delimitator="Comma" DisplayName="Read CSV" Encoding="utf-8" FilePath="typeb7d.csv" sap2010:WorkflowViewState.IdRef="ReadCsvFile_5" />
     <ui:JoinDataTables DataTable1="[dtInPMSs]" DataTable2="[dtIntypeA_90d]" DisplayName="Join Data Tables" sap2010:WorkflowViewState.IdRef="JoinDataTables_1" JoinType="Full" OutputDataTable="[dtStep1]">
       <ui:JoinDataTables.Arguments>
         <scg:List x:TypeArguments="ui:JoinOperationArgument" Capacity="4">
@@ -232,41 +231,442 @@
         <InArgument x:TypeArguments="sd:DataTable">[new DataView(dtStep4_1, "","Column17 ASC,Column8 ASC,Column2 ASC", DataViewRowState.CurrentRows).ToTable]</InArgument>
       </Assign.Value>
     </Assign>
-    <ui:WriteCsvFile AddHeaders="True" DataTable="[dtStep5]" Delimitator="Comma" DisplayName="Write CSV" Encoding="utf-8" FilePath="step5.csv" sap2010:WorkflowViewState.IdRef="WriteCsvFile_5" />
-    <sads:DebugSymbol.Symbol>d0dDOlxVc2Vyc1wwOTAxMjczNVxEZXNrdG9wXEZSX1JQQV9SZXBvcnRpbmdfVjIuNS41XHNlcTAzX21lcmdlVGFibGUueGFtbF1OA+0BDgIBAVoFWrEBAgF4WwVbtwECAXNcBVy3AQIBbl0FXbUBAgFpXgVetQECAWRfBWwZAgFbbQV4GgIBVXkFecUBAgFQegWBAQ4CAU2CAQWPARkCAUSQAQWbARoCAT6cAQWjAQ4CATukAQWkAcUBAgE2pQEFsgEZAgEtswEFvgEaAgEnvwEFxgEOAgEkxwEFxwHFAQIBH8gBBdUBGQIBFtYBBeEBGgIBEOIBBeIBxQECAQvjAQXqAQ4CAQfrAQXrAcMBAgECWmBaZwIBfFofWisCAXpacVp+AgF5W2VbbAIBd1sfWzACAXVbdluEAQIBdFxlXGwCAXJcH1wwAgFwXHZchAECAW9dZF1rAgFtXR9dLwIBa111XYIBAgFqXmReawIBaF4fXi8CAWZedV6CAQIBZWQ2ZEECAWNnNmdDAgFiX78BX8oBAgFgXztfTAIBXl8jXy8CAVxtqQFttgECAVltI20uAgFXdTJ1PwIBVnl1eXwCAVR5Mnk/AgFSeYYBeZEBAgFRfzB/OgIBT3wxfFgCAU6HATaHAUECAUyKATaKAUMCAUuCAcABggHLAQIBSYIBPIIBTQIBR4IBI4IBMAIBRZABqQGQAbYBAgFCkAEjkAEuAgFAmAEymAE/AgE/oQEwoQE6AgE9ngExngFYAgE8pAF1pAF8AgE6pAEypAE/AgE4pAGGAaQBkQECATeqATaqAUECATWtATatAUMCATSlAb8BpQHKAQIBMqUBPKUBTAIBMKUBI6UBMAIBLrMBqQGzAbYBAgErswEjswEuAgEpuwEyuwE/AgEoxAEwxAE5AgEmwQExwQFYAgElxwF1xwF8AgEjxwEyxwE/AgEhxwGGAccBkQECASDNATbNAUECAR7QATbQAUMCAR3IAb8ByAHKAQIBG8gBPMgBTAIBGcgBI8gBMAIBF9YBqQHWAbYBAgEU1gEj1gEuAgES3gEy3gE/AgER4gF14gF8AgEP4gEy4gE/AgEN4gGGAeIBkQECAQzoATToAZ4BAgEK5QE15QE+AgEI6wFz6wF6AgEG6wEy6wE9AgEE6wGEAesBjwECAQM=</sads:DebugSymbol.Symbol>
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_24">
+      <Assign.To>
+        <OutArgument x:TypeArguments="x:Double">[dototalRate]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="x:Double" xml:space="preserve">[Convert.toInt32(dtStep5.Compute("SUM(COMPLETE)","").ToString) /
+Convert.toInt32(dtStep5.Compute("SUM(START)","").ToString)]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Info" Message="[dototalRate.ToString]" />
+    <ui:AddDataColumn x:TypeArguments="x:String" Column="{x:Null}" DefaultValue="{x:Null}" AllowDBNull="True" AutoIncrement="False" ColumnName="FLAG1" DataTable="[dtStep5]" DisplayName="Add Data Column" sap2010:WorkflowViewState.IdRef="AddDataColumn`1_1" MaxLength="100" Unique="False" />
+    <ui:AddDataColumn x:TypeArguments="x:String" Column="{x:Null}" DefaultValue="{x:Null}" AllowDBNull="True" AutoIncrement="False" ColumnName="FLAG2" DataTable="[dtStep5]" DisplayName="Add Data Column" sap2010:WorkflowViewState.IdRef="AddDataColumn`1_2" MaxLength="100" Unique="False" />
+    <ui:AddDataColumn x:TypeArguments="x:Double" Column="{x:Null}" DefaultValue="{x:Null}" AllowDBNull="True" AutoIncrement="False" ColumnName="SuccessRate" DataTable="[dtStep5]" DisplayName="Add Data Column" sap2010:WorkflowViewState.IdRef="AddDataColumn`1_3" MaxLength="100" Unique="False" />
+    <ui:ForEachRow CurrentIndex="{x:Null}" DataTable="[dtStep5]" DisplayName="For Each Row" sap2010:WorkflowViewState.IdRef="ForEachRow_1">
+      <ui:ForEachRow.Body>
+        <ActivityAction x:TypeArguments="sd:DataRow">
+          <ActivityAction.Argument>
+            <DelegateInArgument x:TypeArguments="sd:DataRow" Name="row" />
+          </ActivityAction.Argument>
+          <Sequence sap2010:WorkflowViewState.IdRef="Sequence_5">
+            <TryCatch DisplayName="Try Catch" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+              <TryCatch.Try>
+                <Sequence DisplayName="Body" sap2010:WorkflowViewState.IdRef="Sequence_4">
+                  <Sequence.Variables>
+                    <Variable x:TypeArguments="x:Boolean" Name="blflagtmp" />
+                    <Variable x:TypeArguments="x:Int32" Name="inttmp" />
+                    <Variable x:TypeArguments="x:Int32" Name="intstart" />
+                    <Variable x:TypeArguments="x:Int32" Name="intcom" />
+                  </Sequence.Variables>
+                  <Assign sap2010:WorkflowViewState.IdRef="Assign_19">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Int32">[inttmp]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Int32">0</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <If Condition="[row(&quot;Column156&quot;).ToString.Contains(&quot;Minties&quot;)  or row(&quot;Column156&quot;).ToString.Contains(&quot;Hour&quot;)  or row(&quot;Column156&quot;).ToString.Contains(&quot;Day&quot;)  or row(&quot;Column156&quot;).ToString.Contains(&quot;Daily&quot;)  or row(&quot;Column156&quot;).ToString.Contains(&quot;Week&quot;)]" sap2010:WorkflowViewState.IdRef="If_11">
+                    <If.Then>
+                      <If Condition="[Integer.TryParse(row(&quot;7Days&quot;).ToString, inttmp) AND (Convert.toInt32(row(&quot;7Days&quot;).ToString) &gt;0)]" sap2010:WorkflowViewState.IdRef="If_7">
+                        <If.Then>
+                          <Sequence sap2010:WorkflowViewState.IdRef="Sequence_6">
+                            <Assign sap2010:WorkflowViewState.IdRef="Assign_11">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="x:Object">[row("Flag1")]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="x:Object">["〇"]</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                          </Sequence>
+                        </If.Then>
+                        <If.Else>
+                          <Assign sap2010:WorkflowViewState.IdRef="Assign_17">
+                            <Assign.To>
+                              <OutArgument x:TypeArguments="x:Object">[row("Flag1")]</OutArgument>
+                            </Assign.To>
+                            <Assign.Value>
+                              <InArgument x:TypeArguments="x:Object">["×"]</InArgument>
+                            </Assign.Value>
+                          </Assign>
+                        </If.Else>
+                      </If>
+                    </If.Then>
+                    <If.Else>
+                      <If Condition="[row(&quot;Column156&quot;).ToString.Contains(&quot;Monthly&quot;)  or row(&quot;Column156&quot;).ToString.Contains(&quot;1 Month&quot;)]" sap2010:WorkflowViewState.IdRef="If_10">
+                        <If.Then>
+                          <If Condition="[Integer.TryParse(row(&quot;30Days&quot;).ToString, inttmp) AND (Convert.toInt32(row(&quot;30Days&quot;).ToString) &gt;0)]" sap2010:WorkflowViewState.IdRef="If_8">
+                            <If.Then>
+                              <Sequence sap2010:WorkflowViewState.IdRef="Sequence_7">
+                                <Assign sap2010:WorkflowViewState.IdRef="Assign_12">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:Object">[row("Flag1")]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:Object">["〇"]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                              </Sequence>
+                            </If.Then>
+                            <If.Else>
+                              <Assign sap2010:WorkflowViewState.IdRef="Assign_18">
+                                <Assign.To>
+                                  <OutArgument x:TypeArguments="x:Object">[row("Flag1")]</OutArgument>
+                                </Assign.To>
+                                <Assign.Value>
+                                  <InArgument x:TypeArguments="x:Object">["×"]</InArgument>
+                                </Assign.Value>
+                              </Assign>
+                            </If.Else>
+                          </If>
+                        </If.Then>
+                        <If.Else>
+                          <If Condition="[Integer.TryParse(row(&quot;90Days&quot;).ToString, inttmp) AND (Convert.toInt32(row(&quot;90Days&quot;).ToString) &gt;0)]" sap2010:WorkflowViewState.IdRef="If_9">
+                            <If.Then>
+                              <Sequence sap2010:WorkflowViewState.IdRef="Sequence_8">
+                                <Assign sap2010:WorkflowViewState.IdRef="Assign_13">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:Object">[row("Flag1")]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:Object">["〇"]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                              </Sequence>
+                            </If.Then>
+                            <If.Else>
+                              <Assign sap2010:WorkflowViewState.IdRef="Assign_14">
+                                <Assign.To>
+                                  <OutArgument x:TypeArguments="x:Object">[row("Flag1")]</OutArgument>
+                                </Assign.To>
+                                <Assign.Value>
+                                  <InArgument x:TypeArguments="x:Object">["×"]</InArgument>
+                                </Assign.Value>
+                              </Assign>
+                            </If.Else>
+                          </If>
+                        </If.Else>
+                      </If>
+                    </If.Else>
+                  </If>
+                  <Assign sap2010:WorkflowViewState.IdRef="Assign_20">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Int32">[intstart]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Int32">0</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <Assign sap2010:WorkflowViewState.IdRef="Assign_21">
+                    <Assign.To>
+                      <OutArgument x:TypeArguments="x:Int32">[intcom]</OutArgument>
+                    </Assign.To>
+                    <Assign.Value>
+                      <InArgument x:TypeArguments="x:Int32">0</InArgument>
+                    </Assign.Value>
+                  </Assign>
+                  <If Condition="[Integer.TryParse(row(&quot;START&quot;).ToString,  intstart) AND Integer.TryParse(row(&quot;COMPLETE&quot;).ToString, intstart)]" sap2010:WorkflowViewState.IdRef="If_12">
+                    <If.Then>
+                      <Sequence sap2010:WorkflowViewState.IdRef="Sequence_9">
+                        <Sequence.Variables>
+                          <Variable x:TypeArguments="x:Double" Name="doinvRate" />
+                        </Sequence.Variables>
+                        <Assign sap2010:WorkflowViewState.IdRef="Assign_25">
+                          <Assign.To>
+                            <OutArgument x:TypeArguments="x:Double">[doinvRate]</OutArgument>
+                          </Assign.To>
+                          <Assign.Value>
+                            <InArgument x:TypeArguments="x:Double">0</InArgument>
+                          </Assign.Value>
+                        </Assign>
+                        <If Condition="[Convert.toInt32(row(&quot;START&quot;).ToString) &gt;0]" sap2010:WorkflowViewState.IdRef="If_13">
+                          <If.Then>
+                            <Sequence sap2010:WorkflowViewState.IdRef="Sequence_10">
+                              <Assign sap2010:WorkflowViewState.IdRef="Assign_26">
+                                <Assign.To>
+                                  <OutArgument x:TypeArguments="x:Double">[doinvRate]</OutArgument>
+                                </Assign.To>
+                                <Assign.Value>
+                                  <InArgument x:TypeArguments="x:Double">[Convert.toInt32(row("COMPLETE").ToString) / Convert.toInt32(row("START").ToString)]</InArgument>
+                                </Assign.Value>
+                              </Assign>
+                              <Assign sap2010:WorkflowViewState.IdRef="Assign_15">
+                                <Assign.To>
+                                  <OutArgument x:TypeArguments="x:Object">[row("successRate")]</OutArgument>
+                                </Assign.To>
+                                <Assign.Value>
+                                  <InArgument x:TypeArguments="x:Double">[doinvRate]</InArgument>
+                                </Assign.Value>
+                              </Assign>
+                              <If Condition="[doinvRate&gt;= dototalRate]" sap2010:WorkflowViewState.IdRef="If_14">
+                                <If.Then>
+                                  <Assign sap2010:WorkflowViewState.IdRef="Assign_27">
+                                    <Assign.To>
+                                      <OutArgument x:TypeArguments="x:Object">[row("Flag2")]</OutArgument>
+                                    </Assign.To>
+                                    <Assign.Value>
+                                      <InArgument x:TypeArguments="x:Object">["〇"]</InArgument>
+                                    </Assign.Value>
+                                  </Assign>
+                                </If.Then>
+                                <If.Else>
+                                  <Assign sap2010:WorkflowViewState.IdRef="Assign_28">
+                                    <Assign.To>
+                                      <OutArgument x:TypeArguments="x:Object">[row("Flag2")]</OutArgument>
+                                    </Assign.To>
+                                    <Assign.Value>
+                                      <InArgument x:TypeArguments="x:Object">["×"]</InArgument>
+                                    </Assign.Value>
+                                  </Assign>
+                                </If.Else>
+                              </If>
+                            </Sequence>
+                          </If.Then>
+                          <If.Else>
+                            <Sequence sap2010:WorkflowViewState.IdRef="Sequence_11">
+                              <Assign sap2010:WorkflowViewState.IdRef="Assign_22">
+                                <Assign.To>
+                                  <OutArgument x:TypeArguments="x:Object">[row("successRate")]</OutArgument>
+                                </Assign.To>
+                                <Assign.Value>
+                                  <InArgument x:TypeArguments="x:Object">[0]</InArgument>
+                                </Assign.Value>
+                              </Assign>
+                              <Assign sap2010:WorkflowViewState.IdRef="Assign_29">
+                                <Assign.To>
+                                  <OutArgument x:TypeArguments="x:Object">[row("Flag2")]</OutArgument>
+                                </Assign.To>
+                                <Assign.Value>
+                                  <InArgument x:TypeArguments="x:Object">["-"]</InArgument>
+                                </Assign.Value>
+                              </Assign>
+                            </Sequence>
+                          </If.Else>
+                        </If>
+                      </Sequence>
+                    </If.Then>
+                    <If.Else>
+                      <Assign sap2010:WorkflowViewState.IdRef="Assign_16">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Object">[row("successRate")]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Object">[0]</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                    </If.Else>
+                  </If>
+                </Sequence>
+              </TryCatch.Try>
+              <TryCatch.Catches>
+                <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_1">
+                  <ActivityAction x:TypeArguments="s:Exception">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                    </ActivityAction.Argument>
+                    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_2" Level="Info" Message="[exception.Message]" />
+                  </ActivityAction>
+                </Catch>
+              </TryCatch.Catches>
+            </TryCatch>
+          </Sequence>
+        </ActivityAction>
+      </ui:ForEachRow.Body>
+    </ui:ForEachRow>
+    <ui:FilterDataTable DataTable="[dtStep5]" DisplayName="Filter Data Table" FilterRowsMode="Remove" sap2010:WorkflowViewState.IdRef="FilterDataTable_5" OutputDataTable="[dtFinal]" SelectColumnsMode="Keep">
+      <ui:FilterDataTable.Filters>
+        <scg:List x:TypeArguments="ui:FilterOperationArgument" Capacity="4">
+          <ui:FilterOperationArgument BooleanOperator="And" Operator="NOTSTARTSWITH">
+            <ui:FilterOperationArgument.Column>
+              <InArgument x:TypeArguments="x:String">["Column2"]</InArgument>
+            </ui:FilterOperationArgument.Column>
+            <ui:FilterOperationArgument.Operand>
+              <InArgument x:TypeArguments="x:String">["P"]</InArgument>
+            </ui:FilterOperationArgument.Operand>
+          </ui:FilterOperationArgument>
+          <ui:FilterOperationArgument Operand="{x:Null}" BooleanOperator="Or" Operator="EMPTY">
+            <ui:FilterOperationArgument.Column>
+              <InArgument x:TypeArguments="x:String">["Column2"]</InArgument>
+            </ui:FilterOperationArgument.Column>
+          </ui:FilterOperationArgument>
+        </scg:List>
+      </ui:FilterDataTable.Filters>
+      <ui:FilterDataTable.SelectColumns>
+        <scg:List x:TypeArguments="InArgument" Capacity="32">
+          <InArgument x:TypeArguments="x:String">["Column17"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["Column8"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["Column2"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["Column3"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["Column6"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["Column85"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["Column154"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["Column155"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["Column156"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["90Days"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["30Days"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["7Days"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["START"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["COMPLETE"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["SuccessRate"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["FLAG1"]</InArgument>
+          <InArgument x:TypeArguments="x:String">["FLAG2"]</InArgument>
+        </scg:List>
+      </ui:FilterDataTable.SelectColumns>
+    </ui:FilterDataTable>
+    <ui:WriteCsvFile AddHeaders="True" DataTable="[dtFinal]" Delimitator="Comma" DisplayName="Write CSV" Encoding="utf-8" FilePath="final.csv" sap2010:WorkflowViewState.IdRef="WriteCsvFile_6" />
+    <Assign sap2010:WorkflowViewState.IdRef="Assign_23">
+      <Assign.To>
+        <OutArgument x:TypeArguments="sd:DataTable">[dtOutResult]</OutArgument>
+      </Assign.To>
+      <Assign.Value>
+        <InArgument x:TypeArguments="sd:DataTable">[dtFinal]</InArgument>
+      </Assign.Value>
+    </Assign>
+    <sads:DebugSymbol.Symbol>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</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
-      <sap2010:ViewStateData Id="ReadCsvFile_1" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="ReadCsvFile_2" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="ReadCsvFile_3" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="ReadCsvFile_4" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="ReadCsvFile_5" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="JoinDataTables_1" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="FilterDataTable_1" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="WriteCsvFile_1" sap:VirtualizedContainerService.HintSize="314.4,88" />
-      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="JoinDataTables_2" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="FilterDataTable_2" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="WriteCsvFile_2" sap:VirtualizedContainerService.HintSize="314.4,88" />
-      <sap2010:ViewStateData Id="JoinDataTables_3" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="FilterDataTable_3" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="Assign_3" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="WriteCsvFile_3" sap:VirtualizedContainerService.HintSize="314.4,88" />
-      <sap2010:ViewStateData Id="JoinDataTables_4" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="FilterDataTable_4" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="WriteCsvFile_4" sap:VirtualizedContainerService.HintSize="314.4,88" />
-      <sap2010:ViewStateData Id="Assign_4" sap:VirtualizedContainerService.HintSize="314.4,60" />
-      <sap2010:ViewStateData Id="WriteCsvFile_5" sap:VirtualizedContainerService.HintSize="314.4,88" />
-      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="336.8,2424.8">
+      <sap2010:ViewStateData Id="JoinDataTables_1" sap:VirtualizedContainerService.HintSize="1743,59" />
+      <sap2010:ViewStateData Id="FilterDataTable_1" sap:VirtualizedContainerService.HintSize="1743,59" />
+      <sap2010:ViewStateData Id="WriteCsvFile_1" sap:VirtualizedContainerService.HintSize="1743,87" />
+      <sap2010:ViewStateData Id="Assign_1" sap:VirtualizedContainerService.HintSize="1743,60" />
+      <sap2010:ViewStateData Id="JoinDataTables_2" sap:VirtualizedContainerService.HintSize="1743,59" />
+      <sap2010:ViewStateData Id="FilterDataTable_2" sap:VirtualizedContainerService.HintSize="1743,59" />
+      <sap2010:ViewStateData Id="Assign_2" sap:VirtualizedContainerService.HintSize="1743,60" />
+      <sap2010:ViewStateData Id="WriteCsvFile_2" sap:VirtualizedContainerService.HintSize="1743,87" />
+      <sap2010:ViewStateData Id="JoinDataTables_3" sap:VirtualizedContainerService.HintSize="1743,59" />
+      <sap2010:ViewStateData Id="FilterDataTable_3" sap:VirtualizedContainerService.HintSize="1743,59" />
+      <sap2010:ViewStateData Id="Assign_3" sap:VirtualizedContainerService.HintSize="1743,60" />
+      <sap2010:ViewStateData Id="WriteCsvFile_3" sap:VirtualizedContainerService.HintSize="1743,87" />
+      <sap2010:ViewStateData Id="JoinDataTables_4" sap:VirtualizedContainerService.HintSize="1743,59" />
+      <sap2010:ViewStateData Id="FilterDataTable_4" sap:VirtualizedContainerService.HintSize="1743,59" />
+      <sap2010:ViewStateData Id="WriteCsvFile_4" sap:VirtualizedContainerService.HintSize="1743,87" />
+      <sap2010:ViewStateData Id="Assign_4" sap:VirtualizedContainerService.HintSize="1743,60" />
+      <sap2010:ViewStateData Id="Assign_24" sap:VirtualizedContainerService.HintSize="1743,64" />
+      <sap2010:ViewStateData Id="LogMessage_6" sap:VirtualizedContainerService.HintSize="1743,91" />
+      <sap2010:ViewStateData Id="AddDataColumn`1_1" sap:VirtualizedContainerService.HintSize="1743,22" />
+      <sap2010:ViewStateData Id="AddDataColumn`1_2" sap:VirtualizedContainerService.HintSize="1743,22" />
+      <sap2010:ViewStateData Id="AddDataColumn`1_3" sap:VirtualizedContainerService.HintSize="1743,22" />
+      <sap2010:ViewStateData Id="Assign_19" sap:VirtualizedContainerService.HintSize="1650.4,60" />
+      <sap2010:ViewStateData Id="Assign_11" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="Sequence_6" sap:VirtualizedContainerService.HintSize="265.6,184.8">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="seq03_mergeTable_1" sap:VirtualizedContainerService.HintSize="376.8,327.2" />
+      <sap2010:ViewStateData Id="Assign_17" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="If_7" sap:VirtualizedContainerService.HintSize="533.6,334.4" />
+      <sap2010:ViewStateData Id="Assign_12" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="Sequence_7" sap:VirtualizedContainerService.HintSize="265.6,184.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_18" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="If_8" sap:VirtualizedContainerService.HintSize="533.6,334.4" />
+      <sap2010:ViewStateData Id="Assign_13" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="Sequence_8" sap:VirtualizedContainerService.HintSize="265.6,184.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_14" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="If_9" sap:VirtualizedContainerService.HintSize="533.6,334.4" />
+      <sap2010:ViewStateData Id="If_10" sap:VirtualizedContainerService.HintSize="1092,484" />
+      <sap2010:ViewStateData Id="If_11" sap:VirtualizedContainerService.HintSize="1650.4,633.6">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_20" sap:VirtualizedContainerService.HintSize="1650.4,60" />
+      <sap2010:ViewStateData Id="Assign_21" sap:VirtualizedContainerService.HintSize="1650.4,60" />
+      <sap2010:ViewStateData Id="Assign_25" sap:VirtualizedContainerService.HintSize="824,60" />
+      <sap2010:ViewStateData Id="Assign_26" sap:VirtualizedContainerService.HintSize="511.2,60" />
+      <sap2010:ViewStateData Id="Assign_15" sap:VirtualizedContainerService.HintSize="511.2,60" />
+      <sap2010:ViewStateData Id="Assign_27" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="Assign_28" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="If_14" sap:VirtualizedContainerService.HintSize="511.2,209.6" />
+      <sap2010:ViewStateData Id="Sequence_10" sap:VirtualizedContainerService.HintSize="533.6,534.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_22" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="Assign_29" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="Sequence_11" sap:VirtualizedContainerService.HintSize="265.6,284.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="If_13" sap:VirtualizedContainerService.HintSize="824,684" />
+      <sap2010:ViewStateData Id="Sequence_9" sap:VirtualizedContainerService.HintSize="846.4,908.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_16" sap:VirtualizedContainerService.HintSize="243.2,60" />
+      <sap2010:ViewStateData Id="If_12" sap:VirtualizedContainerService.HintSize="1650.4,1058.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_4" sap:VirtualizedContainerService.HintSize="1672.8,2156.8">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_2" sap:VirtualizedContainerService.HintSize="314.4,92.8" />
+      <sap2010:ViewStateData Id="Catch`1_1" sap:VirtualizedContainerService.HintSize="1676,22.4">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_1" sap:VirtualizedContainerService.HintSize="1691,2385" />
+      <sap2010:ViewStateData Id="Sequence_5" sap:VirtualizedContainerService.HintSize="1713,2509">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ForEachRow_1" sap:VirtualizedContainerService.HintSize="1743,2657" />
+      <sap2010:ViewStateData Id="FilterDataTable_5" sap:VirtualizedContainerService.HintSize="1743,59" />
+      <sap2010:ViewStateData Id="WriteCsvFile_6" sap:VirtualizedContainerService.HintSize="1743,87" />
+      <sap2010:ViewStateData Id="Assign_23" sap:VirtualizedContainerService.HintSize="1743,60" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="1765,5228">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="seq03_mergeTable_1" sap:VirtualizedContainerService.HintSize="1805,5308" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>
