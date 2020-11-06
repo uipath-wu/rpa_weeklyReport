@@ -1,0 +1,36 @@
+## Note that below is NOT an exhaustive list of maintenance triggers and confirmation required locations. 
+##For any changes and maintenance, we strongly encourage the developer to confirm normal behavior after each and every maintenance work
+
+
+
+1. Changes in "RPA Service Management" Google Spreadsheet
+- changes in sheet names for sheets "Process" , "TS", "A&T"
+
+2. Changes in "RPA Service Management" Google Spreadsheet's "Process" sheet
+- Column [G] , [H] , [I] , [J] , [Q] , [R] , [EU] , [FA] , [GS] , [GU] の前または間に新しくコラムが追加された場合。　
+   *[Require pre-processing of Process sheet's validity confirmation]
+- Column [G] , [H] , [I] , [J] , [Q] , [R] , [EU] , [FA] , [GS] , [GU] の各コラムのコラムヘッダー部分の変更があった場合。(名前変更やセルの形変更などを含む)　
+   *[Require pre-processing of Process sheet's validity, column name and default place holder column name confirmation]
+- Process!CI6:DN6に変更があった場合、
+   *<Q>:Process sheet - Region/BU check xaml'svalidation required
+
+3. Changes in "RPA Service Management" Google Spreadsheet's "TS" sheet
+- Column [R] , [S] , [T] , [U] , [V] , [W]の前または間に新しくコラムが追加された場合。
+
+
+4. Changes in "RPA Service Management" Google Spreadsheet's "A&T" sheet
+- Column [L] , [M] , [N] , [O] の前または間に新しくコラムが追加された場合。
+   *[Require pre-processing of A&T sheet's validity confirmation]
+
+5. Changes in "RPA Service Management" Google Spreadsheet's "Master" sheet
+-"Master" sheet　の　A2:A13, C2:C10, E2:E25, に変更があった場合、以下をチェック
+- Master!A2:A13に変更
+    * <G>:Process sheet - Status check xaml's validation required
+- Master!E2:E25に変更
+    * <I>:Process sheet - Department check xaml's validation required
+- Master!C2:C10に変更
+    * <FA>:Process sheet - BusinessCycle check xaml's validation required
+
+6. Changes in "RPA Service Management" Google Spreadsheet's "R&R" sheet
+- 'R&R'!C5:C40に変更があった場合、
+   *<J>:Process sheet - Team check xaml's validation required
