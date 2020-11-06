@@ -1,0 +1,655 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="C00005_BoxFileMove"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:av="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:gadvd="clr-namespace:Google.Apis.Drive.v3.Data;assembly=Google.Apis.Drive.v3"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mva="clr-namespace:Microsoft.VisualBasic.Activities;assembly=System.Activities"
+ xmlns:s="clr-namespace:System;assembly=mscorlib"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:ss="clr-namespace:System.Security;assembly=mscorlib"
+ xmlns:ug="clr-namespace:UiPath.GSuite;assembly=UiPath.GSuite"
+ xmlns:uga="clr-namespace:UiPath.GSuite.Activities;assembly=UiPath.GSuite.Activities"
+ xmlns:ui="http://schemas.uipath.com/workflow/activities"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property sap2010:Annotation.AnnotationText="移動ファイル名" Name="stInMoveFromFileName" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="移動先フォルダ識別子" Name="stInMoveToFoloderString" Type="InArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="移動済みファイルURL" Name="stOutMovedFileURL" Type="OutArgument(x:String)" />
+    <x:Property sap2010:Annotation.AnnotationText="移動ファイル格納Ddriveフォルダ識別子" Name="stInDdriveFolderString" Type="InArgument(x:String)" />
+  </x:Members>
+  <mva:VisualBasic.Settings>
+    <x:Null />
+  </mva:VisualBasic.Settings>
+  <sap2010:WorkflowViewState.IdRef>C00005_BoxFileMove</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System.Activities.XamlIntegration</x:String>
+      <x:String>System.Activities.Validation</x:String>
+      <x:String>System.Activities</x:String>
+      <x:String>System.Activities.Statements</x:String>
+      <x:String>System.Activities.Expressions</x:String>
+      <x:String>Microsoft.VisualBasic</x:String>
+      <x:String>Microsoft.VisualBasic.Activities</x:String>
+      <x:String>System</x:String>
+      <x:String>System.Collections</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Diagnostics</x:String>
+      <x:String>System.Drawing</x:String>
+      <x:String>System.IO</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Net.Mail</x:String>
+      <x:String>System.Xml</x:String>
+      <x:String>System.Xml.Linq</x:String>
+      <x:String>UiPath.Core</x:String>
+      <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Windows.Markup</x:String>
+      <x:String>Box.V2.Models</x:String>
+      <x:String>Box.V2</x:String>
+      <x:String>System.Security</x:String>
+      <x:String>Newtonsoft.Json</x:String>
+      <x:String>System.Web</x:String>
+      <x:String>Google.Apis.Drive.v3.Data</x:String>
+      <x:String>Google.Apis.Requests</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualBasic</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Drawing</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>PresentationFramework</AssemblyReference>
+      <AssemblyReference>WindowsBase</AssemblyReference>
+      <AssemblyReference>PresentationCore</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.ComponentModel.Composition</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>Microsoft.VisualStudio.Services.Common</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities</AssemblyReference>
+      <AssemblyReference>UiPath.UiAutomation.Activities</AssemblyReference>
+      <AssemblyReference>Box.V2</AssemblyReference>
+      <AssemblyReference>System.ValueTuple</AssemblyReference>
+      <AssemblyReference>Newtonsoft.Json</AssemblyReference>
+      <AssemblyReference>System.Web</AssemblyReference>
+      <AssemblyReference>Google.Apis.Drive.v3</AssemblyReference>
+      <AssemblyReference>Google.Apis</AssemblyReference>
+      <AssemblyReference>Google.Apis.Core</AssemblyReference>
+      <AssemblyReference>System.Collections.Immutable</AssemblyReference>
+      <AssemblyReference>UiPath.Excel</AssemblyReference>
+      <AssemblyReference>UiPath.Mail</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Flowchart sap2010:Annotation.AnnotationText="【名称】C00005_BoxFileMove&#xA;【概要】Box上のファイル(orフォルダ)を移動します&#xA;【引数】「処理設計書_C00005_BoxFileMove.xlsx」を参照&#xA;【履歴】2018/07/06 ISID 初版&#xA;            2018/12/05 ISID 英語版OS対応のためSelectorを修正&#xA;            2018/12/17 ISID 引数が無し時のDefaultValueを使用する場合に正常に設定されていない&#xA;                                      問題対応&#xA;                                      キーカーソル依存の問題対応で対象までマウスカーソルを移動させる&#xA;                                      処理を追加 " DisplayName="C00005_BoxFileMove" sap2010:WorkflowViewState.IdRef="Flowchart_1">
+    <Flowchart.Variables>
+      <Variable x:TypeArguments="x:String" sap2010:Annotation.AnnotationText="プロセストレース用定数" Default="%[C00005_BoxFileMove]" sap2010:WorkflowViewState.IdRef="Variable`1_1" Name="TRACE_PROCESS_NAME" />
+      <Variable x:TypeArguments="x:String" Name="stClientSecret" />
+      <Variable x:TypeArguments="x:String" Name="stClientID" />
+      <Variable x:TypeArguments="ss:SecureString" Name="scstClientSecret" />
+    </Flowchart.Variables>
+    <Flowchart.StartNode>
+      <FlowStep x:Name="__ReferenceID3" sap2010:WorkflowViewState.IdRef="FlowStep_3">
+        <Flowchart DisplayName="初期処理" sap2010:WorkflowViewState.IdRef="Flowchart_2">
+          <Flowchart.StartNode>
+            <FlowStep x:Name="__ReferenceID2" sap2010:WorkflowViewState.IdRef="FlowStep_312">
+              <Sequence DisplayName="Output Log" sap2010:WorkflowViewState.IdRef="Sequence_38">
+                <ui:LogMessage DisplayName="開始ログ出力" sap2010:WorkflowViewState.IdRef="LogMessage_6" Level="Info" Message="[TRACE_PROCESS_NAME &amp; &quot; START&quot;]" />
+                <ui:LogMessage DisplayName="Logging arguments" sap2010:WorkflowViewState.IdRef="LogMessage_7" Level="Info" Message="[TRACE_PROCESS_NAME &amp; &quot; stInMoveFromFileName: &quot; + stInMoveFromFileName  +  &quot; stInMoveToFoloderString: &quot;  +  stInMoveToFoloderString +  &quot; stInDdriveFolderString: &quot;  +  stInDdriveFolderString]" />
+              </Sequence>
+              <FlowStep.Next>
+                <FlowStep x:Name="__ReferenceID1" sap2010:WorkflowViewState.IdRef="FlowStep_279">
+                  <Flowchart DisplayName="各任意変数の初期化" sap2010:WorkflowViewState.IdRef="Flowchart_68">
+                    <Flowchart.StartNode>
+                      <FlowStep x:Name="__ReferenceID0" sap2010:WorkflowViewState.IdRef="FlowStep_311">
+                        <Sequence DisplayName="[Sequence] Get Credential from OC" sap2010:WorkflowViewState.IdRef="Sequence_41">
+                          <TryCatch DisplayName="Try Catch" sap2010:WorkflowViewState.IdRef="TryCatch_1">
+                            <TryCatch.Try>
+                              <Sequence sap2010:WorkflowViewState.IdRef="Sequence_39">
+                                <ui:GetRobotCredential TimeoutMS="{x:Null}" AssetName="GDrive_OAuthClient" DisplayName="Private: Get Credential" sap2010:WorkflowViewState.IdRef="GetRobotCredential_1" Password="[scstClientSecret]" Username="[stClientID]" />
+                                <Assign sap2010:WorkflowViewState.IdRef="Assign_63">
+                                  <Assign.To>
+                                    <OutArgument x:TypeArguments="x:String">[stClientSecret]</OutArgument>
+                                  </Assign.To>
+                                  <Assign.Value>
+                                    <InArgument x:TypeArguments="x:String">[new System.Net.NetworkCredential(string.Empty, scstClientSecret).Password]</InArgument>
+                                  </Assign.Value>
+                                </Assign>
+                              </Sequence>
+                            </TryCatch.Try>
+                            <TryCatch.Catches>
+                              <Catch x:TypeArguments="s:Exception" sap2010:WorkflowViewState.IdRef="Catch`1_1">
+                                <ActivityAction x:TypeArguments="s:Exception">
+                                  <ActivityAction.Argument>
+                                    <DelegateInArgument x:TypeArguments="s:Exception" Name="exception" />
+                                  </ActivityAction.Argument>
+                                  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_40">
+                                    <ui:LogMessage DisplayName="Log Message" sap2010:WorkflowViewState.IdRef="LogMessage_8" Level="Error" Message="[&quot;Get GDrive_OAuthClient failed. Please Check if asset GDrive_OAuthClient existed&quot;]" />
+                                    <Rethrow sap2010:WorkflowViewState.IdRef="Rethrow_1" />
+                                  </Sequence>
+                                </ActivityAction>
+                              </Catch>
+                            </TryCatch.Catches>
+                          </TryCatch>
+                        </Sequence>
+                      </FlowStep>
+                    </Flowchart.StartNode>
+                    <x:Reference>__ReferenceID0</x:Reference>
+                  </Flowchart>
+                </FlowStep>
+              </FlowStep.Next>
+            </FlowStep>
+          </Flowchart.StartNode>
+          <x:Reference>__ReferenceID1</x:Reference>
+          <x:Reference>__ReferenceID2</x:Reference>
+        </Flowchart>
+        <FlowStep.Next>
+          <FlowStep x:Name="__ReferenceID4" sap2010:WorkflowViewState.IdRef="FlowStep_310">
+            <Parallel DisplayName="Parallel - GSuite OAuth" sap2010:WorkflowViewState.IdRef="Parallel_2">
+              <Parallel.Variables>
+                <Variable x:TypeArguments="x:String" Name="stMoveFromFileID" />
+                <Variable x:TypeArguments="x:Int32" Default="0" Name="iStepNumber" />
+                <Variable x:TypeArguments="scg:Dictionary(x:String, x:String)" Default="[new Dictionary(of String,String) from {{&quot;en&quot;,&quot;Sign in - Google Accounts&quot;},{&quot;ja&quot;,&quot;ログイン - Google アカウント&quot;}}]" Name="SelectorDictionary" />
+              </Parallel.Variables>
+              <Parallel.CompletionCondition>[iStepNumber= 3]</Parallel.CompletionCondition>
+              <Sequence DisplayName="Click Email" sap2010:WorkflowViewState.IdRef="Sequence_32">
+                <Sequence.Variables>
+                  <Variable x:TypeArguments="x:Boolean" Default="False" Name="SelectUserDone" />
+                </Sequence.Variables>
+                <ParallelForEach x:TypeArguments="x:String" sap2010:Annotation.AnnotationText="Try selectors in all available languages. Cf variable SelectorDictionary for a list of available languages" CompletionCondition="[SelectUserDone]" DisplayName="並列繰り返し (コレクションの各要素)" sap2010:WorkflowViewState.IdRef="ParallelForEach`1_1" Values="[SelectorDictionary.Select(Function(kvp) kvp.Value)]">
+                  <ActivityAction x:TypeArguments="x:String">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="x:String" Name="selector" />
+                    </ActivityAction.Argument>
+                    <Sequence DisplayName="シーケンス" sap2010:WorkflowViewState.IdRef="Sequence_42">
+                      <ui:Click DelayMS="{x:Null}" ClickType="CLICK_SINGLE" ContinueOnError="True" DelayBefore="2000" DisplayName="Click Email" sap2010:WorkflowViewState.IdRef="Click_7" KeyModifiers="None" MouseButton="BTN_LEFT" SendWindowMessages="False" SimulateClick="False">
+                        <ui:Click.CursorPosition>
+                          <ui:CursorPosition Position="Center">
+                            <ui:CursorPosition.OffsetX>
+                              <InArgument x:TypeArguments="x:Int32" />
+                            </ui:CursorPosition.OffsetX>
+                            <ui:CursorPosition.OffsetY>
+                              <InArgument x:TypeArguments="x:Int32" />
+                            </ui:CursorPosition.OffsetY>
+                          </ui:CursorPosition>
+                        </ui:Click.CursorPosition>
+                        <ui:Click.Target>
+                          <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" InformativeScreenshot="acedc3fe99d0a90693eab8999cf378a2" Selector="[&quot;&lt;html app='chrome.exe' title='&quot;+selector+&quot;' /&gt;&lt;webctrl tag='IMG' /&gt;&quot;]" TimeoutMS="300000" WaitForReady="COMPLETE" />
+                        </ui:Click.Target>
+                      </ui:Click>
+                      <Assign DisplayName="代入" sap2010:WorkflowViewState.IdRef="Assign_66">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Boolean">[SelectUserDone]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Boolean">True</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                    </Sequence>
+                  </ActivityAction>
+                </ParallelForEach>
+              </Sequence>
+              <Sequence DisplayName="Click Allow" sap2010:WorkflowViewState.IdRef="Sequence_33">
+                <Sequence.Variables>
+                  <Variable x:TypeArguments="x:Boolean" Default="False" Name="AllowDone" />
+                </Sequence.Variables>
+                <ParallelForEach x:TypeArguments="x:String" sap2010:Annotation.AnnotationText="Try selectors in all available languages. Cf variable SelectorDictionary for a list of available languages" CompletionCondition="[AllowDone]" DisplayName="並列繰り返し (コレクションの各要素)" sap2010:WorkflowViewState.IdRef="ParallelForEach`1_2" Values="[SelectorDictionary.Select(Function(kvp) kvp.Value)]">
+                  <ActivityAction x:TypeArguments="x:String">
+                    <ActivityAction.Argument>
+                      <DelegateInArgument x:TypeArguments="x:String" Name="selector" />
+                    </ActivityAction.Argument>
+                    <Sequence DisplayName="シーケンス" sap2010:WorkflowViewState.IdRef="Sequence_43">
+                      <ui:Click DelayBefore="{x:Null}" DelayMS="{x:Null}" ClickType="CLICK_SINGLE" ContinueOnError="True" DisplayName="Click  Allow" sap2010:WorkflowViewState.IdRef="Click_10" KeyModifiers="None" MouseButton="BTN_LEFT" SendWindowMessages="False" SimulateClick="False">
+                        <ui:Click.CursorPosition>
+                          <ui:CursorPosition Position="Center">
+                            <ui:CursorPosition.OffsetX>
+                              <InArgument x:TypeArguments="x:Int32" />
+                            </ui:CursorPosition.OffsetX>
+                            <ui:CursorPosition.OffsetY>
+                              <InArgument x:TypeArguments="x:Int32" />
+                            </ui:CursorPosition.OffsetY>
+                          </ui:CursorPosition>
+                        </ui:Click.CursorPosition>
+                        <ui:Click.Target>
+                          <ui:Target ClippingRegion="{x:Null}" Element="{x:Null}" InformativeScreenshot="c47a43d2170361fdfa8e4d1c9ff84548" Selector="[&quot;&lt;html app='chrome.exe' title='&quot;+selector+&quot;' /&gt;&lt;webctrl idx='2' parentid='submit_approve_access' tag='DIV' /&gt;&quot;]" TimeoutMS="300000" WaitForReady="COMPLETE" />
+                        </ui:Click.Target>
+                      </ui:Click>
+                      <ui:BrowserScope Browser="{x:Null}" SearchScope="{x:Null}" TimeoutMS="{x:Null}" UiBrowser="{x:Null}" sap2010:Annotation.AnnotationText="Close the window used for authentication" BrowserType="Chrome" ContinueOnError="True" DisplayName="ブラウザーにアタッチ 'chrome.exe OAuth'" sap2010:WorkflowViewState.IdRef="BrowserScope_6" InformativeScreenshot="13e40d55df150082bf02d4f4584755a7" Selector="&lt;html app='chrome.exe' title='OAuth 2.0 Authentication Token Received' /&gt;">
+                        <ui:BrowserScope.Body>
+                          <ActivityAction x:TypeArguments="x:Object">
+                            <ActivityAction.Argument>
+                              <DelegateInArgument x:TypeArguments="x:Object" Name="ContextTarget" />
+                            </ActivityAction.Argument>
+                            <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_44">
+                              <ui:CloseTab Browser="{x:Null}" DisplayName="タブを閉じる" sap2010:WorkflowViewState.IdRef="CloseTab_6" />
+                            </Sequence>
+                          </ActivityAction>
+                        </ui:BrowserScope.Body>
+                      </ui:BrowserScope>
+                      <Assign DisplayName="代入" sap2010:WorkflowViewState.IdRef="Assign_67">
+                        <Assign.To>
+                          <OutArgument x:TypeArguments="x:Boolean">[AllowDone]</OutArgument>
+                        </Assign.To>
+                        <Assign.Value>
+                          <InArgument x:TypeArguments="x:Boolean">True</InArgument>
+                        </Assign.Value>
+                      </Assign>
+                    </Sequence>
+                  </ActivityAction>
+                </ParallelForEach>
+              </Sequence>
+              <Sequence DisplayName="GSuite" sap2010:WorkflowViewState.IdRef="Sequence_37">
+                <uga:GSuiteApplicationScope ApiKey="{x:Null}" KeyPath="{x:Null}" Password="{x:Null}" ServiceAccountEmail="{x:Null}" UserEmail="{x:Null}" AuthenticationType="OAuthClientID" CredentialID="[stClientID]" CredentialSecret="[stClientSecret]" DisplayName="GSuite Application Scope" HasDomainWideAccesss="False" sap2010:WorkflowViewState.IdRef="GSuiteApplicationScope_4" KeyType="JSON" Services="Drive">
+                  <uga:GSuiteApplicationScope.Body>
+                    <ActivityAction x:TypeArguments="ug:SimpleObjectContainer">
+                      <ActivityAction.Argument>
+                        <DelegateInArgument x:TypeArguments="ug:SimpleObjectContainer" Name="GSuiteScope" />
+                      </ActivityAction.Argument>
+                      <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_35">
+                        <Sequence.Variables>
+                          <Variable x:TypeArguments="gadvd:File[]" Name="Results" />
+                          <Variable x:TypeArguments="x:String" Default="https://drive.google.com/file/d/{0}" Name="stGDriveFileUrl" />
+                          <Variable x:TypeArguments="x:String" Default="https://drive.google.com/drive/folders/{0}" Name="stGDriveFolderURL" />
+                          <Variable x:TypeArguments="gadvd:File[]" Name="ExistingFilesInTargetFolder" />
+                        </Sequence.Variables>
+                        <uga:FindFiles DisplayName="Find Files and Folders - Get File ID" FirstResultId="[stMoveFromFileID]" sap2010:WorkflowViewState.IdRef="FindFiles_4" MaxResults="50" Result="[Results]" SearchExpression="[&quot;name = '&quot;+stInMoveFromFileName+&quot;' and '&quot;+stInDdriveFolderString+&quot;' in parents&quot;]" SupportsTeamDrives="True" />
+                        <If Condition="[Results.Count=0]" DisplayName="If no results, throw exception" sap2010:WorkflowViewState.IdRef="If_13">
+                          <If.Then>
+                            <Throw Exception="[New system.IO.FileNotFoundException(&quot;Could not find target file or folder&quot;)]" sap2010:WorkflowViewState.IdRef="Throw_17" />
+                          </If.Then>
+                        </If>
+                        <uga:FindFiles FirstResultId="{x:Null}" DisplayName="Find Files and Folders - Check target folder" sap2010:WorkflowViewState.IdRef="FindFiles_5" MaxResults="50" Result="[ExistingFilesInTargetFolder]" SearchExpression="[&quot;name = '&quot;+stInMoveFromFileName+&quot;' and '&quot;+stInMoveToFoloderString+&quot;' in parents&quot;]" SupportsTeamDrives="True" />
+                        <If Condition="[ExistingFilesInTargetFolder.Count &gt; 0]" DisplayName="If a file with the same name exists in target folder throw an exception" sap2010:WorkflowViewState.IdRef="If_18">
+                          <If.Then>
+                            <Throw Exception="[new Exception(string.Format(&quot;File {0} already exists in target folder {1}&quot;, stInMoveFromFileName,stInMoveToFoloderString))]" sap2010:WorkflowViewState.IdRef="Throw_18" />
+                          </If.Then>
+                        </If>
+                        <uga:MoveDriveFile FileName="{x:Null}" DisplayName="Move File" FileId="[stMoveFromFileID]" sap2010:WorkflowViewState.IdRef="MoveDriveFile_4" NewParentId="[stInMoveToFoloderString]" SupportsTeamDrives="True" />
+                        <If Condition="[Results(0).MimeType.Equals(&quot;application/vnd.google-apps.folder&quot;)]" DisplayName="条件分岐" sap2010:WorkflowViewState.IdRef="If_17">
+                          <If.Then>
+                            <Assign DisplayName="代入" sap2010:WorkflowViewState.IdRef="Assign_65">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="x:String">[stOutMovedFileURL]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="x:String">[String.Format(stGDriveFolderURL, stMoveFromFileID)]</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                          </If.Then>
+                          <If.Else>
+                            <Assign DisplayName="代入" sap2010:WorkflowViewState.IdRef="Assign_64">
+                              <Assign.To>
+                                <OutArgument x:TypeArguments="x:String">[stOutMovedFileURL]</OutArgument>
+                              </Assign.To>
+                              <Assign.Value>
+                                <InArgument x:TypeArguments="x:String">[String.Format(stGDriveFileUrl, stMoveFromFileID)]</InArgument>
+                              </Assign.Value>
+                            </Assign>
+                          </If.Else>
+                        </If>
+                        <WriteLine DisplayName="Write Line" sap2010:WorkflowViewState.IdRef="WriteLine_6" Text="[stOutMovedFileURL]" />
+                        <If Condition="[iStepNumber = 2]" DisplayName="If OAuth page opened, close it" sap2010:WorkflowViewState.IdRef="If_14">
+                          <If.Then>
+                            <ui:BrowserScope Browser="{x:Null}" SearchScope="{x:Null}" TimeoutMS="{x:Null}" UiBrowser="{x:Null}" BrowserType="Chrome" DisplayName="Attach Browser 'chrome.exe OAuth'" sap2010:WorkflowViewState.IdRef="BrowserScope_4" InformativeScreenshot="99af327258046c5f52e427b9ccd01da1" Selector="&lt;html app='chrome.exe' title='OAuth 2.0 Authentication Token Received' /&gt;">
+                              <ui:BrowserScope.Body>
+                                <ActivityAction x:TypeArguments="x:Object">
+                                  <ActivityAction.Argument>
+                                    <DelegateInArgument x:TypeArguments="x:Object" Name="ContextTarget" />
+                                  </ActivityAction.Argument>
+                                  <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_34">
+                                    <ui:CloseTab Browser="{x:Null}" DisplayName="Close Tab" sap2010:WorkflowViewState.IdRef="CloseTab_4" />
+                                  </Sequence>
+                                </ActivityAction>
+                              </ui:BrowserScope.Body>
+                            </ui:BrowserScope>
+                          </If.Then>
+                        </If>
+                        <ui:LogMessage DisplayName="終了ログ出力" sap2010:WorkflowViewState.IdRef="LogMessage_5" Level="Info" Message="[TRACE_PROCESS_NAME &amp; &quot; END&quot;]" />
+                      </Sequence>
+                    </ActivityAction>
+                  </uga:GSuiteApplicationScope.Body>
+                </uga:GSuiteApplicationScope>
+                <If Condition="[iStepNumber = 2]" DisplayName="If window open, close it" sap2010:WorkflowViewState.IdRef="If_15">
+                  <If.Then>
+                    <ui:BrowserScope Browser="{x:Null}" SearchScope="{x:Null}" UiBrowser="{x:Null}" BrowserType="Chrome" ContinueOnError="True" DisplayName="Attach Browser 'chrome.exe OAuth'" sap2010:WorkflowViewState.IdRef="BrowserScope_5" InformativeScreenshot="99af327258046c5f52e427b9ccd01da1" Selector="&lt;html app='chrome.exe' title='OAuth 2.0 Authentication Token Received' /&gt;" TimeoutMS="10000">
+                      <ui:BrowserScope.Body>
+                        <ActivityAction x:TypeArguments="x:Object">
+                          <ActivityAction.Argument>
+                            <DelegateInArgument x:TypeArguments="x:Object" Name="ContextTarget" />
+                          </ActivityAction.Argument>
+                          <Sequence DisplayName="Do" sap2010:WorkflowViewState.IdRef="Sequence_36">
+                            <ui:CloseTab Browser="{x:Null}" DisplayName="Close Tab" sap2010:WorkflowViewState.IdRef="CloseTab_5" />
+                          </Sequence>
+                        </ActivityAction>
+                      </ui:BrowserScope.Body>
+                    </ui:BrowserScope>
+                  </If.Then>
+                </If>
+                <Assign sap2010:WorkflowViewState.IdRef="Assign_62">
+                  <Assign.To>
+                    <OutArgument x:TypeArguments="x:Int32">[iStepNumber]</OutArgument>
+                  </Assign.To>
+                  <Assign.Value>
+                    <InArgument x:TypeArguments="x:Int32">3</InArgument>
+                  </Assign.Value>
+                </Assign>
+              </Sequence>
+            </Parallel>
+          </FlowStep>
+        </FlowStep.Next>
+      </FlowStep>
+    </Flowchart.StartNode>
+    <x:Reference>__ReferenceID3</x:Reference>
+    <x:Reference>__ReferenceID4</x:Reference>
+    <sads:DebugSymbol.Symbol>d1dDOlxVc2Vyc1wwOTAxNDY1NlxEb2N1bWVudHNcV29ya2Zsb3dzXEdEcml2ZS1TaGFyZWRXb3JrZmxvd3NcQzAwMDA1X0dEcml2ZUZpbGVNb3ZlLnhhbWxzXAPhAg8CAQFeZF57AgECZQmZARUCAXycAQ3ZAhgCAQNoD2saAwGQAW4TkgEfAgF9nwE9nwFAAgEFoAFYoAHrAQIBBKMBD8cBGgIBa8gBD/gBGgIBVvkBD9gCGgIBCKIBLaIBPQIBBmkRaasBAwGXAWoRaukCAwGRAXEZjgEkAgF+pQFBpQFIAgFspwERxgEjAgFtygFBygFIAgFXzAER9wEjAgFY+gERvwIuAgEWwAIRzwIWAgEN0AIR1wIaAgEJaXlpqAEDAZgBaoQBauYCAwGSAXIbjQEmAgF/pwHSAqcBiAMCAXmnAeABpwHyAQIBeqwBFcQBIAIBbswBzQLMAYMDAgFozAHgAcwB7QECAWnRARX1ASACAVn6AeoB+gH8AQIBVPoBygH6AdgBAgFSgAIXvAIiAgEXwAIfwAIyAgEOwgIVzQInAgEQ1QI71QI8AgEM0gI80gJJAgEKdB9+KgMBhAGGASOJAS4DAYABrQEXuwEiAgFzvAEXwwEgAgFv0gEX4AEiAgFj4QEX7AEpAgFe7QEX9AEgAgFagwJIgwJtAgEZhAJIhAJ0AgEYhwIZhwLuAgIBSYgCGYwCHgIBRY0CGY0CgQMCAT6OAhmSAh4CATqTAhmTAuoBAgE1lAIZqQIeAgEnqgIZqgKIAQIBJKsCGboCHgIBHbsCGbsCsQECARrCArQCwgKFAwIBFcICkAPCApcDAgEUwgKKAcICkAECARPIAhvKAiYCARF1IXWBAgMBigF2IX0qAwGFAYcBJYcB9QEDAYIBiAEliAFcAwGBAbkBlQG5Af4BAgF3uQGJArkBkQICAXatAV2tAWMCAXWtAXCtAXYCAXTBAUPBAUcCAXK+AUS+AVQCAXDeAZUB3gGnAgIBZt4BsgLeAboCAgFl0gF00gF6AgFk4QGUA+EB5QMCAWLhAe4B4QH0AQIBYecBHekBKAIBX/IBQ/IBRwIBXe8BRO8BTwIBW4cCaYcCfQIBUIcCwwGHAs4BAgFOhwLgAYcC0QICAUuHArcBhwK7AQIBSogCJ4gCOgIBRooCHYoCtQECAUeNAsEBjQLgAQIBQ40C8gGNAuQCAgFAjQK1AY0CuQECAT+OAieOAlMCATuQAh2QAuQBAgE8kwKyAZMCzQECATiTAl+TAnMCATaUAieUAnUCASiWAh2dAiYCAS+gAh2nAiYCASmqAnCqAoUBAgElqwInqwI6AgEerQIduAIvAgEguwKBAbsCrgECARvJAh3JAoQBAgESdVd1awMBjwF18AF1/gEDAY0BddIBdeYBAwGLAXtMe5cBAwGIAXhNeF0DAYYBhwGTAYcB8gEDAYMB6AEf6AGDAQIBYIoCLooChwECAUiQAi6QArYBAgE9mwJImwJ8AgEymAJJmAJcAgEwpQJIpQJ6AgEsogJJogJcAgEqrQK6Aq0CiwMCASOzAiO1Ai4CASG0AiW0AowBAgEi</sads:DebugSymbol.Symbol>
+  </Flowchart>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="Variable`1_1">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_6" sap:VirtualizedContainerService.HintSize="314,91">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_7" sap:VirtualizedContainerService.HintSize="314,91">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_38" sap:VirtualizedContainerService.HintSize="200,51">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="GetRobotCredential_1" sap:VirtualizedContainerService.HintSize="242,22" />
+      <sap2010:ViewStateData Id="Assign_63" sap:VirtualizedContainerService.HintSize="242,60" />
+      <sap2010:ViewStateData Id="Sequence_39" sap:VirtualizedContainerService.HintSize="264,246">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_8" sap:VirtualizedContainerService.HintSize="314,91" />
+      <sap2010:ViewStateData Id="Rethrow_1" sap:VirtualizedContainerService.HintSize="314,22" />
+      <sap2010:ViewStateData Id="Sequence_40" sap:VirtualizedContainerService.HintSize="336,277">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Catch`1_1" sap:VirtualizedContainerService.HintSize="400,346">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="TryCatch_1" sap:VirtualizedContainerService.HintSize="414,508" />
+      <sap2010:ViewStateData Id="Sequence_41" sap:VirtualizedContainerService.HintSize="200,51">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_311">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,144.5</av:Point>
+            <av:Size x:Key="ShapeSize">200,51</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,174 300,204 299.178333333333,204 299.178333333333,231.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_68" sap:VirtualizedContainerService.HintSize="614,636">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">270,2.5</av:Point>
+            <av:Size x:Key="ShapeSize">60,75</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,144.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_279">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,307</av:Point>
+            <av:Size x:Key="ShapeSize">200,51</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,271 300,301 300.178333333333,301 300.178333333333,309.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_312">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,114.5</av:Point>
+            <av:Size x:Key="ShapeSize">200,51</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,165.5 300,307</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_2" sap:VirtualizedContainerService.HintSize="200,54">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <av:Point x:Key="ShapeLocation">270,2.5</av:Point>
+            <av:Size x:Key="ShapeSize">60,75</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,114.5</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Click_7" sap:VirtualizedContainerService.HintSize="314,106">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_66" sap:VirtualizedContainerService.HintSize="314,62" />
+      <sap2010:ViewStateData Id="Sequence_42" sap:VirtualizedContainerService.HintSize="336,332">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ParallelForEach`1_1" sap:VirtualizedContainerService.HintSize="366,533">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_32" sap:VirtualizedContainerService.HintSize="388,1916">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Click_10" sap:VirtualizedContainerService.HintSize="414,106">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CloseTab_6" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Sequence_44" sap:VirtualizedContainerService.HintSize="222,146">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="BrowserScope_6" sap:VirtualizedContainerService.HintSize="414,322">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_67" sap:VirtualizedContainerService.HintSize="414,62" />
+      <sap2010:ViewStateData Id="Sequence_43" sap:VirtualizedContainerService.HintSize="436,665">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="ParallelForEach`1_2" sap:VirtualizedContainerService.HintSize="466,866">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_33" sap:VirtualizedContainerService.HintSize="488,1916">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FindFiles_4" sap:VirtualizedContainerService.HintSize="513,64" />
+      <sap2010:ViewStateData Id="Throw_17" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="If_13" sap:VirtualizedContainerService.HintSize="513,213" />
+      <sap2010:ViewStateData Id="FindFiles_5" sap:VirtualizedContainerService.HintSize="513,64" />
+      <sap2010:ViewStateData Id="Throw_18" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="If_18" sap:VirtualizedContainerService.HintSize="513,213" />
+      <sap2010:ViewStateData Id="MoveDriveFile_4" sap:VirtualizedContainerService.HintSize="513,82" />
+      <sap2010:ViewStateData Id="Assign_65" sap:VirtualizedContainerService.HintSize="244,62" />
+      <sap2010:ViewStateData Id="Assign_64" sap:VirtualizedContainerService.HintSize="244,62" />
+      <sap2010:ViewStateData Id="If_17" sap:VirtualizedContainerService.HintSize="513,215" />
+      <sap2010:ViewStateData Id="WriteLine_6" sap:VirtualizedContainerService.HintSize="513,64" />
+      <sap2010:ViewStateData Id="CloseTab_4" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Sequence_34" sap:VirtualizedContainerService.HintSize="222.4,147.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="BrowserScope_4" sap:VirtualizedContainerService.HintSize="414.4,294.4" />
+      <sap2010:ViewStateData Id="If_14" sap:VirtualizedContainerService.HintSize="513,54">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="LogMessage_5" sap:VirtualizedContainerService.HintSize="513,97">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Sequence_35" sap:VirtualizedContainerService.HintSize="535,1510">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="GSuiteApplicationScope_4" sap:VirtualizedContainerService.HintSize="549,1596">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="CloseTab_5" sap:VirtualizedContainerService.HintSize="200,22.4" />
+      <sap2010:ViewStateData Id="Sequence_36" sap:VirtualizedContainerService.HintSize="222.4,147.2">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="BrowserScope_5" sap:VirtualizedContainerService.HintSize="414.4,294.4" />
+      <sap2010:ViewStateData Id="If_15" sap:VirtualizedContainerService.HintSize="500,54">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Assign_62" sap:VirtualizedContainerService.HintSize="500,62" />
+      <sap2010:ViewStateData Id="Sequence_37" sap:VirtualizedContainerService.HintSize="571,1916">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            <x:Boolean x:Key="IsPinned">False</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Parallel_2" sap:VirtualizedContainerService.HintSize="1641,1962">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_310">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,230.3</av:Point>
+            <av:Size x:Key="ShapeSize">200,54</av:Size>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="FlowStep_3">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <av:Point x:Key="ShapeLocation">200,127.5</av:Point>
+            <av:Size x:Key="ShapeSize">200,54</av:Size>
+            <av:PointCollection x:Key="ConnectorLocation">300,181.5 300,230.3</av:PointCollection>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="Flowchart_1" sap:VirtualizedContainerService.HintSize="654,810">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+            <av:Point x:Key="ShapeLocation">270,2.5</av:Point>
+            <av:Size x:Key="ShapeSize">60,75</av:Size>
+            <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
+            <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,127.5</av:PointCollection>
+            <x:Double x:Key="Width">640</x:Double>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="C00005_BoxFileMove" sap:VirtualizedContainerService.HintSize="694,890" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>
